@@ -1,0 +1,20 @@
+.btn {
+    padding: 12px 40px;
+    border: none;
+    border-radius: 12px;
+    background: #000000;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+    font-weight: 500;
+    color: #ffffff;
+    max-height: 47px;
+  
+    &:hover {
+      transform: scale(1.05);
+    }
+  
+    &:active {
+      background-color: #ddd;
+    }
+  }

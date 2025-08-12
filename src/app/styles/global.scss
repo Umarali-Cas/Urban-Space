@@ -1,2 +1,6 @@
 @use './reset.scss';
 @use './variable.scss';
+
+*{
+    font-family: var(--font-family);
+}
