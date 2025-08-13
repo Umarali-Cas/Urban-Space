@@ -1,10 +1,11 @@
-.header{
+.footer{
+    max-width: 1440px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 64px;
     display: flex;
     justify-content: space-between;
-    padding: 24px 64px;
     align-items: center;
-    max-width: 1440px;
-    margin: 0 auto;
 
     @media (max-width: 1200px) {
         padding: 24px 32px;        
@@ -12,5 +13,11 @@
 
     @media (max-width: 475px) {
         padding: 16px 24px;
+    }
+
+    &__contacts{
+        display: flex;
+        align-items: center;
+        column-gap: 24px;
     }
 }
