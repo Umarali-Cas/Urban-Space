@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './styles/global.scss'
 import { Header } from '@/widgets/Header'
+import { Footer } from '@/widgets/Footer'
 
 const inter = Inter({
   variable: '--font-family',
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body className={`${inter.variable}`}>
         <Header />
         {children}
+        <Footer />
       </body>
     </html>
   )

@@ -15,7 +15,7 @@ export function LastIdeas() {
           userName="Анна Петрова"
           date="24.01.2025"
           likes={10}
-          link="/idea/1"
+          link="#"
           imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqVPB84wI3t0rAKcAtfiPNnRMJBZKUFR8-8A&s"
           avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGsps9vg5OwA8atxhgDRRAZyyX5ahtjhI70A&s"
         />
@@ -25,7 +25,7 @@ export function LastIdeas() {
           userName="Анна Петрова"
           date="24.01.2025"
           likes={10}
-          link="/idea/1"
+          link="#"
           imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqVPB84wI3t0rAKcAtfiPNnRMJBZKUFR8-8A&s"
           avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGsps9vg5OwA8atxhgDRRAZyyX5ahtjhI70A&s"
         />
@@ -35,7 +35,7 @@ export function LastIdeas() {
           userName="Анна Петрова"
           date="24.01.2025"
           likes={10}
-          link="/idea/1"
+          link="#"
           imageUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqVPB84wI3t0rAKcAtfiPNnRMJBZKUFR8-8A&s"
           avatarUrl="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGsps9vg5OwA8atxhgDRRAZyyX5ahtjhI70A&s"
         />
