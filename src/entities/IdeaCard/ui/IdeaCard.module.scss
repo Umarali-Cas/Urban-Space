@@ -1,0 +1,90 @@
+.ideaCard{
+    max-width: 420px;
+    width: 100%;
+    border: 2px solid #00000015;
+    border-radius: 16px;
+
+    &__image{
+        width: 100%;
+        height: 240px;
+        background: red;
+        border-radius: 14px 14px 0 0;
+    }
+
+    &__content{
+        padding: 24px;
+    }
+
+    &__title{
+        font-size: 24px;
+        color: var(--black);
+        font-weight: 600;
+        line-height: 145%;
+        letter-spacing: -2%;
+
+        @media (max-width: 1250px) {
+            font-size: 20px;
+        }
+    }
+
+    &__subtitle{
+        font-size: 16px;
+        color: #354052;
+        font-weight: 400;
+        margin-top: 8px;
+        letter-spacing: -0.5%;
+        line-height: 140%;
+    }
+
+    &__box{
+        display: flex;
+        justify-content: space-between;
+        height: 30px;
+        align-items: center;
+        margin: 8px 0 32px;
+
+        &__profile{
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+
+            &__avatar{
+                width: 31px;
+                height: 31px;
+                background: red;
+                border-radius: 50%;
+            }
+
+            &__name{
+                font-size: 14px;
+                color: #7A8894;
+                font-weight: 400;
+                line-height: 140%;
+            }
+        }
+    }
+
+    &__tags{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &__likes{
+            display: flex;
+            align-items: center;
+            column-gap: 4px;
+
+            &__count{
+                font-size: 18px;
+                color: #F20505;
+            }
+        }
+
+        &__link{
+            font-size: 18px;
+            color: #000000;
+            line-height: 145%;
+            font-weight: 600;
+        }
+    }
+}

@@ -1,8 +1,13 @@
+import { EcoBaner } from "@/entities/EcoBaner";
+import { Hero } from "@/widgets/Hero";
+import { LastIdeas } from "@/widgets/LastIdeas";
+
 export default function Home() {
   return (
-    <div>
-      <h1 style={{ fontSize: '50px' }}>Home</h1>
-      <p></p>
-    </div>
+    <>
+      <Hero />
+      <EcoBaner />
+      <LastIdeas />
+    </>
   )
 }
