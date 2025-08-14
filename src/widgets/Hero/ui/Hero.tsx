@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import classes from './Hero.module.scss'
-import poster from '../lib/Lightbox Poster.png' 
+import poster from '../assets/images/Lightbox Poster.png' 
 
 export function Hero() {
   return (

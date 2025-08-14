@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import classes from './IdeaCard.module.scss'
 import Image from 'next/image'
-import heartIcon from '../lib/heart.svg'
+import heartIcon from '../assets/icons/heart.svg'
 
 interface IdeaCardProps {
   title: string

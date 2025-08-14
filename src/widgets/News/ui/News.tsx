@@ -1,6 +1,6 @@
 import { NewsCard } from '@/entities/NewsCard'
 import classes from './News.module.scss'
-import image from '../lib/Image-1.png'
+import image from '../assets/images/Image-1.png'
 
 export function News() {
   return (
