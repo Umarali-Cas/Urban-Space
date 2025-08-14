@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import classes from './EcoBaner.module.scss'
-import ecoHand from '../lib/ecology hand.svg'
+import ecoHand from '../assets/icons/ecology hand.svg'
 
 export function EcoBaner() {
   return (

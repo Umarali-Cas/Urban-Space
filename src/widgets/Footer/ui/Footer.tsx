@@ -2,8 +2,8 @@ import { Logo } from '@/entities/Logo'
 import classes from './Footer.module.scss'
 import { NavBar } from '@/features/NavBar'
 import Image from 'next/image'
-import instagram from '../lib/instagram.svg'
-import telegram from '../lib/telegram.svg'
+import instagram from '../assets/icons/instagram.svg'
+import telegram from '../assets/icons/telegram.svg'
 import Link from 'next/link'
 
 export function Footer() {
