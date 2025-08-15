@@ -9,7 +9,15 @@
     margin: 0 auto;
     display: flex;
     background: var(--lightGreen);
-    // background: red;
+    justify-content: center;
+
+    @media (max-width: 1250px) {
+      padding: 80px 32px 40px;
+    }
+
+    @media (max-width: 1250px) {
+      padding: 80px 16px 40px;
+    }
   }
 
   &__container {
@@ -24,7 +32,7 @@
       line-height: 120%;
 
       @media (max-width: 1250px) {
-        text-align: center;
+        // text-align: center;
         font-size: 40px;
       }
       @media (max-width: 768px) {
@@ -39,7 +47,7 @@
       line-height: 140%;
 
       @media (max-width: 1250px) {
-        text-align: center;
+        // text-align: center;
       }
     }
 
@@ -47,6 +55,7 @@
         display: flex;
         column-gap: 24px;
         justify-content: center;
+
     }
   }
 }
