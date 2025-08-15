@@ -44,6 +44,10 @@
         display: flex;
         column-gap: 16px;
 
+        @media (max-width: 768px) {
+            row-gap: 8px;
+        }
+
         &__avatar{
             border-radius: 8px;
         }
@@ -51,12 +55,14 @@
         &__info{
             display: flex;
             flex-direction: column;
+            overflow: hidden;
 
             &__name{
                 font-size: 16px;
                 color: var(--black);
                 font-weight: 600;
                 line-height: 150%;
+                text-wrap: nowrap;
             }
     
             &__role{
@@ -64,6 +70,7 @@
                 color: #00000055;
                 font-weight: 500;
                 line-height: 150%;
+                text-wrap: nowrap;
             }
         }
 
