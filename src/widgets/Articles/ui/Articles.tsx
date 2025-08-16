@@ -1,64 +1,58 @@
-'use client'
-
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import classes from './Articles.module.scss'
 import image from '../assets/Image-1.png'
-import { useEffect, useState } from 'react'
 
 export function Articles() {
-  const [isHide, setIsHide] = useState(false)
+  const cards = [
+    <ArticlesCard
+      key="1"
+      article="Your expectations will fly sky high. I felt like I was soaring."
+      articleName="Название статьи"
+      role="Публицист"
+      userName="Wanda Wingleton"
+      avatarUrl={image.src}
+    />,
+    <ArticlesCard
+      key="2"
+      article="Your expectations will fly sky high. I felt like I was soaring."
+      articleName="Название статьи"
+      role="Публицист"
+      userName="Wanda Wingleton"
+      avatarUrl={''}
+    />,
+    <ArticlesCard
+      key="3"
+      article="Your expectations will fly sky high. I felt like I was soaring."
+      articleName="Название статьи"
+      role="Публицист"
+      userName="Wanda Wingleton"
+      avatarUrl={''}
+    />,
+  ]
 
-  useEffect(() => { //Адаптация под мобильные устройства, временно пока нет бекенда
-    const handleResize = () => {
-      if (window.innerWidth <= 1200) {
-        setIsHide(true);
-      } else {
-        setIsHide(false);
-      }
-    };
+  const duplicatedCards = [...cards, ...cards, ...cards, ...cards]
 
-    handleResize();
+  // В будущем можно будет заменить на логику получения данных из API
 
-    window.addEventListener('resize', handleResize);
-
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-  
   return (
     <section className={classes.articles}>
       <div className={classes.articles__wrapper}>
         <div className={classes.articles__container}>
+          <div className={classes.articles__container__titleWrapper}>
+
           <h1 className={classes.articles__container__title}>Урбан - статьи</h1>
           <p className={classes.articles__container__subtitle}>
             Ознакомьтесь с последними новостями
           </p>
+          </div>
           <div className={classes.articles__container__content}>
-            <ArticlesCard
-              article="Your expectations will fly sky high. I felt like I was soaring."
-              articleName="Название статьи"
-              role="Публицист"
-              userName="Wanda Wingleton"
-              avatarUrl={''}
-            />
-            {!isHide && (
-              <>
-              <ArticlesCard
-                article="Your expectations will fly sky high. I felt like I was soaring."
-                articleName="Название статьи"
-                role="Публицист"
-                userName="Wanda Wingleton"
-                avatarUrl={image.src}
-              />
-
-              <ArticlesCard
-                article="Your expectations will fly sky high. I felt like I was soaring."
-                articleName="Название статьи"
-                role="Публицист"
-                userName="Wanda Wingleton"
-                avatarUrl={image.src}
-                />
-                </>
-            )}
+            <div className={classes.articles__container__content__track}>
+              {duplicatedCards.map((card, index) => (
+                <div key={`${index}-${card.key}`} className={classes.articles__container__content__track__item}>
+                  {card}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
