@@ -1,6 +1,5 @@
 .articlesCard{
-    max-width: 420px;
-    width: 100%;
+    width: 420px;
     height: 280px;
     padding: 32px;
     background: #1B480620;
@@ -10,6 +9,10 @@
     flex-direction: column;
     justify-content: space-between;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+    @media (max-width: 768px) {
+        width: 327px;
+    }
 
     &__title{
         font-size: 24px;
