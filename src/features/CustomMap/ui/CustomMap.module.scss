@@ -1,0 +1,27 @@
+.mapContainer{
+    height: 506px;
+    width: 1024px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    border: 2px solid #E2E1DF;
+}
+
+.customIcon{
+    position: relative;
+    background: #38a53850;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+
+    &::before{
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 22px;
+        height: 22px;
+        background-color: #38a538;
+        border-radius: 50%;
+    }
+}
