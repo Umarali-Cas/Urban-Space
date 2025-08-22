@@ -1,20 +1,13 @@
 import Link from 'next/link'
 import classes from './NewsCard.module.scss'
-
-interface NewsCardProps {
-  title: string
-  subtitle: string
-  date: string
-  link: string
-  imageUrl?: string
-}
+import { NewsCardProps } from '../types/type'
 
 export function NewsCard({
   title,
   subtitle,
   date,
   link,
-  imageUrl
+  imageUrl,
 }: NewsCardProps) {
   return (
     <div className={classes.newsCard}>
@@ -23,7 +16,7 @@ export function NewsCard({
         style={{
           backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
         }}
       ></div>
 

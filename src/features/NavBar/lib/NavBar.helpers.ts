@@ -1,7 +1,8 @@
 export const NavBarTitles = [
     {
         title: 'Эко-карта',
-        href: '/map',
+        // href: '/map',
+        href: '#'
     },
     {
         title: 'Банк идей',
@@ -9,14 +10,17 @@ export const NavBarTitles = [
     },
     {
         title: 'Урбан-статьи',
-        href: '/articles',
+        // href: '/articles',
+        href: '#'
     },
     {
         title: 'Оказать поддержку',
-        href: '/support',
+        // href: '/support',
+        href: '#'
     },
     {
         title: 'Форумы',
-        href: '/forums',
+        // href: '/forums',
+        href: '#'
     }
 ]
