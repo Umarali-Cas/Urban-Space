@@ -1,12 +1,12 @@
 .lastIdeas{
     display: flex;
     flex-direction: column;
-    padding: 80px 64px 40px;
+    padding: 80px 64px 0px;
     max-width: 1440px;
     margin: 0 auto;
 
     @media (max-width: 1250px) {
-        padding: 80px 16px 40px;
+        padding: 80px 16px 0px;
     }
 
     &__title{
@@ -17,7 +17,6 @@
         line-height: 120%;
 
         @media (max-width: 1250px) {
-            text-align: center;
             font-size: 40px;
         }
         @media (max-width: 768px) {
@@ -31,10 +30,6 @@
         font-weight: 400;
         margin: 16px 0 32px;
         line-height: 140%;
-
-        @media (max-width: 1250px) {
-            text-align: center;
-        }
     }
 
     &__ideas{
