@@ -11,7 +11,11 @@ export default function Home() {
     <>
       <Hero />
       <EcoBaner />
-      <LastIdeas />
+      <LastIdeas
+        title="Последние добавленные идеи"
+        subtitle="Свежие предложения от участников сообщества"
+        viewCards={3}
+      />
       <MapSearch />
       <News />
       <Articles />
