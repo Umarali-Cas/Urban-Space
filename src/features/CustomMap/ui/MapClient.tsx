@@ -70,11 +70,11 @@ export default function MapClient() {
       attributionControl={false}
     >
       <TileLayer
-        // url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        // attribution='&copy; <a href="https://carto.com/">CARTO</a>'
+        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://carto.com/">CARTO</a>'
 
-        url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
-        attribution="© <a href='https://www.stadiamaps.com/' target='_blank'>Stadia Maps</a> © <a href='https://openmaptiles.org/' target='_blank'>OpenMapTiles</a> © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        // url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
+        // attribution="© <a href='https://www.stadiamaps.com/' target='_blank'>Stadia Maps</a> © <a href='https://openmaptiles.org/' target='_blank'>OpenMapTiles</a> © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
 
         //--------------------------------------
 
