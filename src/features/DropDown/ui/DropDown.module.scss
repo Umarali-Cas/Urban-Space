@@ -21,6 +21,11 @@
     overflow-y: scroll;
     background: #f3f4f9;
     border-radius: 8px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+      }
 
     &__item {
       width: 100%;
@@ -31,6 +36,11 @@
       align-items: center;
       padding: 9px 12px;
       font-weight: 700;
+      cursor: pointer;
+
+      &:hover {
+        background: #e6e6e6;
+      }
     }
   }
 }
