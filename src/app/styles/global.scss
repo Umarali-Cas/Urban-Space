@@ -1,8 +1,6 @@
 @use './reset.scss';
 @use './variable.scss';
 
-@import "leaflet/dist/leaflet.css";
-
 *{
     font-family: var(--font-family);
 }

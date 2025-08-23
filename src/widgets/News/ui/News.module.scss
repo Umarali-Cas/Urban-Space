@@ -25,6 +25,7 @@
         line-height: 120%;
 
         @media (max-width: 1250px) {
+            text-align: center;
             font-size: 40px;
         }
         @media (max-width: 768px) {
@@ -38,6 +39,10 @@
         font-weight: 400;
         margin: 16px 0 32px;
         line-height: 140%;
+
+        @media (max-width: 1250px) {
+            text-align: center;
+        }
     }
 
     &__box{
