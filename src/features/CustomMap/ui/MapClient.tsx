@@ -76,7 +76,12 @@ export default function MapClient() {
         // url="https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png"
         // attribution="© <a href='https://www.stadiamaps.com/' target='_blank'>Stadia Maps</a> © <a href='https://openmaptiles.org/' target='_blank'>OpenMapTiles</a> © <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
 
-        url="https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=ru"
+        //--------------------------------------
+
+        // url="https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png?lang=ru"
+        // attribution="&copy; <a href='https://wikimediafoundation.org/'>Wikimedia</a> contributors"
+
+        url="/api/tile?z={z}&x={x}&y={y}"
         attribution="&copy; <a href='https://wikimediafoundation.org/'>Wikimedia</a> contributors"
       />
 
