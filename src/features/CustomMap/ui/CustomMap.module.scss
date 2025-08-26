@@ -17,8 +17,8 @@
     font-size: 14px;
   }
 
-  &__polygon{
-    &:hover{
+  &__polygon {
+    &:hover {
       fill: red;
     }
   }
@@ -37,15 +37,20 @@
   }
 }
 
-.customIcon {
-  position: relative;
-  background: #008F00;
-  padding: 6px !important;
-  border-radius: 50%;
+// .customIcon {
+//   position: relative;
+//   background: #008F00;
+//   padding: 6px !important;
+//   border-radius: 50%;
 
-  box-shadow: 
-  0 0 0 6px rgba(0, 143, 0, 0.2), /* полупрозрачная рамка */
-  0 4px 10px rgba(0, 0, 0, 0.1); 
+//   box-shadow:
+//   0 0 0 6px rgba(0, 143, 0, 0.2), /* полупрозрачная рамка */
+//   0 4px 10px rgba(0, 0, 0, 0.1);
+// }
+
+.customIcon {
+  margin-top: -14px !important;
+  margin-left: -13px !important;
 }
 
 .mapSection {
