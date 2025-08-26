@@ -13,4 +13,14 @@
     @media (max-width: 475px) {
         padding: 16px 24px;
     }
+
+    &__actions{
+        display: flex;
+        column-gap: 24px;
+        align-items: center;
+
+        @media (max-width: 1200px) {
+            column-gap: 16px;
+        }
+    }
 }

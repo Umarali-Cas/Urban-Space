@@ -58,7 +58,7 @@ export default function MapClient() {
   return (
     <MapContainer
       center={[41.47522939797829, 74.61934986021016]}
-      zoom={7}
+      zoom={6}
       zoomControl={true} // Отключаем стандартные кнопки
       scrollWheelZoom={true}
       wheelPxPerZoomLevel={320} // Увеличьте значение для более плавного зума

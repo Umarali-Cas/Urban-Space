@@ -1,4 +1,4 @@
-export const NavBarTitles = [
+export const BurgerMenuItems = [
     {
         title: 'Эко-карта',
         href: '/map',
