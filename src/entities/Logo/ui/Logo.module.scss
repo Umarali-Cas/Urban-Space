@@ -24,5 +24,9 @@
         color: var(--black);
         font-weight: 800;
         letter-spacing: -2%;
+
+        @media (max-width: 475px) {
+            font-size: 20px;
+        }
     }
 }
