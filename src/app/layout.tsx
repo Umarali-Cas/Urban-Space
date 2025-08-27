@@ -28,7 +28,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable}`}>
         <Header />
+<<<<<<< HEAD
         <Providers>{children}</Providers>
+=======
+        <main>{children}</main>
+>>>>>>> 4f1a6fcbc4a2a699a47af26e209f2d829d051c4f
         <Footer />
       </body>
     </html>

@@ -1,14 +1,7 @@
 import Image from 'next/image'
 import classes from './ArticlesCard.module.scss'
 import avatar from '../assets/UserImage.jpg'
-
-interface ArticlesCardProps {
-  userName: string
-  role: string
-  articleName: string
-  article: string
-  avatarUrl?: string
-}
+import { ArticlesCardProps } from '../types/type'
 
 export function ArticlesCard({
   role,

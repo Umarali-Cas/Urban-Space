@@ -1,6 +1,13 @@
 @use './reset.scss';
 @use './variable.scss';
 
+@import "leaflet/dist/leaflet.css";
+
 *{
     font-family: var(--font-family);
+}
+
+main{
+    padding: 120px 0 0 0;
+    margin: 0 auto;
 }
