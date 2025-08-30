@@ -37,20 +37,9 @@
   }
 }
 
-// .customIcon {
-//   position: relative;
-//   background: #008F00;
-//   padding: 6px !important;
-//   border-radius: 50%;
-
-//   box-shadow:
-//   0 0 0 6px rgba(0, 143, 0, 0.2), /* полупрозрачная рамка */
-//   0 4px 10px rgba(0, 0, 0, 0.1);
-// }
-
 .customIcon {
   margin-top: -14px !important;
-  margin-left: -13px !important;
+  margin-left: -13.5px !important;
 }
 
 .mapSection {
@@ -100,5 +89,12 @@
         font-size: 14px !important;
       }
     }
+  }
+}
+
+.customPolygon{
+  &:hover {
+    fill: #00000050;
+    stroke: #00000050;
   }
 }

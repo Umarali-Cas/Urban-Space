@@ -1,0 +1,58 @@
+.articlesPage {
+  padding: 80px 64px 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  @media (max-width: 1250px) {
+    padding: 80px 32px 40px;
+  }
+
+    @media (max-width: 768px) {
+    padding: 80px 16px 40px;
+  }
+  
+  &__title {
+    font-size: 48px;
+    color: var(--black);
+    font-weight: 700;
+    letter-spacing: -2%;
+    line-height: 120%;
+
+    @media (max-width: 1250px) {
+      font-size: 40px;
+    }
+    @media (max-width: 768px) {
+      font-size: 32px;
+    }
+  }
+
+  &__description {
+    font-size: 24px;
+    color: var(--black);
+    font-weight: 400;
+    margin: 16px 0 48px;
+    line-height: 140%;
+  }
+
+  &__cardsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+    gap: 32px;
+
+    *{
+        color: var(--black);
+    }
+
+    @media (max-width: 1100px) {
+      grid-template-columns: repeat(2, auto);
+      justify-content: space-around;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, auto);
+      justify-content: center;
+    }
+  }
+}

@@ -4,13 +4,14 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
   Polygon,
   CircleMarker,
 } from 'react-leaflet'
 import L from 'leaflet'
 import classes from './CustomMap.module.scss'
 import mapIcon from '../assets/icons/map.svg'
+import React, { useEffect } from 'react'
+import { useMap } from 'react-leaflet'
 
 interface MarkerType {
   pos: [number, number]
@@ -26,7 +27,6 @@ interface PolygonOptions {
   title: string
 }
 
-// Функция для создания SVG-иконки
 const createSvgIcon = (iconUrl: string): L.Icon => {
   return new L.Icon({
     iconUrl: iconUrl,
@@ -71,6 +71,16 @@ export default function MapClient() {
     title: 'Зеленая Зона',
   }
 
+  function ResizeHandler() {
+    const map = useMap()
+
+    useEffect(() => {
+      map.invalidateSize()
+    }, [map])
+
+    return null
+  }
+
   return (
     <MapContainer
       center={[41.47522939797829, 74.61934986021016]}
@@ -78,11 +88,11 @@ export default function MapClient() {
       className={classes.mapContainer}
       attributionControl={false}
     >
+      <ResizeHandler />
       <TileLayer url="http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
 
       {markers.map((marker, index) => (
-        <>
-          {/* Круг с заливкой и полупрозрачной обводкой */}
+        <React.Fragment key={`marker-${index}`}>
           <CircleMarker
             key={`circle-${index}`}
             center={marker.pos}
@@ -96,27 +106,35 @@ export default function MapClient() {
             className={classes.customCircle}
           />
 
-          {/* SVG-иконка поверх круга */}
           <Marker
             key={`icon-${index}`}
             position={marker.pos}
             icon={createSvgIcon(mapIcon.src)}
-            eventHandlers={{ click: () => { console.log(`${marker.title} clicked`) } }}
+            eventHandlers={{
+              click: () => {
+                alert(marker.title)
+              },
+            }}
           >
-            <Popup key={`popup-${index}`}>{marker.title}</Popup>
+            {/* <Popup key={`popup-${index}`}>{marker.title}</Popup> */}
           </Marker>
-        </>
+        </React.Fragment>
       ))}
 
       <Polygon
+        className={classes.customPolygon}
         positions={polygon.coordinates}
         pathOptions={{
           color: polygon.color,
           fillColor: polygon.fillColor,
           fillOpacity: 0.3,
         }}
+        eventHandlers={{
+          click: () => {
+            alert(polygon.title)
+          },
+        }}
       >
-        <Popup>{polygon.title}</Popup>
       </Polygon>
     </MapContainer>
   )
