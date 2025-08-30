@@ -11,15 +11,16 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "leaflet": "^1.9.4",
     "next": "15.4.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-leaflet": "^5.0.0",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "leaflet": "^1.9.4",
-    "react-leaflet": "^5.0.0",
     "sass": "^1.89.2",
+    "sharp": "^0.34.3",
     "swiper": "^11.2.10"
   },
   "devDependencies": {
