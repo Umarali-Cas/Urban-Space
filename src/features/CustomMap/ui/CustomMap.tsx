@@ -12,11 +12,11 @@ export default function CustomMap() {
     <div className={classes.mapSection}>
       <div className={classes.mapSection__container}>
         <DropDown />
-        <Button text='Проблемы' className={classes.mapSection__container__problems}/>
-        <Button text='Предложения' className={classes.mapSection__container__suggestions}/>
-        <Button text='Реализованные прокты' className={classes.mapSection__container__projects}/>
+        <Button key={1} text='Проблемы' className={classes.mapSection__container__problems}/>
+        <Button key={2} text='Предложения' className={classes.mapSection__container__suggestions}/>
+        <Button key={3} text='Реализованные прокты' className={classes.mapSection__container__projects}/>
       </div>
-      <MapClient />
+      <MapClient key={1}/>
     </div>
   )
 }

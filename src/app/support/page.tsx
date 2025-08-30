@@ -1,7 +1,9 @@
+import { GiveIdea } from "@/entities/GiveIdea";
+
 export default function Support() {
   return (
     <>
-      <h1>Support Page</h1>
+      <GiveIdea />
     </>
   )
 }

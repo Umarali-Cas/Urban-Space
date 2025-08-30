@@ -1,7 +1,10 @@
+'use client'
+
 import { IdeaCard } from '@/entities/IdeaCard'
 import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
 import testImage from '../assets/images/testDog.png'
+import { useState } from 'react'
 
 const ideas = [
   {
@@ -82,7 +85,9 @@ export function LastIdeas({
   subtitle,
   viewCards = 3,
 }: LastIdeasProps) {
-  const visibleIdeas = ideas.slice(0, viewCards)
+  const [visibleCount, setVisibleCount] = useState(viewCards)
+
+  const visibleIdeas = ideas.slice(0, visibleCount)
   return (
     <section className={classes.lastIdeas}>
       <h1 className={classes.lastIdeas__title}>{title}</h1>
@@ -92,7 +97,7 @@ export function LastIdeas({
           <IdeaCard key={index} {...idea} />
         ))}
       </div>
-      <button className={classes.lastIdeas__button}>Показать еще</button>
+      <button className={classes.lastIdeas__button} onClick={() =>  setVisibleCount((prev) => prev + 6)}>Показать еще</button>
     </section>
   )
 }
