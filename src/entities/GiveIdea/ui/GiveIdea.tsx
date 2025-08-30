@@ -1,10 +1,13 @@
 'use client'
 
+// import { IdeaForm } from '@/features/IdeaForm/ui/IdeaForm'
 import classes from './GiveIdea.module.scss'
+// import { SupportUs } from '@/features/SupportUs/ui/SupportUs'
 import dynamic from 'next/dynamic'
 
 const IdeaForm = dynamic(() =>
-  import('@/features/IdeaForm/ui/IdeaForm').then((mod) => mod.IdeaForm)
+  import('@/features/IdeaForm/ui/IdeaForm').then((mod) => mod.IdeaForm),
+  { ssr: false }
 )
 
 const SupportUs = dynamic(() =>

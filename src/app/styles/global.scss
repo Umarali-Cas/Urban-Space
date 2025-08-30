@@ -11,3 +11,11 @@ main{
     padding: 120px 0 0 0;
     margin: 0 auto;
 }
+
+input[type=password]::-ms-reveal {
+  display: none;
+}
+
+input[type=password]::-webkit-textfield-decoration-container {
+  display: none;
+}

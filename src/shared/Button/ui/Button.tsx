@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes } from 'react';
 import classes from './Button.module.scss';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text: string;
+  text?: string | React.ReactNode
   className?: string;
 }
 

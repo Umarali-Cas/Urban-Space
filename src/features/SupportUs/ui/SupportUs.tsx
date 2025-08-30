@@ -24,17 +24,17 @@ export function SupportUs() {
     <form className={classes.supportUs} onSubmit={handleSubmit}>
       <label>
         ФИО
-        <input type="text" name="fullname" placeholder="Введите ваше ФИО" required />
+        <input className={classes.supportUs__input}  type="text" name="fullname" placeholder="Введите ваше ФИО" required />
       </label>
 
       <label>
         Email
-        <input type="email" name="email" placeholder="Введите вашу почту" required />
+        <input className={classes.supportUs__input} type="email" name="email" placeholder="Введите вашу почту" required />
       </label>
 
       <label>
         Номер телефона
-        <input type="tel" name="phone" placeholder="+996(xxx)_____" required />
+        <input className={classes.supportUs__input} type="tel" name="phone" placeholder="+996(xxx)_____" required />
       </label>
 
       <label>

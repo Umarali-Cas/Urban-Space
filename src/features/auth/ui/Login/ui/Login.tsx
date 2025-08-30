@@ -46,8 +46,23 @@ export const LoginW = () => {
       const result = await login({ email, password }).unwrap();
       dispatch(setCredentials(result));
       router.push('/');
-    } catch (err: any) {
-      setError(err?.data?.message || 'Ошибка авторизации');
+    } catch (err: unknown) {
+      interface LoginError {
+        data?: {
+          message?: string;
+        };
+      }
+
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'data' in err &&
+        typeof (err as LoginError).data?.message === 'string'
+      ) {
+        setError((err as LoginError).data!.message!);
+      } else {
+        setError('Ошибка авторизации');
+      }
       setIsModalOpen(true);
     }
   };

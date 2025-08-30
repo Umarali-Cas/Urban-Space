@@ -30,12 +30,22 @@ export const RegisterW = () => {
   const [error, setError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false) // Добавляем для модалки
 
-  const [formData, setFormData] = useState({
+  type FormDataType = {
+    username: string
+    region: string
+    email: string
+    phone_number: string
+    avatar: File | null
+    password: string
+    checkPassword: string
+  }
+
+  const [formData, setFormData] = useState<FormDataType>({
     username: '',
     region: '',
     email: '',
     phone_number: '',
-    avatar: null as File | null,
+    avatar: null,
     password: '',
     checkPassword: '',
   })
@@ -90,7 +100,9 @@ export const RegisterW = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value, files } = e.target as any
+    const target = e.target as HTMLInputElement | HTMLSelectElement
+    const { name, value } = target
+    const files = (target as HTMLInputElement).files
     setFormData({
       ...formData,
       [name]: files ? files[0] : value,
@@ -157,8 +169,17 @@ export const RegisterW = () => {
       }
 
       router.push('/')
-    } catch (err: any) {
-      setError(err?.data?.message || 'Ошибка регистрации')
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'data' in err &&
+        typeof (err as { data?: { message?: string } }).data?.message === 'string'
+      ) {
+        setError((err as { data: { message: string } }).data.message)
+      } else {
+        setError('Ошибка регистрации')
+      }
       setIsModalOpen(true)
     }
   }
@@ -195,7 +216,7 @@ export const RegisterW = () => {
                 type="file"
                 name={field.name}
                 accept="image/jpeg,image/png,image/webp"
-                onChange={handleChange}
+              value={formData[field.name as keyof FormDataType] as string}
                 hidden
               />
             </label>
@@ -205,7 +226,7 @@ export const RegisterW = () => {
               type={field.type}
               className={cls.input}
               name={field.name}
-              value={(formData as any)[field.name]}
+              value={formData[field.name as keyof FormDataType] as string}
               onChange={handleChange}
             />
           )}
