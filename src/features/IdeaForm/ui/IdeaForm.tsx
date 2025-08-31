@@ -108,7 +108,7 @@ export function IdeaForm() {
             attributionControl={false}
           >
             <ResizeHandler />
-            <TileLayer url="http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
+            <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
             <LocationPicker onSelect={(lat, lng) => setCoords({ lat, lng })} />
           </MapContainer>
         </div>

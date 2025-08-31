@@ -89,7 +89,7 @@ export default function MapClient() {
       attributionControl={false}
     >
       <ResizeHandler />
-      <TileLayer url="http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
+      <TileLayer url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png" />
 
       {markers.map((marker, index) => (
         <React.Fragment key={`marker-${index}`}>
