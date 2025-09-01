@@ -2,17 +2,21 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { authApi } from '@/features/auth/api/authApi'
-import authReducer from '@/features/auth/lib/authSlice';
+import authReducer from '@/features/auth/lib/authSlice'
+import { articlesApi } from '@/widgets/Articles/api/articlesApi'
+import { IdeasApi } from '@/widgets/LastIdeas/api/IdeasApi'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
+  [articlesApi.reducerPath]: articlesApi.reducer,
+  [IdeasApi.reducerPath]: IdeasApi.reducer,
 })
 
 const persistConfig = {
   key: 'root',
   storage,
-  blacklist: [authApi.reducerPath],
+  blacklist: [authApi.reducerPath, articlesApi.reducerPath, IdeasApi.reducerPath],
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -22,7 +26,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(authApi.middleware),
+    }).concat(authApi.middleware, articlesApi.middleware, IdeasApi.middleware),
 })
 
 export const storePersisted = persistStore(store)

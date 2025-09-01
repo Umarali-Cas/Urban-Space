@@ -30,6 +30,8 @@ export function Articles() {
     />,
   ]
 
+  
+
   const duplicatedCards = [...cards, ...cards, ...cards, ...cards]
 
   // В будущем можно будет заменить на логику получения данных из API
