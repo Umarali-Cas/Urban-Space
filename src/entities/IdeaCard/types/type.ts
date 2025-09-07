@@ -9,4 +9,6 @@ export interface IdeaCardProps {
     link: string
     imageUrl?: string | StaticImageData
     avatarUrl?: string | StaticImageData
+    uniqueId: number | string
+    slug: string
   }

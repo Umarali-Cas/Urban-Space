@@ -29,7 +29,7 @@ export function BurgerMenu() {
       <ul className={classes.burgerMenu__list} style={{ height: isOpen ? "auto" : "0", transition: "height 0.3s ease" }}>
         {BurgerMenuItems.map((item) => (
           <li className={classes.burgerMenu__list__item} key={item.href}>
-            <Link className={classes.burgerMenu__list__item__link} href={item.href}>{item.title}</Link>
+            <Link className={classes.burgerMenu__list__item__link} href={item.href} prefetch>{item.title}</Link>
           </li>
         ))}
       </ul>

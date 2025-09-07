@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import classes from './Hero.module.scss'
-import poster from '../assets/images/Lightbox Poster.png' 
+import poster from '../assets/images/Lightbox Poster.png'
 
 export function Hero() {
   return (
@@ -12,7 +12,7 @@ export function Hero() {
             <span className={classes.hero__box__border__dot}></span>
             <span className={classes.hero__box__border__dot}></span>
         </div>
-        <Image src={poster} alt='hero-image' className={classes.hero__box__image}/>
+        <Image src={poster} alt='hero-image' className={classes.hero__box__image} loading='lazy'/>
       </div>
     </section>
   )

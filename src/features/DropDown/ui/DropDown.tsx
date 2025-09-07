@@ -9,8 +9,8 @@ const date = [
 ]
 
 export function DropDown() {
-  const [selected, setSelected] = useState<number>(date[0]) // выбранный год
-  const [open, setOpen] = useState(false) // открыт/закрыт список
+  const [selected, setSelected] = useState<number>(date[0])
+  const [open, setOpen] = useState(false)
 
   return (
     <div className={classes.dropDown}>
@@ -23,22 +23,24 @@ export function DropDown() {
       </button>
 
       {/* Список */}
-      {open && (
-        <ul className={classes.dropDown__list}>
-          {date.map(item => (
-            <li
-              key={item}
-              className={classes.dropDown__list__item}
-              onClick={() => {
-                setSelected(item)
-                setOpen(false)
-              }}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul
+        className={`${classes.dropDown__list} ${
+          open ? classes.open : classes.closed
+        }`}
+      >
+        {date.map(item => (
+          <li
+            key={item}
+            className={classes.dropDown__list__item}
+            onClick={() => {
+              setSelected(item)
+              setOpen(false)
+            }}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }

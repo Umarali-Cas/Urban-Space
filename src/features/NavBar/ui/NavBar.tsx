@@ -6,7 +6,7 @@ export function NavBar() {
   return (
     <nav className={classes.navbar}>
       {NavBarTitles.map(item => (
-        <Link href={item.href} key={item.title} className={classes.navbar__link}> 
+        <Link href={item.href} key={item.title} className={classes.navbar__link} prefetch> 
             {item.title}
         </Link>
       ))}
