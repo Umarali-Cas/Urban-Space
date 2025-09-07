@@ -4,11 +4,12 @@ import { IdeaCard } from '@/entities/IdeaCard'
 import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
 import { useState } from 'react'
-import { useGetIdeasQuery } from '../api/IdeasApi'
+import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 
 export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
-  const [offset, setOffset] = useState(0)
+  const [page, setPage] = useState(1)
   const limit = viewCards
+  const offset = (page - 1) * limit
 
   const {
     data: ideas = [],
@@ -19,9 +20,13 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
     offset,
   })
 
-  const handleLoadMore = () => {
-    setOffset(prev => prev + limit)
-  }
+  const { data: totalCount } = useGetTotalCountQuery()
+
+  console.log(ideas.map(idea => idea.id))
+  console.log(totalCount)
+
+  const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
+  // const totalPages = 5;
 
   return (
     <section className={classes.lastIdeas}>
@@ -52,16 +57,35 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
           </p>
         ) : (
           ideas.map((idea, index) => (
-            <IdeaCard key={idea.id ?? index} {...idea} />
+            <IdeaCard
+              slug={idea.slug || ''}
+              uniqueId={idea.id}
+              key={idea.id ?? index}
+              date={idea.created_at || ''}
+              likes={idea.likes_count || 0}
+              link={idea.link || ''}
+              subtitle={idea.description_md || ''}
+              title={idea.title || ''}
+              userName={idea.author_name}
+              avatarUrl={idea.author_avatar}
+              imageUrl={idea.media?.[0]?.meta?.url}
+            />
           ))
         )}
       </div>
 
-      {ideas.length === limit && (
-        <button className={classes.lastIdeas__button} onClick={handleLoadMore}>
-          Показать еще
-        </button>
-      )}
+      {/* 🔢 Пагинация */}
+      <div className={classes.pagination}>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
+          <button
+            key={num}
+            onClick={() => setPage(num)}
+            className={`${classes.pageButton} ${page === num ? classes.active : ''}`}
+          >
+            {num}
+          </button>
+        ))}
+      </div>
     </section>
   )
 }

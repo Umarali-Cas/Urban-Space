@@ -4,6 +4,7 @@ import './styles/global.scss'
 import { Header } from '@/widgets/Header'
 import { Footer } from '@/widgets/Footer'
 import { Providers } from '@/app/providers'
+import { Loader } from '@/entities/Loader'
 
 const inter = Inter({
   variable: '--font-family',
@@ -30,6 +31,7 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body className={`${inter.variable}`}>
+        <Loader />
         <Header />
         <Providers>
           <main>{children}</main>

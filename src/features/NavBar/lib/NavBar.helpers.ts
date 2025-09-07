@@ -12,11 +12,15 @@ export const NavBarTitles = [
         href: '/articles',
     },
     {
-        title: 'Оказать поддержку',
-        href: '/support',
+        title: 'Краудфайдинг',
+        href: '/crowdfunding',
+    },
+    {
+        title: 'Краудсорсинг',
+        href: '/crowdsourcing',
     },
     {
         title: 'Форумы',
         href: '/forums',
-    }
+    },
 ]

@@ -13,10 +13,10 @@ export function Footer() {
       <NavBar />
       <div className={classes.footer__contacts}>
         <Link href={'#'}>
-          <Image src={telegram} alt="telegram" width={24} height={24} />
+          <Image className={classes.footer__icon} src={telegram} alt="telegram" width={24} height={24} />
         </Link>
         <Link href={'#'}>
-          <Image src={instagram} alt="instagram" width={24} height={24} />
+          <Image className={classes.footer__icon} src={instagram} alt="instagram" width={24} height={24} />
         </Link>
       </div>
     </footer>

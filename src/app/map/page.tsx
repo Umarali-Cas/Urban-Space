@@ -1,7 +1,10 @@
+import CustomMap from "@/features/CustomMap/ui/CustomMap";
+import classes from './MapPage.module.scss'
+
 export default function Map() {
   return (
-    <>
-      <h1>Map Page</h1>
-    </>
+    <section className={classes.map}>
+      <CustomMap />
+    </section>
   )
 }

@@ -5,12 +5,16 @@ import { authApi } from '@/features/auth/api/authApi'
 import authReducer from '@/features/auth/lib/authSlice'
 import { articlesApi } from '@/widgets/Articles/api/articlesApi'
 import { IdeasApi } from '@/widgets/LastIdeas/api/IdeasApi'
+import { mapApi } from '@/features/CustomMap/api/mapApi'
+import { getAreasApi } from '@/features/CustomMap/api/getAreasApi'
 
 const rootReducer = combineReducers({
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
   [articlesApi.reducerPath]: articlesApi.reducer,
   [IdeasApi.reducerPath]: IdeasApi.reducer,
+  [mapApi.reducerPath]: mapApi.reducer,
+  [getAreasApi.reducerPath]: getAreasApi.reducer,
 })
 
 const persistConfig = {
@@ -26,7 +30,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(authApi.middleware, articlesApi.middleware, IdeasApi.middleware),
+    }).concat(authApi.middleware, articlesApi.middleware, IdeasApi.middleware, mapApi.middleware, getAreasApi.middleware),
 })
 
 export const storePersisted = persistStore(store)

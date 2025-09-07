@@ -1,6 +1,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  images: {
+domains: ['example.com'], // сюда добавь все внешние хосты картинок
+},
   async rewrites() {
     return [
       {

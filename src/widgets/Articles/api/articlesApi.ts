@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: fetchBaseQuery({
@@ -15,10 +14,19 @@ export const articlesApi = createApi({
     },
   }),
   endpoints: builder => ({
-    getArticles: builder.query<any[], void>({
-      query: () => '/articles',
+    getArticles: builder.query<any[], { limit?: number; offset?: number }>({
+      query: ({ limit = 6, offset = 0 }) => ({
+        url: '/articles',
+        params: { limit, offset },
+      }),
+    }),
+    getArticleBySlug: builder.query<any, string>({
+      query: slug => `/articles/${slug}`,
+    }),
+    getTotalCount: builder.query<number, void>({
+      query: () => '/articles/count',
     }),
   }),
 })
 
-export const { useGetArticlesQuery } = articlesApi
+export const { useGetArticlesQuery, useGetArticleBySlugQuery, useGetTotalCountQuery } = articlesApi

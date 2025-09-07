@@ -1,56 +1,56 @@
+'use client'
+
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import classes from './Articles.module.scss'
-import image from '../assets/Image-1.png'
+import { useGetArticlesQuery } from '@/widgets/Articles/api/articlesApi'
+import Link from 'next/link'
 
 export function Articles() {
-  const cards = [
-    <ArticlesCard
-      key="1"
-      article="Your expectations will fly sky high. I felt like I was soaring."
-      articleName="Название статьи"
-      role="Публицист"
-      userName="Wanda Wingleton"
-      avatarUrl={image.src}
-    />,
-    <ArticlesCard
-      key="2"
-      article="Your expectations will fly sky high. I felt like I was soaring."
-      articleName="Название статьи"
-      role="Публицист"
-      userName="Wanda Wingleton"
-      avatarUrl={''}
-    />,
-    <ArticlesCard
-      key="3"
-      article="Your expectations will fly sky high. I felt like I was soaring."
-      articleName="Название статьи"
-      role="Публицист"
-      userName="Wanda Wingleton"
-      avatarUrl={''}
-    />,
-  ]
+  const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 6 })
 
-  
+  // формируем карточки из статей
+  const cards = articles.map(article => (
+    <Link
+      key={article.id}
+      href={`/articles/${article.slug}`}
+      className={classes.articles__container__content__track__item}
+    >
+      <ArticlesCard
+        key={article.id}
+        article={article.summary || 'Нет описания'}
+        articleName={article.title || 'Без названия'}
+        role={article.tags ?? 'Автор'}
+        userName={article.slug ?? 'Неизвестный'}
+        avatarUrl={article.attachments?.[0]?.url ?? ''}
+      />
+    </Link>
+  ))
 
+  // дублируем для бесконечного скролла
   const duplicatedCards = [...cards, ...cards, ...cards, ...cards]
 
-  // В будущем можно будет заменить на логику получения данных из API
+  if (isLoading)
+    return <p style={{ textAlign: 'center', color: 'gray' }}>Загрузка...</p>
 
   return (
     <section className={classes.articles}>
       <div className={classes.articles__wrapper}>
         <div className={classes.articles__container}>
           <div className={classes.articles__container__titleWrapper}>
-
-          <h1 className={classes.articles__container__title}>Урбан - статьи</h1>
-          <p className={classes.articles__container__subtitle}>
-            Ознакомьтесь с последними новостями
-          </p>
+            <h1 className={classes.articles__container__title}>
+              Урбан - статьи
+            </h1>
+            <p className={classes.articles__container__subtitle}>
+              Ознакомьтесь с последними новостями
+            </p>
           </div>
           <div className={classes.articles__container__content}>
             <div className={classes.articles__container__content__track}>
               {duplicatedCards.map((card, index) => (
-                <div key={`${index}-${card.key}`} className={classes.articles__container__content__track__item}>
+                <div
+                  key={`${index}-${card.key}`}
+                  className={classes.articles__container__content__track__item}
+                >
                   {card}
                 </div>
               ))}

@@ -1,6 +1,6 @@
 import { GiveIdea } from "@/entities/GiveIdea";
 
-export default function Support() {
+export default function crowdsourcing() {
   return (
     <>
       <GiveIdea />
