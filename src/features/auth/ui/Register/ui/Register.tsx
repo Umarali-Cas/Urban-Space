@@ -10,7 +10,6 @@ import eyesIcon from '@/features/auth/assets/eye-icon.svg'
 import closedEyesIcon from '@/features/auth/assets/closed-eye-icon.svg'
 import {
   useRegisterMutation,
-  useUploadAvatarMutation,
 } from '@/features/auth/api/authApi'
 import { useAppDispatch } from '@/shared/hooks/reduxHooks'
 import { setCredentials } from '@/features/auth/lib/authSlice'
@@ -21,21 +20,18 @@ export const RegisterW = () => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [registerUser, { isLoading: isRegisterLoading }] = useRegisterMutation()
-  const [uploadAvatar, { isLoading: isAvatarLoading }] =
-    useUploadAvatarMutation()
 
   const [showPassword, setShowPassword] = useState(false)
   const [showCheckPassword, setShowCheckPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isModalOpen, setIsModalOpen] = useState(false) // Добавляем для модалки
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   type FormDataType = {
     username: string
     region: string
     email: string
     phone_number: string
-    avatar: File | null
     password: string
     checkPassword: string
   }
@@ -45,7 +41,6 @@ export const RegisterW = () => {
     region: '',
     email: '',
     phone_number: '',
-    avatar: null,
     password: '',
     checkPassword: '',
   })
@@ -70,7 +65,6 @@ export const RegisterW = () => {
       placeholder: '+996(xxx)______',
       type: 'tel',
     },
-    { name: 'avatar', label: 'Фото профиля', type: 'file' },
   ]
 
   const kyrgyzCities = [
@@ -100,12 +94,10 @@ export const RegisterW = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const target = e.target as HTMLInputElement | HTMLSelectElement
-    const { name, value } = target
-    const files = (target as HTMLInputElement).files
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value,
+      [name]: value,
     })
   }
 
@@ -149,12 +141,6 @@ export const RegisterW = () => {
       }
       const result = await registerUser(payload).unwrap()
       dispatch(setCredentials(result))
-
-      if (formData.avatar) {
-        const formDataAvatar = new FormData()
-        formDataAvatar.append('file', formData.avatar)
-        await uploadAvatar(formDataAvatar).unwrap()
-      }
 
       if (rememberMe) {
         localStorage.setItem(
@@ -206,20 +192,6 @@ export const RegisterW = () => {
                 </option>
               ))}
             </select>
-          ) : field.type === 'file' ? (
-            <label className={cls.fileInput}>
-              <Image src={userIcon} alt="upload" width={20} height={20} />
-              <span>
-                {formData.avatar ? formData.avatar.name : 'Прикрепите фото'}
-              </span>
-              <input
-                type="file"
-                name={field.name}
-                accept="image/jpeg,image/png,image/webp"
-              value={formData[field.name as keyof FormDataType] as string}
-                hidden
-              />
-            </label>
           ) : (
             <Input
               text={field.placeholder || ''}
@@ -296,11 +268,11 @@ export const RegisterW = () => {
 
         <Button
           text={
-            isRegisterLoading || isAvatarLoading ? 'Загрузка...' : 'Регистрация'
+            isRegisterLoading ? 'Загрузка...' : 'Регистрация'
           }
           className={cls.registerButton}
           onClick={handleSubmit}
-          disabled={isRegisterLoading || isAvatarLoading}
+          disabled={isRegisterLoading}
         />
 
         <Link href="/login">

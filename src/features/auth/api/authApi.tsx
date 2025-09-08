@@ -1,30 +1,42 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { RootState } from '@/app/store/store'
-import { User } from '@/features/auth/lib/authSlice';
+import { User } from '@/features/auth/lib/authSlice'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:5055',
+    baseUrl: 'http://localhost:8000',
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token;
+      const token = (getState() as RootState).auth.token
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set('Authorization', `Bearer ${token}`)
       }
-      return headers;
+      return headers
     },
   }),
-  endpoints: (builder) => ({
-    register: builder.mutation<{ user: User; token: string }, { email: string; password: string; username: string; phone_number?: string; region?: string }>({
-      query: (userData) => ({
+  endpoints: builder => ({
+    register: builder.mutation<
+      { user: User; token: string },
+      {
+        email: string
+        password: string
+        username: string
+        phone_number?: string
+        region?: string
+      }
+    >({
+      query: userData => ({
         url: '/auth/register',
         method: 'POST',
         body: userData,
       }),
     }),
-    login: builder.mutation<{ user: User; token: string }, { email: string; password: string }>({
-      query: (credentials) => ({
-        url: '/auth/authorization',
+    login: builder.mutation<
+      { access_token: string; token_type: string },
+      { email: string; password: string }
+    >({
+      query: credentials => ({
+        url: '/auth/login-body',
         method: 'POST',
         body: credentials,
       }),
@@ -33,7 +45,7 @@ export const authApi = createApi({
       query: () => '/auth/me',
     }),
     updateProfile: builder.mutation<User, Partial<User>>({
-      query: (profileData) => ({
+      query: profileData => ({
         url: '/profile/update-profile',
         method: 'PATCH',
         body: profileData,
@@ -46,14 +58,14 @@ export const authApi = createApi({
       }),
     }),
     uploadAvatar: builder.mutation<{ avatar_url: string }, FormData>({
-      query: (formData) => ({
+      query: formData => ({
         url: '/auth/me/avatar',
         method: 'POST',
         body: formData,
       }),
     }),
   }),
-});
+})
 
 export const {
   useRegisterMutation,
@@ -62,4 +74,4 @@ export const {
   useUpdateProfileMutation,
   useDeleteProfileMutation,
   useUploadAvatarMutation,
-} = authApi;
+} = authApi

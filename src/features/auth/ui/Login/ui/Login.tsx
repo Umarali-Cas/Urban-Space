@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import userIcon from '@/features/auth/assets/user-icon.svg';
 import { Button } from '@/shared/Button';
@@ -18,12 +18,22 @@ export const LoginW = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState<string | null>(null); 
+  const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('authData');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setEmail(parsed.email || '');
+      setPassword(parsed.password || '');
+      setRememberMe(true);
+    }
+  }, []);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -40,16 +50,45 @@ export const LoginW = () => {
       setIsModalOpen(true);
       return;
     }
+
     try {
       setError(null);
       setIsModalOpen(false);
-      const result = await login({ email, password }).unwrap();
-      dispatch(setCredentials(result));
+      const loginResult = await login({ email, password }).unwrap();
+
+      const response = await fetch('http://localhost:8000/auth/me', {
+        headers: {
+          Authorization: `Bearer ${loginResult.access_token}`,
+        },
+      });
+      const userResult = await response.json();
+
+      dispatch(setCredentials({
+        user: userResult,
+        token: loginResult.access_token,
+      }));
+
+      if (rememberMe) {
+        localStorage.setItem(
+          'authData',
+          JSON.stringify({
+            email,
+            password,
+          })
+        );
+      } else {
+        localStorage.removeItem('authData');
+      }
+
       router.push('/');
     } catch (err: unknown) {
       interface LoginError {
         data?: {
-          message?: string;
+          detail?: Array<{
+            loc: string[];
+            msg: string;
+            type: string;
+          }>;
         };
       }
 
@@ -57,9 +96,10 @@ export const LoginW = () => {
         typeof err === 'object' &&
         err !== null &&
         'data' in err &&
-        typeof (err as LoginError).data?.message === 'string'
+        (err as LoginError).data?.detail
       ) {
-        setError((err as LoginError).data!.message!);
+        const errorMsg = (err as LoginError).data!.detail![0].msg;
+        setError(errorMsg);
       } else {
         setError('Ошибка авторизации');
       }
@@ -107,7 +147,12 @@ export const LoginW = () => {
         </div>
 
         <div className={cls.memoryGroup}>
-          <input type="checkbox" className={cls.checkBox} />
+          <input
+            type="checkbox"
+            className={cls.checkBox}
+            checked={rememberMe}
+            onChange={(e) => setRememberMe(e.target.checked)}
+          />
           <p className={cls.rememberMe}>Запомнить меня</p>
         </div>
       </div>
