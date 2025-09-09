@@ -4,6 +4,7 @@
 
 import { useParams } from 'next/navigation'
 import { useGetArticleBySlugQuery } from '@/widgets/Articles/api/articlesApi'
+import { ArticlesInfo } from '@/entities/ArticlesInfo/ui/ArticlesInfo'
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>()
@@ -16,9 +17,7 @@ export default function ArticleDetailPage() {
 
   return (
     <section>
-      <h1>{article.title}</h1>
-      <p>{article.summary}</p>
-      <div dangerouslySetInnerHTML={{ __html: article.content }} />
+      <ArticlesInfo desc={article.summary} title={article.title}/>
     </section>
   )
 }

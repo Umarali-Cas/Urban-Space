@@ -57,9 +57,10 @@
       row-gap: 10px;
       ul {
         display: flex;
-        flex-direction: column;
+        // flex-direction: column;
+        flex-wrap: wrap;
         align-items: flex-start;
-        row-gap: 16px;
+        gap: 16px;
 
         li {
           font-size: 20px;

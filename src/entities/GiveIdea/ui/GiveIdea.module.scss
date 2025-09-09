@@ -40,20 +40,4 @@
       }
     }
   }
-
-  &__support {
-    &__title {
-      font-size: 38px;
-      color: var(--black);
-      font-weight: 700;
-      letter-spacing: -2%;
-      text-align: center;
-      line-height: 120%;
-      margin: 40px 0;
-
-      @media (max-width: 768px) {
-        font-size: 20px;
-      }
-    }
-  }
 }

@@ -18,6 +18,10 @@
     filter: brightness(1.1);
   }
 
+  &:active{
+    transform: scale(0.95);
+  }
+
   @media (max-width: 885px) {
     max-width: 360px;
     padding: 28px;
