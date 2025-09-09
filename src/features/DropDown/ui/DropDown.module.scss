@@ -1,7 +1,7 @@
 .dropDown {
-  width: 100%;
+  width: 50%;
   height: 40px;
-  z-index: 1000;
+  z-index: 2000;
   position: relative; // нужно для абсолютного позиционирования списка
 
   &__button {

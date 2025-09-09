@@ -16,7 +16,7 @@ export default function Home() {
         subtitle="Свежие предложения от участников сообщества"
         viewCards={3}
       />
-      <MapSearch />
+      {/* <MapSearch /> */}
       <News />
       <Articles />
     </>

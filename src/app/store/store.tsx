@@ -1,12 +1,12 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 import { persistStore, persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 import { authApi } from '@/features/auth/api/authApi'
 import authReducer from '@/features/auth/lib/authSlice'
 import { articlesApi } from '@/widgets/Articles/api/articlesApi'
 import { IdeasApi } from '@/widgets/LastIdeas/api/IdeasApi'
 import { mapApi } from '@/features/CustomMap/api/mapApi'
 import { getAreasApi } from '@/features/CustomMap/api/getAreasApi'
+import storage from '../utils/storage'
 
 const rootReducer = combineReducers({
   auth: authReducer,

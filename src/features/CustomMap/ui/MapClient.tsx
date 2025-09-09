@@ -5,7 +5,7 @@ import {
   TileLayer,
   Marker,
   Polygon,
-  CircleMarker,
+  CircleMarker, 
 } from 'react-leaflet'
 import L from 'leaflet'
 import classes from './CustomMap.module.scss'

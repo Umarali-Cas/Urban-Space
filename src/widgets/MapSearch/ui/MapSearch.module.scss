@@ -1,8 +1,7 @@
 .mapSearch{
     display: flex;
     flex-direction: column;
-    // align-items: flex-end;
-    padding: 80px 64px 40px;
+    padding: 40px 64px 40px;
     max-width: 1440px;
     margin: 0 auto;
     row-gap: 24px;
@@ -37,6 +36,12 @@
     &__search{
         display: flex;
         position: relative;
+        column-gap: 20px;
+
+        @media (max-width: 768px) {
+            column-gap: 10px;
+            
+        }
 
         &__icon{
             position: absolute;

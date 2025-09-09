@@ -10,10 +10,6 @@ const IdeaForm = dynamic(() =>
   { ssr: false }
 )
 
-const SupportUs = dynamic(() =>
-  import('@/features/SupportUs/ui/SupportUs').then((mod) => mod.SupportUs)
-)
-
 export function GiveIdea() {
   return (
     <section className={classes.giveIdea}>
@@ -25,10 +21,6 @@ export function GiveIdea() {
         </p>
       </div>
       <IdeaForm />
-      <h1 className={classes.giveIdea__support__title}>
-        Оказать финансовую поддержку
-      </h1>
-      <SupportUs />
     </section>
   )
 }

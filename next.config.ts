@@ -2,16 +2,20 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   images: {
-domains: ['example.com'], // сюда добавь все внешние хосты картинок
-},
+    // добавляй сюда все домены, с которых будут подгружаться картинки
+    domains: ['example.com', 'cdn.yourapp.com'],
+  },
   async rewrites() {
     return [
       {
-        source: "/api/:path*",  // любые запросы с /api/*
-        destination: "http://localhost:8000/:path*", // прокси на backend
+        source: '/api/:path*',
+        destination: 'http://localhost:8000/:path*',
       },
     ]
   },
+  // Рекомендуется для продакшна
+  output: 'standalone',
+  reactStrictMode: true,
 }
 
 export default nextConfig

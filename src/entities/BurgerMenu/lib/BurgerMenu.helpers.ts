@@ -1,10 +1,10 @@
 export const BurgerMenuItems = [
     {
-        title: 'Эко-карта',
+        title: 'Урбан-карта',
         href: '/map',
     },
     {
-        title: 'Банк идей',
+        title: 'Банк Урбан-идей',
         href: '/ideas',
     },
     {
@@ -12,11 +12,15 @@ export const BurgerMenuItems = [
         href: '/articles',
     },
     {
-        title: 'Оказать поддержку',
-        href: '/support',
+        title: 'Краудфандинг',
+        href: '/crowdfunding',
     },
     {
-        title: 'Форумы',
+        title: 'Краудсорсинг',
+        href: '/crowdsourcing',
+    },
+    {
+        title: 'Форумы/Контакты',
         href: '/forums',
-    }
+    },
 ]

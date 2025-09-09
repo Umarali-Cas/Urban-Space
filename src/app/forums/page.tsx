@@ -1,3 +1,4 @@
+import { ForumCard } from '@/entities/ForumCard/ui/ForumCard'
 import classes from './Forums.module.scss'
 
 const info = {
@@ -6,16 +7,16 @@ const info = {
   address: 'Бишкек , Улица, Дом',
   social: [
     {
-      url: '#',
+      url: '',
+      name: 'канал'
+    },
+    {
+      url: '',
       name: 'Ссылка на канал - "Название канала"'
     },
     {
-      url: '#',
-      name: 'Ссылка на канал - "Название канала"'
-    },
-    {
-      url: '#',
-      name: 'Ссылка на канал - "Название канала"'
+      url: '',
+      name: 'Ссылка на канал - "Название канала по абв и где"'
     },
   ]
 }
@@ -33,11 +34,7 @@ export default function Forums() {
             <p>Наши каналы:</p>
             <ul>
               {info.social.map((item, index) => (
-                <li key={index}>
-                  <a href={item.url} target="_blank" rel="noopener noreferrer">
-                    {item.name}
-                  </a>
-                </li>
+                <ForumCard media={item.url} title={item.name} key={index}/>
               ))}
             </ul>
           </div>

@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic'
 import classes from './MapSearch.module.scss'
 import Image from 'next/image'
 import search from '../assets/icons/search.svg'
+import { DropDown } from '@/features/DropDown'
 
 const CustomMap = dynamic(() => import('@/features/CustomMap/ui/CustomMap'))
 
@@ -16,6 +17,7 @@ export function MapSearch() {
           placeholder="Поиск"
           className={classes.mapSearch__search__input}
         />
+        <DropDown />
       </div>
       <CustomMap />
     </section>
