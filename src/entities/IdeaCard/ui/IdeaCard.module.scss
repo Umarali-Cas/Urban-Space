@@ -6,7 +6,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in-out;
 
-
   &__imageWrapper {
     width: 100%;
     height: 240px;
@@ -104,9 +103,9 @@
         transition: all 0.2s ease-in-out;
         cursor: pointer;
 
-        &:hover{
-            transform: scale(1.05);
-            transition: all 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.05);
+          transition: all 0.2s ease-in-out;
         }
       }
     }
@@ -117,10 +116,17 @@
       line-height: 145%;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.1s ease-in-out;
 
-      &:hover{
+      &:hover {
         text-decoration: underline;
         transform: scale(1.05);
+        transition: all 0.1s ease-in-out;
+      }
+
+      &:active {
+        transform: scale(0.95);
+        color: #146318;
       }
     }
   }

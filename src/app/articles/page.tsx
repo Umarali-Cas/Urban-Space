@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
 'use client'
 
-import { ArticlesCard } from '@/entities/ArticlesCard'
-import classes from './ArticlesPage.module.scss'
-import { useGetArticlesQuery, useGetTotalCountQuery } from '@/widgets/Articles/api/articlesApi'
 import { useState } from 'react'
+import classes from './ArticlesPage.module.scss'
+import { ArticlesCard } from '@/entities/ArticlesCard'
+import {
+  useGetArticlesQuery,
+  useGetTotalCountQuery,
+} from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
+import { DropDown } from '@/features/DropDown'
 
 export default function ArticlesPage() {
   const [page, setPage] = useState(1)
-  const limit = 6 // сколько карточек на страницу
+  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
+
+  const limit = 6
   const offset = (page - 1) * limit
+  const [search, setSearch] = useState('')
 
   const {
     data: articles = [],
@@ -20,45 +26,34 @@ export default function ArticlesPage() {
   } = useGetArticlesQuery({
     limit,
     offset,
+    sort_by: sortBy,
+    search,
   })
 
   const { data: totalCountData } = useGetTotalCountQuery()
 
   const CardsBox = () => {
     if (articles.length === 0) {
-      return (
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'gray',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textWrap: 'nowrap',
-          }}
-        >
-          На данный момент нет статей
-        </p>
-      )
+      return <p className={classes.noArticles}>На данный момент нет статей</p>
     }
     return (
       <>
-{articles.map((article: any) => (
-  <Link
-    key={article.id}
-    href={`/articles/${article.slug}`}
-    className={classes.articles__container__content__track__item}
-  >
-    <ArticlesCard
-      articleName={article.title}
-      article={article.summary}
-      role={article.tags ?? 'Автор'}
-      userName={article.slug ?? 'Неизвестный'}
-      avatarUrl={article.attachments ?? ''}
-    />
-  </Link>
-))}
+        {articles.map((article: any) => (
+          <Link
+            key={article.id}
+            href={`/articles/${article.slug}`}
+            className={classes.articles__container__content__track__item}
+          >
+            <ArticlesCard
+              color={'#000000'}
+              articleName={article.title}
+              article={article.summary}
+              role={article.tags ?? 'Автор'}
+              userName={article.slug ?? 'Неизвестный'}
+              avatarUrl={article.attachments ?? ''}
+            />
+          </Link>
+        ))}
       </>
     )
   }
@@ -69,21 +64,34 @@ export default function ArticlesPage() {
       <p className={classes.articlesPage__description}>
         Ознакомьтесь с последними статьями
       </p>
+
+      {/* Сортировка */}
+      <div className={classes.sorting}>
+        <input
+          type="text"
+          className={classes.sorting__input}
+          placeholder="Поиск статей..."
+          value={search}
+          onChange={e => {
+            setPage(1) // сбрасываем на первую страницу
+            setSearch(e.target.value)
+          }}
+        />
+        <DropDown
+          arr={['Новые', 'Популярные', 'Активные']}
+          onSelect={val => {
+            setPage(1) // сбрасываем на первую страницу
+            setSortBy(val as 'new' | 'popular' | 'active')
+          }}
+          className={classes.sorting__dropdown}
+        />
+      </div>
+
       <div className={classes.articlesPage__cardsContainer}>
-        {isLoading || error ? (
-          <p
-            style={{
-              textAlign: 'center',
-              color: 'gray',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              textWrap: 'nowrap',
-            }}
-          >
-            Загрузка...
-          </p>
+        {isLoading ? (
+          <p className={classes.loading}>Загрузка...</p>
+        ) : error ? (
+          <p className={classes.error}>Статей нет</p>
         ) : (
           <CardsBox />
         )}
@@ -91,7 +99,10 @@ export default function ArticlesPage() {
 
       {/* Пагинация */}
       <div className={classes.pagination}>
-        {Array.from({ length: totalCountData ?? 0 }, (_, i) => i + 1).map(p => (
+        {Array.from(
+          { length: Math.ceil((totalCountData ?? 0) / limit) },
+          (_, i) => i + 1
+        ).map(p => (
           <button
             key={p}
             onClick={() => setPage(p)}

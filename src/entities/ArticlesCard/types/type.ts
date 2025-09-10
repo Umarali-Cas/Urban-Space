@@ -1,4 +1,5 @@
 export interface ArticlesCardProps {
+    color: string
     userName: string
     role: string
     articleName: string

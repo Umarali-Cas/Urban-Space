@@ -14,19 +14,52 @@ export const articlesApi = createApi({
     },
   }),
   endpoints: builder => ({
-    getArticles: builder.query<any[], { limit?: number; offset?: number }>({
-      query: ({ limit = 6, offset = 0 }) => ({
+    getArticles: builder.query<
+      any[],
+      {
+        limit?: number
+        offset?: number
+        sort_by?: 'new' | 'popular' | 'active'
+        search?: string
+        category?: string
+        author_id?: string
+        status?: string
+      }
+    >({
+      query: ({
+        limit = 6,
+        offset = 0,
+        sort_by = 'new',
+        search,
+        category,
+        author_id,
+        status,
+      }) => ({
         url: '/articles',
-        params: { limit, offset },
+        params: {
+          limit,
+          offset,
+          sort_by,
+          search,
+          category,
+          author_id,
+          status,
+        },
       }),
     }),
+
     getArticleBySlug: builder.query<any, string>({
       query: slug => `/articles/${slug}`,
     }),
+
     getTotalCount: builder.query<number, void>({
       query: () => '/articles/count',
     }),
   }),
 })
 
-export const { useGetArticlesQuery, useGetArticleBySlugQuery, useGetTotalCountQuery } = articlesApi
+export const {
+  useGetArticlesQuery,
+  useGetArticleBySlugQuery,
+  useGetTotalCountQuery,
+} = articlesApi
