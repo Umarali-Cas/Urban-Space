@@ -16,8 +16,8 @@ export default function ArticleDetailPage() {
   if (error || !article) return <p>Статья не найдена</p>
 
   return (
-    <section>
+    <>
       <ArticlesInfo desc={article.summary} title={article.title}/>
-    </section>
+    </>
   )
 }

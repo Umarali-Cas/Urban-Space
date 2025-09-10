@@ -16,6 +16,7 @@ export function Articles() {
       className={classes.articles__container__content__track__item}
     >
       <ArticlesCard
+        color={"#ffffff"}
         key={article.id}
         article={article.summary || 'Нет описания'}
         articleName={article.title || 'Без названия'}

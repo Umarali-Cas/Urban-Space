@@ -89,3 +89,31 @@
   background: var(--green); // фиолетовый акцент
   color: white;
 }
+
+.sorting {
+  margin: 40px 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    
+  }
+
+  &__dropdown {
+    max-width: 300px !important;
+  }
+
+  &__input {
+    max-width: 500px;
+    width: 100%;
+    background: #f3f4f9;
+    border: 2px solid #e6e6e6;
+    border-radius: 8px;
+    padding-left: 15px;
+    height: 40px;
+    color: #000000;
+    font-weight: 600;
+  }
+}
