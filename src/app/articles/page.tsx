@@ -10,6 +10,7 @@ import {
 } from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
 import { DropDown } from '@/features/DropDown'
+import Image from 'next/image'
 
 export default function ArticlesPage() {
   const [page, setPage] = useState(1)
@@ -34,7 +35,12 @@ export default function ArticlesPage() {
 
   const CardsBox = () => {
     if (articles.length === 0) {
-      return <p className={classes.noArticles}>На данный момент нет статей</p>
+      return (
+        <div className={classes.noArticles}>
+          <Image src="/nothing.svg" alt="404" width={600} height={400} />
+          <p>Статья не найдена</p>
+        </div>
+      )
     }
     return (
       <>
@@ -91,7 +97,19 @@ export default function ArticlesPage() {
         {isLoading ? (
           <p className={classes.loading}>Загрузка...</p>
         ) : error ? (
-          <p className={classes.error}>Статей нет</p>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              marginTop: '20px',
+            }}
+            className={classes.noArticles}
+          >
+            <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>Статьи не найдены</p>
+          </div>
         ) : (
           <CardsBox />
         )}
