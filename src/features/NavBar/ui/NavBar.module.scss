@@ -1,0 +1,32 @@
+.navbar {
+  display: flex;
+  align-items: center;
+  column-gap: 32px;
+  
+  @media (max-width: 1400px) {
+    column-gap: 23px; 
+  }
+  
+  @media (max-width: 1300px) {
+    display: none;
+  }
+
+  &__link {
+    color: var(--black);
+    font-size: 16px;
+    line-height: 145%;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+    transition: all 0.2s ease-in-out;
+    text-wrap: nowrap;
+
+    &:hover {
+        transform: scale(1.05);
+        color: #008F00;
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+}

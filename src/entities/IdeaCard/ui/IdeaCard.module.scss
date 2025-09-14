@@ -1,0 +1,133 @@
+.ideaCard {
+  max-width: 420px;
+  width: 100%;
+  border: 2px solid #00000015;
+  border-radius: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease-in-out;
+
+  &__imageWrapper {
+    width: 100%;
+    height: 240px;
+    background: rgb(132, 132, 132);
+    border-radius: 14px 14px 0 0;
+    overflow: hidden;
+  }
+
+  &__image {
+    width: 100%;
+    height: 240px;
+    background: rgb(132, 132, 132);
+    border-radius: 14px 14px 0 0;
+    object-fit: cover;
+  }
+
+  &__content {
+    padding: 24px;
+
+    @media (max-width: 1250px) {
+      padding: 16px;
+    }
+  }
+
+  &__title {
+    font-size: 24px;
+    color: var(--black);
+    font-weight: 600;
+    line-height: 145%;
+    letter-spacing: -2%;
+    min-height: 70px;
+
+    @media (max-width: 1250px) {
+      font-size: 20px;
+    }
+  }
+
+  &__subtitle {
+    font-size: 16px;
+    color: #354052;
+    font-weight: 400;
+    min-height: 66px;
+    margin-top: 8px;
+    letter-spacing: -0.5%;
+    line-height: 140%;
+  }
+
+  &__box {
+    display: flex;
+    justify-content: space-between;
+    height: 30px;
+    align-items: center;
+    margin: 8px 0 32px;
+
+    &__profile {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+
+      &__avatar {
+        width: 31px;
+        height: 31px;
+        background: rgb(124, 124, 124);
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      &__name {
+        font-size: 14px;
+        color: #7a8894;
+        font-weight: 400;
+        line-height: 140%;
+      }
+    }
+  }
+
+  &__tags {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__likes {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+
+      &__count {
+        font-size: 18px;
+        color: #f20505;
+      }
+
+      &__icon {
+        width: 24px;
+        height: 24px;
+        transition: all 0.2s ease-in-out;
+        cursor: pointer;
+
+        &:hover {
+          transform: scale(1.05);
+          transition: all 0.2s ease-in-out;
+        }
+      }
+    }
+
+    &__link {
+      font-size: 18px;
+      color: #000000;
+      line-height: 145%;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.1s ease-in-out;
+
+      &:hover {
+        text-decoration: underline;
+        transform: scale(1.05);
+        transition: all 0.1s ease-in-out;
+      }
+
+      &:active {
+        transform: scale(0.95);
+        color: #146318;
+      }
+    }
+  }
+}

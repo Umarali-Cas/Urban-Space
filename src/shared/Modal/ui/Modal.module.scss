@@ -1,0 +1,38 @@
+// Modal.module.scss
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modalContent {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  max-width: 400px;
+  width: 100%;
+}
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: 16px;
+}
+.modalMessage {
+  color: #4b5563;
+  margin-bottom: 24px;
+}
+.modalButton {
+  width: 100%;
+  background: #ef4444;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+.modalButton:hover {
+  background: #dc2626;
+}

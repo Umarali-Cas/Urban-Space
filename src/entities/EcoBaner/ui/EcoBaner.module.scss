@@ -1,0 +1,56 @@
+.ecoBaner{
+    width: 100%;
+    display: flex;
+    background: var(--lightGreen);
+    align-items: center;
+    justify-content: center;
+    height: 140px;
+    padding: 0 50px;
+
+    @media (max-width: 1000px) {
+        flex-direction: column;
+        height: auto;
+        padding: 8 16px 16px;
+        row-gap: 16px;
+    }
+
+    &__title{
+        font-size: 28px;
+        color: var(--white);
+        font-weight: 600;
+        text-wrap: nowrap;
+        line-height: 120%;
+
+        @media (max-width: 1000px) {
+            text-align: center;
+            font-size: 24px;
+        }
+    }
+
+    &__hand{
+        margin-right: 16px;
+    }
+
+    &__line{
+        width: 2px;
+        height: 68px;
+        background: var(--white);
+        margin: 0 16px 0 48px;
+
+        @media (max-width: 1000px) {
+            width: 85%;
+            height: 2px;
+        }
+    }
+
+    &__text{
+        font-size: 16px;
+        max-width: 700px;
+        line-height: 132%;
+        color: var(--white);
+
+        @media (max-width: 1000px) {
+            text-align: center;
+        }
+    }
+}

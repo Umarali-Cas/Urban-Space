@@ -1,0 +1,1 @@
+export { EcoBaner } from './EcoBaner'

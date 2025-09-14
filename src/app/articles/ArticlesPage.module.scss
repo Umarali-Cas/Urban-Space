@@ -1,0 +1,119 @@
+.articlesPage {
+  padding: 80px 64px 40px;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  @media (max-width: 1250px) {
+    padding: 80px 32px 40px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 80px 16px 40px;
+  }
+
+  &__title {
+    font-size: 48px;
+    color: var(--black);
+    font-weight: 700;
+    letter-spacing: -2%;
+    line-height: 120%;
+
+    @media (max-width: 1250px) {
+      font-size: 40px;
+    }
+    @media (max-width: 768px) {
+      font-size: 32px;
+    }
+  }
+
+  &__description {
+    font-size: 24px;
+    color: var(--black);
+    font-weight: 400;
+    margin: 16px 0 48px;
+    line-height: 140%;
+  }
+
+  &__cardsContainer {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    justify-content: space-between;
+    gap: 32px;
+    position: relative;
+
+    @media (max-width: 1400px) {
+      gap: 16px;
+    }
+
+    * {
+      color: var(--black);
+    }
+
+    @media (max-width: 1350px) {
+      grid-template-columns: repeat(2, auto);
+      justify-content: space-evenly;
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, auto);
+      justify-content: center;
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+
+  &__button {
+    background: #f3f4f9;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      background: #e6e6e6;
+      transition: all 0.2s ease;
+    }
+  }
+}
+
+.active {
+  transform: scale(0.95);
+  background: var(--green); // фиолетовый акцент
+  color: white;
+}
+
+.sorting {
+  margin: 40px 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    
+  }
+
+  &__dropdown {
+    max-width: 300px !important;
+  }
+
+  &__input {
+    max-width: 500px;
+    width: 100%;
+    background: #f3f4f9;
+    border: 2px solid #e6e6e6;
+    border-radius: 8px;
+    padding-left: 15px;
+    height: 40px;
+    color: #000000;
+    font-weight: 600;
+  }
+}
