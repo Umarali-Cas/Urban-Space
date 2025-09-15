@@ -27,7 +27,8 @@ jobs:
       - name: Build & Push Docker image
         run: |
           IMAGE_TAG=${{ github.sha }}
-          docker build -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
+          docker build --build-arg NEXT_PUBLIC_API_BASE_URL="${{ secrets.NEXT_PUBLIC_API_BASE_URL }}" \
+          -t $REGISTRY/$IMAGE_NAME:$IMAGE_TAG .
           docker push $REGISTRY/$IMAGE_NAME:$IMAGE_TAG
           echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
 
@@ -41,5 +42,4 @@ jobs:
           az containerapp update \
             --name $CONTAINERAPP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --image $REGISTRY/$IMAGE_NAME:${{ env.IMAGE_TAG }} \
-            --set-env-vars "NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}"
+            --image $REGISTRY/$IMAGE_NAME:${{ env.IMAGE_TAG }}
