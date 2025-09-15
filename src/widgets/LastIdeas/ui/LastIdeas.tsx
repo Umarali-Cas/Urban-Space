@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { IdeaCard } from '@/entities/IdeaCard'
 import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
 
@@ -23,26 +22,12 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
   })
 
   const { data: totalCount } = useGetTotalCountQuery()
-  const [data, setData] = useState<any>(null)
-  const [warr, setWarr] = useState<string | null>(null)
-
-  useEffect(() => {
-    fetch('https://api.urbanspace.sdinis.org/ideas/')
-      .then(res => res.json())
-      .then(json => setData(json))
-      .catch(err => setWarr(err.message))
-      .finally(() => console.log('finally'))
-  }, [])
 
   const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
   // const totalPages = 5;
 
   return (
     <section className={classes.lastIdeas}>
-      <hr />
-      {error && <p>Ошибка: {warr}</p>}
-      {data ? <p>{JSON.stringify(data, null, 2)}</p> : <p>Загрузка...</p>}
-      <hr />
       <h1 className={classes.lastIdeas__title}>{title}</h1>
       <p className={classes.lastIdeas__subtitle}>{subtitle}</p>
 
