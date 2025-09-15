@@ -24,7 +24,7 @@ export const IdeasApi = createApi({
       query: slug => `/ideas/${slug}/`,
     }),
     getTotalCount: builder.query<number, void>({
-      query: () => '/ideas/count/',
+      query: () => '/ideas/counts',
     })
   }),
 })
