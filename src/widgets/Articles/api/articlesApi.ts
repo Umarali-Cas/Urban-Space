@@ -53,7 +53,7 @@ export const articlesApi = createApi({
     }),
 
     getTotalCount: builder.query<number, void>({
-      query: () => '/articles/count/',
+      query: () => '/articles/counts',
     }),
   }),
 })
