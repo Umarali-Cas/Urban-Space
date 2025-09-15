@@ -5,6 +5,7 @@ import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
 import { useState } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
+import Image from 'next/image'
 
 export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
   const [page, setPage] = useState(1)
@@ -37,7 +38,19 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
         <p style={{ textAlign: 'center', color: 'gray' }}>Загрузка...</p>
       )}
       {error && (
-        <p style={{ textAlign: 'center', color: 'gray' }}>Ошибка загрузки</p>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              width: '100%',
+              marginTop: '20px',
+            }}
+            className={classes.noIdeas}
+          >
+            <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>Идей не найдено</p>
+          </div>
       )}
 
       <div className={classes.lastIdeas__ideas}>

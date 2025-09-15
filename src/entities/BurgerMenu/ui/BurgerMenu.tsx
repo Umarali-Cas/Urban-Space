@@ -19,7 +19,7 @@ export function BurgerMenu() {
   }, []);
   return (
     <>
-      {width !== null && width < 1300 && (
+      {width !== null && width < 1355 && (
         <div className={classes.burgerMenu}>
       <button className={`${classes.burgerMenu__icon} ${isOpen ? classes.burgerMenu__icon__active : ''}`} onClick={() => setIsOpen(!isOpen)}>
         <span className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}></span>

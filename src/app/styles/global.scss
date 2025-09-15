@@ -19,3 +19,13 @@ input[type=password]::-ms-reveal {
 input[type=password]::-webkit-textfield-decoration-container {
   display: none;
 }
+
+.global-image-nothing{
+  width: 600px;
+  height: 400px;
+
+  @media (max-width: 768px) {
+    width: 300px;
+    height: 200px;
+  }
+}

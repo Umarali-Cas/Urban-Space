@@ -11,11 +11,13 @@ const defaultDate = [
 export function DropDown({
   arr,
   onSelect,
-  className
+  className,
+  visibleArrow = true,
 }: {
   arr?: Array<string | number>
   onSelect?: (value: string | number) => void
   className?: string
+  visibleArrow?: boolean
 }) {
   const options = arr && arr.length > 0 ? arr : defaultDate
   const [selected, setSelected] = useState<string | number>(options[0])
@@ -27,7 +29,7 @@ export function DropDown({
         className={classes.dropDown__button}
         onClick={() => setOpen(prev => !prev)}
       >
-        {selected} <span className={classes.arrow}>{open ? '▲' : '▼'}</span>
+        {selected} <span style={{ display: visibleArrow ? 'block' : 'none' }} className={classes.arrow}>{open ? '▲' : '▼'}</span>
       </button>
 
       <ul

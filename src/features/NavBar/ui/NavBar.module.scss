@@ -7,12 +7,12 @@
     column-gap: 23px; 
   }
   
-  @media (max-width: 1300px) {
+  @media (max-width: 1355px) {
     display: none;
   }
 
   &__link {
-    color: var(--black);
+    color: #636363;
     font-size: 16px;
     line-height: 145%;
     font-weight: 500;

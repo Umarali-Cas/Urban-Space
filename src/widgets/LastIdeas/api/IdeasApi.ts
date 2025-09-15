@@ -16,15 +16,15 @@ export const IdeasApi = createApi({
   endpoints: builder => ({
     getIdeas: builder.query<any[], { limit?: number; offset?: number }>({
       query: ({ limit = 6, offset = 0 }) => ({
-        url: '/ideas',
+        url: '/ideas/',
         params: { limit, offset },
       }),
     }),
     getIdeaBySlug: builder.query<any, string>({
-      query: slug => `/ideas/${slug}`,
+      query: slug => `/ideas/${slug}/`,
     }),
     getTotalCount: builder.query<number, void>({
-      query: () => '/ideas/count',
+      query: () => '/ideas/count/',
     })
   }),
 })

@@ -35,7 +35,7 @@ export const articlesApi = createApi({
         author_id,
         status,
       }) => ({
-        url: '/articles',
+        url: '/articles/',
         params: {
           limit,
           offset,
@@ -53,7 +53,7 @@ export const articlesApi = createApi({
     }),
 
     getTotalCount: builder.query<number, void>({
-      query: () => '/articles/count',
+      query: () => '/articles/count/',
     }),
   }),
 })
