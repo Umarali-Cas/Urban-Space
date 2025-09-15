@@ -6,11 +6,14 @@ import { NavBar } from '@/features/NavBar'
 import { Button } from '@/shared/Button'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { DropDown } from '@/features/DropDown'
 
 const BurgerMenu = dynamic(() =>
   import('@/entities/BurgerMenu/ui/BurgerMenu').then((mod) => mod.BurgerMenu),
   { ssr: false }
 )
+
+const languages = ['ru', 'en', 'kg'] 
 
 export function Header() {
   return (
@@ -19,6 +22,7 @@ export function Header() {
         <Logo />
         <NavBar />
         <div className={classes.header__actions}>
+          <DropDown visibleArrow={false} className={classes.header__actions__lang} arr={languages} onSelect={() => console.log('awd')}/>
           <Link href="/login">
             <Button text="Войти" />
           </Link>

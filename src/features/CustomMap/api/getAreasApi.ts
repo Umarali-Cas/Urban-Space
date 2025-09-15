@@ -16,7 +16,7 @@ export const getAreasApi = createApi({
   }),
   endpoints: builder => ({
     getAreas: builder.query<any[], void>({
-      query: () => '/map/areas',
+      query: () => '/map/areas/',
     }),
 }),
 })

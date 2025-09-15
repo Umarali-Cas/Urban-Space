@@ -76,6 +76,24 @@
   }
 }
 
+.articles__container__content__track__empty{
+  width: 95%;
+  margin: 0 auto;
+  border-radius: 8px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &__title{
+    text-align: center;
+    font-size: xx-large;
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
 @keyframes scroll {
   0% {
     transform: translateX(0);
