@@ -41,4 +41,5 @@ jobs:
           az containerapp update \
             --name $CONTAINERAPP_NAME \
             --resource-group $RESOURCE_GROUP \
-            --image $REGISTRY/$IMAGE_NAME:${{ env.IMAGE_TAG }}
+            --image $REGISTRY/$IMAGE_NAME:${{ env.IMAGE_TAG }} \
+            --set-env-vars NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
