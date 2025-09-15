@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const IdeasApi = createApi({
   reducerPath: 'ideasApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.urbanspace.sdinis.org",
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth?.accessToken
       if (token) {
