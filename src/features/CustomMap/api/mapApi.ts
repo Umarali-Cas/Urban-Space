@@ -16,7 +16,7 @@ export const mapApi = createApi({
   }),
   endpoints: builder => ({
     getMap: builder.query<any[], void>({
-      query: () => '/map/places',
+      query: () => '/map/places/',
     }),
 }),
 })

@@ -34,8 +34,17 @@
     column-gap: 24px;
     align-items: center;
 
+    @media (max-width: 1380px) {
+      column-gap: 18px;
+      
+    }
+
     @media (max-width: 1200px) {
       column-gap: 16px;
+    }
+
+    @media (max-width: 475px) {
+      column-gap: 12px;
     }
   }
 }

@@ -45,7 +45,7 @@ export function IdeaCard({
             <Image className={classes.ideaCard__tags__likes__icon} src={heartIcon} alt="heart" width={24} height={24} />
             <span className={classes.ideaCard__tags__likes__count}>{likes}</span>
           </div>
-          <Link className={classes.ideaCard__tags__link} href={`/ideas/${slug}`}>Подробнее</Link>
+          <Link className={classes.ideaCard__tags__link} href={`/ideas/${slug}/`}>Подробнее</Link>
         </div>
       </div>
     </div>

@@ -16,6 +16,7 @@
     padding: 9px 12px;
     font-weight: 700;
     cursor: pointer;
+    transition: all 0.1s ease-in-out;
 
     .arrow {
       display: inline-block;
@@ -24,6 +25,12 @@
 
     &.open .arrow {
       transform: rotate(180deg);
+    }
+
+    &:active {
+      background: #e6e6e6;
+      transform: scale(0.95);
+      transition: all 0.1s ease-in-out;
     }
   }
 
@@ -52,8 +59,9 @@
       border-radius: 8px;
       display: flex;
       justify-content: space-between;
+      text-align: center;
       align-items: center;
-      padding: 9px 12px;
+      padding: 8px 10px;
       font-weight: 700;
       cursor: pointer;
 

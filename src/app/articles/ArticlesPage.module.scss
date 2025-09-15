@@ -1,14 +1,14 @@
 .articlesPage {
-  padding: 80px 64px 40px;
+  padding: 80px 64px 0px;
   max-width: 1440px;
   margin: 0 auto;
 
   @media (max-width: 1250px) {
-    padding: 80px 32px 40px;
+    padding: 80px 32px 0px;
   }
 
   @media (max-width: 768px) {
-    padding: 80px 16px 40px;
+    padding: 80px 16px 0px;
   }
 
   &__title {

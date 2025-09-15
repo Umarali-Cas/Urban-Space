@@ -4,7 +4,6 @@ import { ArticlesCard } from '@/entities/ArticlesCard'
 import classes from './Articles.module.scss'
 import { useGetArticlesQuery } from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
-import Image from 'next/image'
 
 export function Articles() {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 6 })

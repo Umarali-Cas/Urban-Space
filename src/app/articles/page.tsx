@@ -93,9 +93,9 @@ export default function ArticlesPage() {
         />
       </div>
 
-      <div className={classes.articlesPage__cardsContainer}>
+      <div style={articles.length !== 0 ? { justifyContent: 'space-between' } : { justifyContent: 'center' }} className={classes.articlesPage__cardsContainer}>
         {isLoading ? (
-          <p className={classes.loading}>Загрузка...</p>
+          <p style={{ textAlign: 'center', color: 'gray'}} className={classes.loading}>Загрузка...</p>
         ) : error ? (
           <div
             style={{
