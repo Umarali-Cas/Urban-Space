@@ -1,13 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import classes from './ArticlesPage.module.scss'
 import { ArticlesCard } from '@/entities/ArticlesCard'
-import {
-  useGetArticlesQuery,
-  useGetTotalCountQuery,
-} from '@/widgets/Articles/api/articlesApi'
+import { useGetArticlesQuery, useGetTotalCountQuery } from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
 import { DropDown } from '@/features/DropDown'
 import Image from 'next/image'
@@ -15,20 +12,31 @@ import Image from 'next/image'
 export default function ArticlesPage() {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
-
+  const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = 6
   const offset = (page - 1) * limit
-  const [search, setSearch] = useState('')
 
-  const {
-    data: articles = [],
-    isLoading,
-    error,
-  } = useGetArticlesQuery({
+  // debounce для поиска
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+      setPage(1)
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [searchInput])
+
+  const sortOptions = [
+    { label: 'Новые', value: 'new' },
+    { label: 'Популярные', value: 'popular' },
+    { label: 'Активные', value: 'active' },
+  ]
+
+  const { data: articles = [], isLoading, error } = useGetArticlesQuery({
     limit,
     offset,
     sort_by: sortBy,
-    search,
+    search: debouncedSearch,
   })
 
   const { data: totalCountData } = useGetTotalCountQuery()
@@ -48,7 +56,7 @@ export default function ArticlesPage() {
           <Link
             key={article.id}
             href={`/articles/${article.slug}`}
-            className={classes.articles__container__content__track__item}
+            className={classes.articlesPage__cardsContainer__item}
           >
             <ArticlesCard
               color={'#000000'}
@@ -77,25 +85,25 @@ export default function ArticlesPage() {
           type="text"
           className={classes.sorting__input}
           placeholder="Поиск статей..."
-          value={search}
-          onChange={e => {
-            setPage(1) // сбрасываем на первую страницу
-            setSearch(e.target.value)
-          }}
+          value={searchInput}
+          onChange={e => setSearchInput(e.target.value)}
         />
         <DropDown
-          arr={['Новые', 'Популярные', 'Активные']}
+          arr={sortOptions}
           onSelect={val => {
-            setPage(1) // сбрасываем на первую страницу
+            setPage(1)
             setSortBy(val as 'new' | 'popular' | 'active')
           }}
           className={classes.sorting__dropdown}
         />
       </div>
 
-      <div style={articles.length !== 0 ? { justifyContent: 'space-between' } : { justifyContent: 'center' }} className={classes.articlesPage__cardsContainer}>
+      <div
+        style={articles.length !== 0 ? { justifyContent: 'space-between' } : { justifyContent: 'center' }}
+        className={classes.articlesPage__cardsContainer}
+      >
         {isLoading ? (
-          <p style={{ textAlign: 'center', color: 'gray'}} className={classes.loading}>Загрузка...</p>
+          <p style={{ textAlign: 'center', color: 'gray' }} className={classes.loading}>Загрузка...</p>
         ) : error ? (
           <div
             style={{
@@ -108,7 +116,7 @@ export default function ArticlesPage() {
             className={classes.noArticles}
           >
             <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>Статьи не найдены</p>
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>Статьи не найдены</p>
           </div>
         ) : (
           <CardsBox />
@@ -124,9 +132,7 @@ export default function ArticlesPage() {
           <button
             key={p}
             onClick={() => setPage(p)}
-            className={`${classes.pagination__button} ${
-              page === p ? classes.active : ''
-            }`}
+            className={`${classes.pagination__button} ${page === p ? classes.active : ''}`}
           >
             {p}
           </button>
