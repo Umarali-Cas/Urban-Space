@@ -14,10 +14,37 @@ export const IdeasApi = createApi({
     },
   }),
   endpoints: builder => ({
-    getIdeas: builder.query<any[], { limit?: number; offset?: number }>({
-      query: ({ limit = 6, offset = 0 }) => ({
+        getIdeas: builder.query<
+      any[],
+      {
+        limit?: number
+        offset?: number
+        sort_by?: 'new' | 'popular' | 'active'
+        search?: string
+        category?: string
+        author_id?: string
+        status?: string
+      }
+    >({
+      query: ({
+        limit = 6,
+        offset = 0,
+        sort_by = 'new',
+        search,
+        category,
+        author_id,
+        status,
+      }) => ({
         url: '/ideas/',
-        params: { limit, offset },
+        params: {
+          limit,
+          offset,
+          sort_by,
+          search,
+          category,
+          author_id,
+          status,
+        },
       }),
     }),
     getIdeaBySlug: builder.query<any, string>({

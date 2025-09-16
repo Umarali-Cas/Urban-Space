@@ -14,6 +14,7 @@ export function IdeaCard({
   likes,
   imageUrl,
   avatarUrl,
+  onSelect
 }: IdeaCardProps) {
   return (
     <div className={classes.ideaCard}>
@@ -47,6 +48,9 @@ export function IdeaCard({
           </div>
           <Link className={classes.ideaCard__tags__link} href={`/ideas/${slug}/`}>Подробнее</Link>
         </div>
+        {onSelect && (
+          <button className={classes.ideaCard__button} onClick={onSelect}>Поддержать проект</button>
+        )}
       </div>
     </div>
   )

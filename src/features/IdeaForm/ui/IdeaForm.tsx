@@ -2,10 +2,17 @@
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from 'react-leaflet'
 import { DivIcon } from 'leaflet'
 import classes from './IdeaForm.module.scss'
 import profilePic from '../assets/user-icon.svg'
+import { DropDown } from '@/features/DropDown'
 
 const defaultIcon = new DivIcon({
   className: classes.customIcon,
@@ -32,8 +39,11 @@ function LocationPicker({
 }
 
 export function IdeaForm() {
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    null
+  )
   const [preview, setPreview] = useState<string | null>(null) // для превью фото
+  const [category, setCategory] = useState<string>('Проблемы')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,6 +54,7 @@ export function IdeaForm() {
       formData.append('lat', coords.lat.toString())
       formData.append('lng', coords.lng.toString())
     }
+    formData.append('category', category) // добавляем категорию
 
     const data: Record<string, string> = {}
     formData.forEach((value, key) => {
@@ -55,6 +66,12 @@ export function IdeaForm() {
     })
 
     console.log('Отправленные данные:', data)
+
+    // сброс
+    form.reset()
+    setCoords(null)
+    setPreview(null)
+    setCategory('Проблемы') // сброс категории
   }
 
   function ResizeHandler() {
@@ -117,6 +134,18 @@ export function IdeaForm() {
             Выбрано: {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
           </small>
         )}
+      </label>
+
+      <label>
+        Категория
+        <DropDown
+          button={classes.dropDown__button}
+          arr={['Проблемы', 'Предложения', 'Реализованные проекты']}
+          onSelect={val => setCategory(String(val))}
+          className={classes.dropDown}
+          visibleArrow={true}
+        />
+        <input type="hidden" name="category" value={category} />
       </label>
 
       <label className={classes.ideaForm__fileInput}>

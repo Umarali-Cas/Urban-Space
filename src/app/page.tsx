@@ -1,5 +1,4 @@
 import { EcoBaner } from "@/entities/EcoBaner";
-import { MapSearch } from "@/widgets/MapSearch";
 import { Articles } from "@/widgets/Articles";
 import { Hero } from "@/widgets/Hero";
 import { LastIdeas } from "@/widgets/LastIdeas";
@@ -16,7 +15,6 @@ export default function Home() {
         subtitle="Свежие предложения от участников сообщества"
         viewCards={3}
       />
-      {/* <MapSearch /> */}
       <News />
       <Articles />
     </>
