@@ -3,14 +3,39 @@
 import { IdeaCard } from '@/entities/IdeaCard'
 import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
+import { DropDown } from '@/features/DropDown'
 
-export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
+export function LastIdeas({
+  title,
+  subtitle,
+  viewCards = 6,
+  selected,
+  showSelectButton = false,
+}: LastIdeasProps) {
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
+  const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = viewCards
   const offset = (page - 1) * limit
+
+  // debounce для поиска
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+      setPage(1) // сбрасываем на первую страницу
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [searchInput])
+
+  const sortOptions = [
+    { label: 'Новые', value: 'new' },
+    { label: 'Популярные', value: 'popular' },
+    { label: 'Активные', value: 'active' },
+  ]
 
   const {
     data: ideas = [],
@@ -19,22 +44,50 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
   } = useGetIdeasQuery({
     limit,
     offset,
+    sort_by: sortBy,
+    search: debouncedSearch,
   })
 
   const { data: totalCount } = useGetTotalCountQuery()
-
   const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
-  // const totalPages = 5;
 
   return (
     <section className={classes.lastIdeas}>
       <h1 className={classes.lastIdeas__title}>{title}</h1>
-      <p className={classes.lastIdeas__subtitle}>{subtitle}</p>
+      <p
+        style={showSelectButton ? { color: 'black' } : { color: '#7A8894' }}
+        className={classes.lastIdeas__subtitle}
+      >
+        {subtitle}
+      </p>
 
-      {isLoading && (
-        <p style={{ textAlign: 'center', color: 'gray' }}>Загрузка...</p>
+      {showSelectButton && (
+        <p className={classes.lastIdeas__description}>
+          Выберите идею, которую хотите поддержать:
+        </p>
       )}
-      {error && (
+
+      <div className={classes.sorting}>
+        <input
+          type="text"
+          className={classes.sorting__input}
+          placeholder="Поиск проектов..."
+          value={searchInput}
+          onChange={e => setSearchInput(e.target.value)}
+        />
+        <DropDown
+          arr={sortOptions}
+          onSelect={val => {
+            setPage(1)
+            setSortBy(val as 'new' | 'popular' | 'active')
+          }}
+          className={classes.sorting__dropdown}
+        />
+      </div>
+
+      {isLoading ? (
+        <p style={{ textAlign: 'center', color: 'gray' }}>Загрузка...</p>
+      ) : error ? (
         <div
           style={{
             display: 'flex',
@@ -53,28 +106,26 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
             height={400}
           />
           <p style={{ textAlign: 'center', marginTop: '20px' }}>
-            Идей не найдено
+            Идей не найдено
           </p>
         </div>
-      )}
-
-      <div className={classes.lastIdeas__ideas}>
-        {ideas.length === 0 && !isLoading && !error ? (
-          <p
-            style={{
-              textAlign: 'center',
-              color: 'gray',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              textWrap: 'nowrap',
-            }}
-          >
-            Нет идей
-          </p>
-        ) : (
-          ideas.map((idea, index) => (
+      ) : ideas.length === 0 ? (
+        <p
+          style={{
+            textAlign: 'center',
+            color: 'gray',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textWrap: 'nowrap',
+          }}
+        >
+          Нет идей
+        </p>
+      ) : (
+        <div className={classes.lastIdeas__ideas}>
+          {ideas.map((idea, index) => (
             <IdeaCard
               slug={idea.slug || ''}
               uniqueId={idea.id}
@@ -87,12 +138,15 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
               userName={idea.author_name}
               avatarUrl={idea.author_avatar}
               imageUrl={idea.media?.[0]?.meta?.url}
+              onSelect={
+                showSelectButton && selected ? () => selected(idea) : undefined
+              } // передаём выбранную идею наверх
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* 🔢 Пагинация */}
+      {/* Пагинация */}
       <div className={classes.pagination}>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
           <button
