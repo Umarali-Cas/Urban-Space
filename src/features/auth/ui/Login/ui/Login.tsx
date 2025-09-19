@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -14,7 +15,7 @@ import { setCredentials } from '@/features/auth/lib/authSlice';
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/shared/Modal';
 
-export const LoginW = () => {
+export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title: string, mail: any, pass: any, loginBtn: string, regBtn: string, remember: string}) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [login, { isLoading }] = useLoginMutation();
@@ -110,12 +111,12 @@ export const LoginW = () => {
   return (
     <section className={cls.loginWidget}>
       <Image src={userIcon} alt="user-icon" width={32} height={32} />
-      <h3>Авторизация</h3>
+      <h3>{title}</h3>
 
       <div className={cls.formGroup}>
-        <p>Почта</p>
+        <p>{mail.label}</p>
         <Input
-          text="Введите вашу почту"
+          text={mail.placeholder}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -124,10 +125,10 @@ export const LoginW = () => {
       </div>
 
       <div className={cls.formGroup}>
-        <p>Пароль</p>
+        <p>{pass.label}</p>
         <div className={cls.passwordContainer}>
           <Input
-            text="Пароль"
+            text={pass.placeholder}
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -153,7 +154,7 @@ export const LoginW = () => {
             checked={rememberMe}
             onChange={(e) => setRememberMe(e.target.checked)}
           />
-          <p className={cls.rememberMe}>Запомнить меня</p>
+          <p className={cls.rememberMe}>{remember}</p>
         </div>
       </div>
 
@@ -164,14 +165,14 @@ export const LoginW = () => {
       />
 
       <Button
-        text={isLoading ? 'Загрузка...' : 'Войти'}
+        text={isLoading ? 'Загрузка...' : loginBtn}
         onClick={handleLogin}
         disabled={isLoading}
         className={cls.loginButton}
       />
 
       <Link href="/register" className={cls.registrationButtonLink}>
-        <Button text="Регистрация" className={cls.registerButton} />
+        <Button text={regBtn} className={cls.registerButton} />
       </Link>
     </section>
   );

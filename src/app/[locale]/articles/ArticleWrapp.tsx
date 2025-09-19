@@ -8,8 +8,9 @@ import { useGetArticlesQuery, useGetTotalCountQuery } from '@/widgets/Articles/a
 import Link from 'next/link'
 import { DropDown } from '@/features/DropDown'
 import Image from 'next/image'
+import { dropDownSearchs, getInputSearchLocale, nothingDefined } from '@/i18n/useNativeLocale'
 
-export default function ArticlesPage() {
+export default function ArticlesWrapp({title, desc} : {title: string, desc: string}) {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
   const [searchInput, setSearchInput] = useState('')
@@ -26,11 +27,7 @@ export default function ArticlesPage() {
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = [
-    { label: 'Новые', value: 'new' },
-    { label: 'Популярные', value: 'popular' },
-    { label: 'Активные', value: 'active' },
-  ]
+  const sortOptions = dropDownSearchs()
 
   const { data: articles = [], isLoading, error } = useGetArticlesQuery({
     limit,
@@ -46,7 +43,7 @@ export default function ArticlesPage() {
       return (
         <div className={classes.noArticles}>
           <Image src="/nothing.svg" alt="404" width={600} height={400} />
-          <p>Статья не найдена</p>
+          <p>{nothingDefined()}</p>
         </div>
       )
     }
@@ -74,9 +71,9 @@ export default function ArticlesPage() {
 
   return (
     <section className={classes.articlesPage}>
-      <h1 className={classes.articlesPage__title}>Урбан-статьи</h1>
+      <h1 className={classes.articlesPage__title}>{title}</h1>
       <p className={classes.articlesPage__description}>
-        Ознакомьтесь с последними статьями
+        {desc}
       </p>
 
       {/* Сортировка */}
@@ -84,7 +81,7 @@ export default function ArticlesPage() {
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder="Поиск статей..."
+          placeholder={getInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -116,7 +113,7 @@ export default function ArticlesPage() {
             className={classes.noArticles}
           >
             <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>Статьи не найдены</p>
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>{nothingDefined()}</p>
           </div>
         ) : (
           <CardsBox />

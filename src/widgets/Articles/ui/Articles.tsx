@@ -5,7 +5,7 @@ import classes from './Articles.module.scss'
 import { useGetArticlesQuery } from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
 
-export function Articles() {
+export function Articles({title, desc} : {title: string, desc: string}) {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 6 })
 
   // формируем карточки из статей
@@ -39,10 +39,10 @@ export function Articles() {
         <div className={classes.articles__container}>
           <div className={classes.articles__container__titleWrapper}>
             <h1 className={classes.articles__container__title}>
-              Урбан - статьи
+              {title}
             </h1>
             <p className={classes.articles__container__subtitle}>
-              Ознакомьтесь с последними новостями
+              {desc}
             </p>
           </div>
           <div className={classes.articles__container__content}>

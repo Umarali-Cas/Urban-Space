@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
 import { DropDown } from '@/features/DropDown'
+import { crowdfundingData, dropDownSearchs, getInputSearchLocale, nothingDefined } from '@/i18n/useNativeLocale'
 
 export function LastIdeas({
   title,
@@ -22,6 +23,8 @@ export function LastIdeas({
   const limit = viewCards
   const offset = (page - 1) * limit
 
+  const data = crowdfundingData()
+
   // debounce для поиска
   useEffect(() => {
     const handler = setTimeout(() => {
@@ -31,11 +34,7 @@ export function LastIdeas({
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = [
-    { label: 'Новые', value: 'new' },
-    { label: 'Популярные', value: 'popular' },
-    { label: 'Активные', value: 'active' },
-  ]
+  const sortOptions = dropDownSearchs()
 
   const {
     data: ideas = [],
@@ -63,7 +62,7 @@ export function LastIdeas({
 
       {showSelectButton && (
         <p className={classes.lastIdeas__description}>
-          Выберите идею, которую хотите поддержать:
+          {data.label}
         </p>
       )}
 
@@ -71,12 +70,12 @@ export function LastIdeas({
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder="Поиск проектов..."
+          placeholder={getInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
         <DropDown
-          arr={sortOptions}
+          arr={sortOptions as unknown as string[]}
           onSelect={val => {
             setPage(1)
             setSortBy(val as 'new' | 'popular' | 'active')
@@ -106,7 +105,7 @@ export function LastIdeas({
             height={400}
           />
           <p style={{ textAlign: 'center', marginTop: '20px' }}>
-            Идей не найдено
+            {nothingDefined()}
           </p>
         </div>
       ) : ideas.length === 0 ? (
@@ -121,7 +120,7 @@ export function LastIdeas({
             textWrap: 'nowrap',
           }}
         >
-          Нет идей
+          {nothingDefined()}
         </p>
       ) : (
         <div className={classes.lastIdeas__ideas}>

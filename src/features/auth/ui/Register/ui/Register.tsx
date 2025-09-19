@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import { Button } from '@/shared/Button'
 import { Input } from '@/shared/Input'
@@ -16,7 +17,7 @@ import { setCredentials } from '@/features/auth/lib/authSlice'
 import { useRouter } from 'next/navigation'
 import { Modal } from '@/shared/Modal'
 
-export const RegisterW = () => {
+export const RegisterW = ({title, form, remember, pass} : {title: string, form: any, remember: any | string, pass: any | string}) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [registerUser, { isLoading: isRegisterLoading }] = useRegisterMutation()
@@ -48,34 +49,23 @@ export const RegisterW = () => {
   const fields = [
     {
       name: 'username',
-      label: 'Имя пользователя',
-      placeholder: 'Введите ваше имя',
+      label: form.name.label,
+      placeholder: form.name.placeholder,
       type: 'text',
     },
-    { name: 'region', label: 'Регион', type: 'select' },
+    { name: 'region', label: form.region.label, type: 'select' },
     {
       name: 'email',
-      label: 'Почта',
-      placeholder: 'Введите вашу почту',
+      label: form.mail.label,
+      placeholder: form.mail.placeholder,
       type: 'email',
     },
     {
       name: 'phone_number',
-      label: 'Номер телефона',
-      placeholder: '+996(xxx)______',
+      label: form.tel.label,
+      placeholder: form.tel.placeholder,
       type: 'tel',
     },
-  ]
-
-  const kyrgyzCities = [
-    'Бишкек',
-    'Ош',
-    'Джалал-Абад',
-    'Каракол',
-    'Токмок',
-    'Нарын',
-    'Баткен',
-    'Талас',
   ]
 
   useEffect(() => {
@@ -173,7 +163,7 @@ export const RegisterW = () => {
   return (
     <section className={cls.registerWidget}>
       <Image src={userIcon} alt="user-icon" width={32} height={32} />
-      <h3>Регистрация</h3>
+      <h3>{title}</h3>
 
       {fields.map(field => (
         <div className={cls.formGroup} key={field.name}>
@@ -185,8 +175,8 @@ export const RegisterW = () => {
               value={formData.region}
               onChange={handleChange}
             >
-              <option value="">Выберите регион</option>
-              {kyrgyzCities.map(city => (
+              <option value="">{form.region.placeholder}</option>
+              {form.region.regions.map((city : any)  => (
                 <option key={city} value={city}>
                   {city}
                 </option>
@@ -206,10 +196,10 @@ export const RegisterW = () => {
       ))}
 
       <div className={cls.formGroup}>
-        <p>Пароль</p>
+        <p>{pass.label}</p>
         <div className={cls.passwordContainer}>
           <Input
-            text="Пароль"
+            text={pass.placeholder}
             type={showPassword ? 'text' : 'password'}
             name="password"
             value={formData.password}
@@ -228,10 +218,10 @@ export const RegisterW = () => {
           />
         </div>
 
-        <p>Подтвердите пароль</p>
+        <p>{form.returnPass.label}</p>
         <div className={cls.passwordContainer}>
           <Input
-            text="Пароль"
+            text={form.returnPass.placeholder}
             type={showCheckPassword ? 'text' : 'password'}
             name="checkPassword"
             value={formData.checkPassword}
@@ -257,7 +247,7 @@ export const RegisterW = () => {
             checked={rememberMe}
             onChange={e => setRememberMe(e.target.checked)}
           />
-          <p className={cls.rememberMe}>Запомнить меня</p>
+          <p className={cls.rememberMe}>{remember}</p>
         </div>
 
         <Modal
@@ -268,7 +258,7 @@ export const RegisterW = () => {
 
         <Button
           text={
-            isRegisterLoading ? 'Загрузка...' : 'Регистрация'
+            isRegisterLoading ? 'Загрузка...' : form.title
           }
           className={cls.registerButton}
           onClick={handleSubmit}
@@ -276,7 +266,7 @@ export const RegisterW = () => {
         />
 
         <Link href="/login">
-          <Button text="У меня уже есть аккаунт" className={cls.loginButton} />
+          <Button text={form.haveAccount} className={cls.loginButton} />
         </Link>
       </div>
     </section>

@@ -1,7 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import classes from './DropDown.module.scss'
+import Cookies from 'js-cookie'
 
 type Option = string | number | { label: string; value: string }
 
@@ -20,15 +22,20 @@ export function DropDown({
   button?: string
   type?: 'button' | 'submit' | 'reset'
 }) {
-  const defaultDate = [
-    2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018, 2017, 2016,
-    2015, 2014, 2013, 2012, 2011, 2010, 2009, 2008, 2007,
-    2006, 2005, 2004, 2003, 2002, 2001, 2000,
-  ]
+  const options = arr && arr.length > 0 ? arr : ['ru', 'en', 'kg'] // твои языки
 
-  const options = arr && arr.length > 0 ? arr : defaultDate
-  const [selected, setSelected] = useState<Option>(options[0])
+  // 🔹 стартовое значение пустое, чтобы избежать гидрационных расхождений
+  const [selected, setSelected] = useState<Option>('') 
   const [open, setOpen] = useState(false)
+
+  useEffect(() => {
+    const locale = Cookies.get('locale')
+    if (locale && options.includes(locale)) {
+      setSelected(locale)
+    } else {
+      setSelected(options[0])
+    }
+  }, [options])
 
   const getLabel = (item: Option) =>
     typeof item === 'object' && 'label' in item ? item.label : item
@@ -41,12 +48,12 @@ export function DropDown({
       <button
         className={`${classes.dropDown__button} ${button}`}
         onClick={e => {
-          e.preventDefault() // предотвращаем сабмит формы
+          e.preventDefault()
           setOpen(prev => !prev)
         }}
         type={type}
       >
-        {getLabel(selected)}{' '}
+        {selected && getLabel(selected)}{' '}
         <span
           style={{ display: visibleArrow ? 'block' : 'none' }}
           className={classes.arrow}
