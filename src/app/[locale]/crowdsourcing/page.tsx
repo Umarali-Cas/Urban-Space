@@ -1,11 +1,16 @@
-import { GiveIdea } from "@/entities/GiveIdea";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
+import { GiveIdea } from '@/entities/GiveIdea'
 
 export default async function crowdsourcing({
   params,
+  searchParams,
 }: {
-  params: { locale: string }
+  params: { locale: string } & Promise<any>
+  searchParams: any
 }) {
-    const { locale } = await Promise.resolve(params)
+  const { locale } = params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/crowdsourcing?locale=${locale}`
@@ -16,7 +21,11 @@ export default async function crowdsourcing({
 
   return (
     <>
-      <GiveIdea title={crowdsourcingData.title} desc={crowdsourcingData.desc} formData={crowdsourcingData.form}/>
+      <GiveIdea
+        title={crowdsourcingData.title}
+        desc={crowdsourcingData.desc}
+        formData={crowdsourcingData.form}
+      />
     </>
   )
 }

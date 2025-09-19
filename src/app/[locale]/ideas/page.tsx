@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { LastIdeas } from '@/widgets/LastIdeas'
 
 export default async function BankIdeas({
   params,
+  searchParams,
 }: {
-  params: { locale: string }
+  params: { locale: string } & Promise<any>
+  searchParams: any
 }) {
-  const { locale } = await Promise.resolve(params)
+  const { locale } = params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/bank-of-ideas?locale=${locale}`

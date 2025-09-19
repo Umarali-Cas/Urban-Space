@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
@@ -8,7 +9,7 @@ import { useGetArticlesQuery, useGetTotalCountQuery } from '@/widgets/Articles/a
 import Link from 'next/link'
 import { DropDown } from '@/features/DropDown'
 import Image from 'next/image'
-import { dropDownSearchs, getInputSearchLocale, nothingDefined } from '@/i18n/useNativeLocale'
+import { useDropDownSearchs, useInputSearchLocale, useNothingDefined } from '@/i18n/useNativeLocale'
 
 export default function ArticlesWrapp({title, desc} : {title: string, desc: string}) {
   const [page, setPage] = useState(1)
@@ -27,7 +28,7 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = dropDownSearchs()
+  const sortOptions = useDropDownSearchs()
 
   const { data: articles = [], isLoading, error } = useGetArticlesQuery({
     limit,
@@ -43,7 +44,7 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
       return (
         <div className={classes.noArticles}>
           <Image src="/nothing.svg" alt="404" width={600} height={400} />
-          <p>{nothingDefined()}</p>
+          <p>{useNothingDefined()}</p>
         </div>
       )
     }
@@ -81,7 +82,7 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder={getInputSearchLocale()}
+          placeholder={useInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -113,7 +114,7 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
             className={classes.noArticles}
           >
             <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>{nothingDefined()}</p>
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>{useNothingDefined()}</p>
           </div>
         ) : (
           <CardsBox />

@@ -14,7 +14,7 @@ import { DivIcon } from 'leaflet'
 import classes from './IdeaForm.module.scss'
 import profilePic from '../assets/user-icon.svg'
 import { DropDown } from '@/features/DropDown'
-import { crowdsourcingData } from '@/i18n/useNativeLocale'
+import { useCrowdsourcingData } from '@/i18n/useNativeLocale'
 
 const defaultIcon = new DivIcon({
   className: classes.customIcon,
@@ -96,7 +96,7 @@ export function IdeaForm({formData} : {formData: any}) {
     }
   }
 
-  const value = crowdsourcingData()
+  const value = useCrowdsourcingData()
 
 const categoryNames = Object.values(formData.category.categories);
 

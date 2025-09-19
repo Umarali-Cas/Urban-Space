@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import classes from './NewsCard.module.scss'
 import { NewsCardProps } from '../types/type'
-import { moreButton } from '@/i18n/useNativeLocale'
+import { useMoreButton } from '@/i18n/useNativeLocale'
 
 export function NewsCard({
   title,
@@ -28,7 +28,7 @@ export function NewsCard({
         <p className={classes.newsCard__content__subtitle}>{subtitle}</p>
         <span className={classes.newsCard__content__date}>{date}</span>
         <Link href={link} className={classes.newsCard__content__link}>
-          {moreButton()} →
+          {useMoreButton()} →
         </Link>
       </div>
     </div>

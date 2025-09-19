@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EcoBaner } from "@/entities/EcoBaner";
 import { Articles } from "@/widgets/Articles";
@@ -6,9 +7,15 @@ import { LastIdeas } from "@/widgets/LastIdeas";
 import { News } from "@/widgets/News";
 
 
-export default async function Home({ params }: { params: { locale: string }}) {
+export default async function Home({
+  params,
+  searchParams,
+}: {
+  params: { locale: string } & Promise<any>
+  searchParams: any
+}) {
 
-  const { locale } = await Promise.resolve(params) 
+  const { locale } = await params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`

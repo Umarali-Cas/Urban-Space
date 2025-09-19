@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
 import { useParams } from 'next/navigation'
 
-export function getInputSearchLocale() {
+export function useInputSearchLocale() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -17,7 +16,7 @@ export function getInputSearchLocale() {
   }
 }
 
-export function dropDownSearchs() {
+export function useDropDownSearchs() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -47,7 +46,7 @@ export function dropDownSearchs() {
   }
 }
 
-export function moreButton() {
+export function useMoreButton() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -61,7 +60,7 @@ export function moreButton() {
   }
 }
 
-export function crowdfundingData() {
+export function useCrowdfundingData() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -91,7 +90,7 @@ export function crowdfundingData() {
   }
 }
 
-export function getSupportProjectIdea() {
+export function useSupportProjectIdea() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -105,7 +104,7 @@ export function getSupportProjectIdea() {
   }
 }
 
-export function nothingDefined() {
+export function useNothingDefined() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':
@@ -119,7 +118,7 @@ export function nothingDefined() {
   }
 }
 
-export function crowdsourcingData() {
+export function useCrowdsourcingData() {
   const { locale } = useParams() as { locale: string }
   switch (locale) {
     case 'ru':

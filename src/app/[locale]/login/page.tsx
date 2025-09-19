@@ -1,13 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { EcoBaner } from '@/entities/EcoBaner'
 import { LoginW } from '@/features/auth/ui/Login'
 
 export default async function Login({
   params,
+  searchParams,
 }: {
-  params: { locale: string }
+  params: { locale: string } & Promise<any>
+  searchParams: any
 }) {
-  const { locale } = await Promise.resolve(params)
+  const { locale } = params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`

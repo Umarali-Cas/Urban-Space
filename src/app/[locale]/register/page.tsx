@@ -1,13 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EcoBaner } from '@/entities/EcoBaner'
 import { RegisterW } from '@/features/auth/ui/Register'
 
 export default async function Register({
   params,
+  searchParams,
 }: {
-  params: { locale: string }
+  params: { locale: string } & Promise<any>
+  searchParams: any
 }) {
-  const { locale } = await Promise.resolve(params)
+  const { locale } = params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`

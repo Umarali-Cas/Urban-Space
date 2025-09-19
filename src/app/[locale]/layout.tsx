@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -27,11 +28,13 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
   params,
+  searchParams,
 }: {
+  params: { locale: string } & Promise<any>
   children: ReactNode
-  params: { locale: string }
+  searchParams: any
 }) {
-  let { locale } = await Promise.resolve(params)
+  let { locale } = await params
 
 const res = await fetch(
   `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`,

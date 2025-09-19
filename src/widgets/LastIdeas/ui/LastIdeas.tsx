@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
 import { IdeaCard } from '@/entities/IdeaCard'
@@ -7,7 +8,7 @@ import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
 import { DropDown } from '@/features/DropDown'
-import { crowdfundingData, dropDownSearchs, getInputSearchLocale, nothingDefined } from '@/i18n/useNativeLocale'
+import { useCrowdfundingData, useDropDownSearchs, useInputSearchLocale, useNothingDefined } from '@/i18n/useNativeLocale'
 
 export function LastIdeas({
   title,
@@ -23,7 +24,7 @@ export function LastIdeas({
   const limit = viewCards
   const offset = (page - 1) * limit
 
-  const data = crowdfundingData()
+  const data = useCrowdfundingData()
 
   // debounce для поиска
   useEffect(() => {
@@ -34,7 +35,7 @@ export function LastIdeas({
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = dropDownSearchs()
+  const sortOptions = useDropDownSearchs()
 
   const {
     data: ideas = [],
@@ -70,7 +71,7 @@ export function LastIdeas({
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder={getInputSearchLocale()}
+          placeholder={useInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -105,7 +106,7 @@ export function LastIdeas({
             height={400}
           />
           <p style={{ textAlign: 'center', marginTop: '20px' }}>
-            {nothingDefined()}
+            {useNothingDefined()}
           </p>
         </div>
       ) : ideas.length === 0 ? (
@@ -120,7 +121,7 @@ export function LastIdeas({
             textWrap: 'nowrap',
           }}
         >
-          {nothingDefined()}
+          {useNothingDefined()}
         </p>
       ) : (
         <div className={classes.lastIdeas__ideas}>

@@ -7,11 +7,11 @@ import qr from '../assets/image-224x224.jpg'
 import { FormEvent, useState } from 'react'
 import { IdeaCard } from '@/entities/IdeaCard'
 import { LastIdeas } from '@/widgets/LastIdeas'
-import { crowdfundingData } from '@/i18n/useNativeLocale'
+import { useCrowdfundingData } from '@/i18n/useNativeLocale'
 
 export function SupportUs({title, desc, formData} : {title: string, desc: string, formData: any}) {
   const [selectedIdea, setSelectedIdea] = useState<any | null>(null)
-  const crowdfunding = crowdfundingData()
+  const crowdfunding = useCrowdfundingData()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
