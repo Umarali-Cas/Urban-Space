@@ -2,12 +2,12 @@ import { NewsCard } from '@/entities/NewsCard'
 import classes from './News.module.scss'
 import image from '../assets/images/Image-1.png'
 
-export function News() {
+export function News({title, desc} : {title: string, desc: string}) {
   return (
     <section className={classes.news}>
-      <h1 className={classes.news__title}>Новости</h1>
+      <h1 className={classes.news__title}>{title}</h1>
       <p className={classes.news__subtitle}>
-        Ознакомьтесь с последними новостями
+        {desc}
       </p>
       <div className={classes.news__box}>
         <NewsCard
@@ -25,7 +25,6 @@ export function News() {
           imageUrl={image.src}
         />
       </div>
-      <button className={classes.news__button}>Посмотреть все</button>
     </section>
   )
 }
