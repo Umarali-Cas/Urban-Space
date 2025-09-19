@@ -50,28 +50,5 @@
             row-gap: 32px;
             align-items: center;
         }
-
-
-    }
-
-    &__button{
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: #F6F7FA;
-        border: 2px solid #E6E6E6;
-        height: 40px;
-        border-radius: 8px;
-        margin: 32px auto 0;
-        width: 100%;
-
-        @media (max-width: 1250px) {
-            max-width: 420px;
-            width: 100%;
-        }
-
-        &:hover{
-            background: #bbc0c4;
-        }
     }
 }

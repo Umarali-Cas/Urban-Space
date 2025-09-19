@@ -7,9 +7,11 @@ import qr from '../assets/image-224x224.jpg'
 import { FormEvent, useState } from 'react'
 import { IdeaCard } from '@/entities/IdeaCard'
 import { LastIdeas } from '@/widgets/LastIdeas'
+import { useCrowdfundingData } from '@/i18n/useNativeLocale'
 
-export function SupportUs() {
+export function SupportUs({title, desc, formData} : {title: string, desc: string, formData: any}) {
   const [selectedIdea, setSelectedIdea] = useState<any | null>(null)
+  const crowdfunding = useCrowdfundingData()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
@@ -37,16 +39,14 @@ export function SupportUs() {
 
     data['selectedIdeaId'] = selectedIdea.id
     data['selectedIdeaTitle'] = selectedIdea.title
-
-    console.log('Отправленные данные:', data)
   }
 
   return (
     <div className={classes.support}>
       {/* Выбор проекта через LastIdeas */}
       <LastIdeas
-        title="Оказать финансовую поддержку"
-        subtitle="Вы можете оставить свое предложение или помочь развитию нашей инициативы"
+        title={title}
+        subtitle={desc}
         viewCards={3}
         selected={setSelectedIdea} // передаём выбранную идею наверх
         showSelectButton={true}
@@ -56,7 +56,7 @@ export function SupportUs() {
       <div className={classes.support__bottom}>
         <div className={classes.support__bottom__select}>
           <h2 className={classes.support__bottom__select__title}>
-            Выбранный проект
+            {crowdfunding.selected}
           </h2>
           {selectedIdea ? (
             <IdeaCard
@@ -72,47 +72,47 @@ export function SupportUs() {
               imageUrl={selectedIdea.media?.[0]?.meta?.url}
             />
           ) : (
-            <p style={{ color: 'gray' }}>Ничего не выбрано</p>
+            <p style={{ color: 'gray' }}>{crowdfunding.unselected}</p>
           )}
         </div>
 
         {/* Форма поддержки */}
         <form className={classes.supportUs} onSubmit={handleSubmit}>
           <label>
-            ФИО
+            {formData.name.label}
             <input
               className={classes.supportUs__input}
               type="text"
               name="fullname"
-              placeholder="Введите ваше ФИО"
+              placeholder={formData.name.placeholder}
               required
             />
           </label>
 
           <label>
-            Email
+            {formData.mail.label}
             <input
               className={classes.supportUs__input}
               type="email"
               name="email"
-              placeholder="Введите вашу почту"
+              placeholder={formData.mail.placeholder}
               required
             />
           </label>
 
           <label>
-            Номер телефона
+            {formData.tel.label}
             <input
               className={classes.supportUs__input}
               type="tel"
               name="phone"
-              placeholder="+996(xxx)_____"
+              placeholder={formData.tel.placeholder}
               required
             />
           </label>
 
           <label>
-            QR-code для переводов
+            {formData.qr.label}
             <div className={classes.qrCode__box}>
               <Image
                 className={classes.qrCode__box__image}
@@ -124,7 +124,7 @@ export function SupportUs() {
             </div>
           </label>
 
-          <button type="submit">Отправить</button>
+          <button type="submit">{formData.button.title}</button>
         </form>
       </div>
     </div>

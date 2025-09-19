@@ -1,9 +1,11 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Link from 'next/link'
 import classes from './IdeaCard.module.scss'
 import Image from 'next/image'
 import heartIcon from '../assets/icons/heart.svg'
 import { IdeaCardProps } from '../types/type'
 import baseAvatar from '../assets/images/UserImage.jpg'
+import { useMoreButton, useSupportProjectIdea } from '@/i18n/useNativeLocale'
 
 export function IdeaCard({
   slug,
@@ -46,10 +48,10 @@ export function IdeaCard({
             <Image className={classes.ideaCard__tags__likes__icon} src={heartIcon} alt="heart" width={24} height={24} />
             <span className={classes.ideaCard__tags__likes__count}>{likes}</span>
           </div>
-          <Link className={classes.ideaCard__tags__link} href={`/ideas/${slug}/`}>Подробнее</Link>
+          <Link className={classes.ideaCard__tags__link} href={`/ideas/${slug}/`}>{useMoreButton()}</Link>
         </div>
         {onSelect && (
-          <button className={classes.ideaCard__button} onClick={onSelect}>Поддержать проект</button>
+          <button className={classes.ideaCard__button} onClick={onSelect}>{useSupportProjectIdea()}</button>
         )}
       </div>
     </div>

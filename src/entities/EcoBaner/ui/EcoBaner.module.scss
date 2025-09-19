@@ -18,8 +18,8 @@
         font-size: 28px;
         color: var(--white);
         font-weight: 600;
-        text-wrap: nowrap;
         line-height: 120%;
+        max-width: 250px;
 
         @media (max-width: 1000px) {
             text-align: center;
