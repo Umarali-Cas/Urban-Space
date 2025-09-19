@@ -54,8 +54,17 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     background: #ffffff;
     right: 0px;
-    border-radius: 8px;
-    top: 90px;
+    border-radius: 0 0 8px 8px;
+    top: 92px;
+
+    @media (max-width: 475px) {
+      top: 77px;
+    }
+
+    @media (max-width: 375px) {
+      top: 72px;
+      
+    }
 
     &__item {
       &__link {

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import React, { useState, useEffect, ReactNode } from 'react'
+import React, { useState, useEffect, useRef, ReactNode } from 'react'
 import classes from './DropDown.module.scss'
 import Cookies from 'js-cookie'
 
@@ -15,7 +15,7 @@ export function DropDown({
   visibleArrow = true,
   button,
   type = 'button',
-  isLanguage = false, // <- поддерживаем имя, которое ты передаёшь
+  isLanguage = false,
 }: {
   arr?: Option[]
   onSelect?: (value: string | number) => void
@@ -36,15 +36,15 @@ export function DropDown({
         ]
       : ['ru', 'en', 'kg']
 
-  // стартовое значение пустое (чтобы не было гидрационных расхождений)
-  const [selected, setSelected] = useState<Option | ''>('') 
+  const [selected, setSelected] = useState<Option | ''>('')
   const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null) // реф на контейнер
 
+  // установка выбранного значения из куки
   useEffect(() => {
     const locale = Cookies.get('locale')
     if (locale) {
       if (isLanguage) {
-        // если опции — объекты {value, label} — ищем по value
         const found = options.find(
           item => typeof item === 'object' && 'value' in item && item.value === locale
         ) as Option | undefined
@@ -53,7 +53,6 @@ export function DropDown({
           return
         }
       } else {
-        // если опции простые строки/числа
         const found = options.find(item => item === (locale as unknown as Option))
         if (found) {
           setSelected(found)
@@ -64,6 +63,19 @@ export function DropDown({
     setSelected(options[0])
   }, [options, isLanguage])
 
+  // закрываем dropdown при клике вне компонента
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const getLabel = (item: Option | ''): ReactNode =>
     item && typeof item === 'object' && 'label' in item ? item.label : (item as ReactNode)
 
@@ -73,7 +85,7 @@ export function DropDown({
       : (item as string | number)
 
   return (
-    <div className={`${classes.dropDown} ${className ?? ''}`}>
+    <div className={`${classes.dropDown} ${className ?? ''}`} ref={ref}>
       <button
         className={`${classes.dropDown__button} ${button ?? ''}`}
         onClick={e => {
@@ -100,6 +112,7 @@ export function DropDown({
         {options.map(item => (
           <li
             key={String(getValue(item))}
+            style={isLanguage ? {justifyContent: 'center'} : {justifyContent: 'space-between'}}
             className={classes.dropDown__list__item}
             onClick={() => {
               setSelected(item)
