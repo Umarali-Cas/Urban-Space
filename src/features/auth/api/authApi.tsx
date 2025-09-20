@@ -5,7 +5,7 @@ import { User } from '@/features/auth/lib/authSlice'
 export const authApi = createApi({
   reducerPath: 'authApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:8000',
+    baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token
       if (token) {
@@ -16,7 +16,7 @@ export const authApi = createApi({
   }),
   endpoints: builder => ({
     register: builder.mutation<
-      { user: User; token: string },
+      User, // только user
       {
         email: string
         password: string
@@ -31,6 +31,7 @@ export const authApi = createApi({
         body: userData,
       }),
     }),
+
     login: builder.mutation<
       { access_token: string; token_type: string },
       { email: string; password: string }

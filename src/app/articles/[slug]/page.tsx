@@ -15,6 +15,8 @@ export default function ArticleDetailPage() {
   if (isLoading) return <p>Загрузка...</p>
   if (error || !article) return <p>Статья не найдена</p>
 
+  console.log(article)
+
   return (
     <section>
       <ArticlesInfo desc={article.summary} title={article.title}/>

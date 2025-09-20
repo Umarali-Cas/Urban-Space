@@ -13,20 +13,35 @@ export const IdeasApi = createApi({
       return headers
     },
   }),
+  tagTypes: ['Ideas'],
   endpoints: builder => ({
     getIdeas: builder.query<any[], { limit?: number; offset?: number }>({
       query: ({ limit = 6, offset = 0 }) => ({
         url: '/ideas',
         params: { limit, offset },
       }),
+      providesTags: ['Ideas'],
     }),
     getIdeaBySlug: builder.query<any, string>({
       query: slug => `/ideas/${slug}`,
     }),
     getTotalCount: builder.query<number, void>({
       query: () => '/ideas/count',
-    })
+    }),
+    updateIdeaStatus: builder.mutation<any, { id: string; status: string }>({
+      query: ({ id, status }) => ({
+        url: `/ideas/${id}`,
+        method: 'PATCH',
+        body: { status },
+      }),
+      invalidatesTags: ['Ideas'],
+    }),
   }),
 })
 
-export const { useGetIdeasQuery, useGetIdeaBySlugQuery, useGetTotalCountQuery } = IdeasApi
+export const { 
+  useGetIdeasQuery, 
+  useGetIdeaBySlugQuery, 
+  useGetTotalCountQuery, 
+  useUpdateIdeaStatusMutation 
+} = IdeasApi

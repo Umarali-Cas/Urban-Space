@@ -14,6 +14,7 @@ export function IdeaCard({
   likes,
   imageUrl,
   avatarUrl,
+  status,
 }: IdeaCardProps) {
   return (
     <div className={classes.ideaCard}>
