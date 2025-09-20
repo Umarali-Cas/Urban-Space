@@ -1,14 +1,14 @@
 .articlesPage {
-  padding: 80px 64px 40px;
+  padding: 80px 64px 0px;
   max-width: 1440px;
   margin: 0 auto;
 
   @media (max-width: 1250px) {
-    padding: 80px 32px 40px;
+    padding: 80px 32px 0px;
   }
 
   @media (max-width: 768px) {
-    padding: 80px 16px 40px;
+    padding: 80px 16px 0px;
   }
 
   &__title {
@@ -38,7 +38,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: repeat(3, auto);
-    justify-content: space-between;
+    justify-content: center !important;
     gap: 32px;
     position: relative;
 
@@ -88,4 +88,32 @@
   transform: scale(0.95);
   background: var(--green); // фиолетовый акцент
   color: white;
+}
+
+.sorting {
+  margin: 40px 0;
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    
+  }
+
+  &__dropdown {
+    max-width: 300px !important;
+  }
+
+  &__input {
+    max-width: 500px;
+    width: 100%;
+    background: #f3f4f9;
+    border: 2px solid #e6e6e6;
+    border-radius: 8px;
+    padding-left: 15px;
+    height: 40px;
+    color: #000000;
+    font-weight: 600;
+  }
 }

@@ -7,16 +7,13 @@ import Image from 'next/image'
 import classes from './IdeaDetailPage.module.scss'
 
 export default function IdeaDetailPage() {
-  const { slug } = useParams()
+  const { slug } = useParams<{ slug: string }>()
   console.log(slug)
-  const ideaSlug = Array.isArray(slug) ? slug[0] : slug
-  if (!ideaSlug) return <p>Идентификатор идеи не найден</p>
+    if (!slug) return <p>Идентификатор идеи не найден</p>
+  const { data: idea, isLoading, error } = useGetIdeaBySlugQuery(slug)
 
-  const { data: idea, isLoading, error } = useGetIdeaBySlugQuery(ideaSlug)
-
-  if (isLoading) return <p style={{ textAlign: 'center' }}>Загрузка...</p>
-  if (error || !idea)
-    return <p style={{ textAlign: 'center' }}>Идея не найдена</p>
+  if (isLoading) return <p>Загрузка...</p>
+  if (error || !idea) return <p>Статья не найдена</p>
 
   return (
     <section className={classes.ideaDetail}>

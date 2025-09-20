@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-// import { IdeaForm } from '@/features/IdeaForm/ui/IdeaForm'
 import classes from './GiveIdea.module.scss'
-// import { SupportUs } from '@/features/SupportUs/ui/SupportUs'
 import dynamic from 'next/dynamic'
 
 const IdeaForm = dynamic(() =>
@@ -10,17 +9,17 @@ const IdeaForm = dynamic(() =>
   { ssr: false }
 )
 
-export function GiveIdea() {
+export function GiveIdea({title, desc, formData} : {title: string, desc: string, formData: any}) {
+  console.log('formData', formData)
   return (
     <section className={classes.giveIdea}>
       <div className={classes.giveIdea__header}>
-        <h1 className={classes.giveIdea__header__title}>Предложить идею</h1>
+        <h1 className={classes.giveIdea__header__title}>{title}</h1>
         <p className={classes.giveIdea__header__description}>
-          Вы можете оставить своё предложение или помочь развитию нашей
-          инициативы
+          {desc}
         </p>
       </div>
-      <IdeaForm />
+      <IdeaForm formData={formData}/>
     </section>
   )
 }

@@ -1,11 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, useMapEvents, useMap } from 'react-leaflet'
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMapEvents,
+  useMap,
+} from 'react-leaflet'
 import { DivIcon } from 'leaflet'
 import classes from './IdeaForm.module.scss'
 import profilePic from '../assets/user-icon.svg'
+import { DropDown } from '@/features/DropDown'
+import { useCrowdsourcingData } from '@/i18n/useNativeLocale'
 
 const defaultIcon = new DivIcon({
   className: classes.customIcon,
@@ -31,9 +40,12 @@ function LocationPicker({
   return position ? <Marker position={position} icon={defaultIcon} /> : null
 }
 
-export function IdeaForm() {
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
+export function IdeaForm({formData} : {formData: any}) {
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
+    null
+  )
   const [preview, setPreview] = useState<string | null>(null) // для превью фото
+  const [category, setCategory] = useState<string>('Проблемы')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,6 +56,7 @@ export function IdeaForm() {
       formData.append('lat', coords.lat.toString())
       formData.append('lng', coords.lng.toString())
     }
+    formData.append('category', category) // добавляем категорию
 
     const data: Record<string, string> = {}
     formData.forEach((value, key) => {
@@ -55,6 +68,12 @@ export function IdeaForm() {
     })
 
     console.log('Отправленные данные:', data)
+
+    // сброс
+    form.reset()
+    setCoords(null)
+    setPreview(null)
+    setCategory('Проблемы') // сброс категории
   }
 
   function ResizeHandler() {
@@ -77,29 +96,33 @@ export function IdeaForm() {
     }
   }
 
+  const value = useCrowdsourcingData()
+
+const categoryNames = Object.values(formData.category.categories);
+
   return (
     <form className={classes.ideaForm} onSubmit={handleSubmit}>
-      <h2 className={classes.ideaForm__title}>Описание</h2>
+      <h2 className={classes.ideaForm__title}>{formData.title}</h2>
 
       <label>
-        Тема
+        {formData.them.label}
         <input
           type="text"
           name="theme"
           maxLength={100}
-          placeholder="Тема (название инициативы, макс. 100 символов)"
+          placeholder={formData.them.placeholder}
           required
         />
       </label>
 
       <label>
-        Описание
-        <input type="text" name="description" placeholder="Описание" required />
+        {formData.description.label}
+        <input type="text" name="description" placeholder={formData.description.placeholder} required />
       </label>
 
       <label>
-        Локация
-        <span>Укажите локацию (нажмите на карте)</span>
+        {formData.location.label}
+        <span>{formData.location.placeholder}</span>
         <div style={{ height: '250px', width: '100%', marginTop: '8px' }}>
           <MapContainer
             center={[41.47522939797829, 74.61934986021016]}
@@ -114,13 +137,25 @@ export function IdeaForm() {
         </div>
         {coords && (
           <small>
-            Выбрано: {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
+            {typeof value === 'string' ? value : value.label} {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
           </small>
         )}
       </label>
 
+      <label>
+        {formData.category.label}
+        <DropDown
+          button={classes.dropDown__button}
+          arr={categoryNames as string[]}
+          onSelect={val => setCategory(String(val))}
+          className={classes.dropDown}
+          visibleArrow={true}
+        />
+        <input type="hidden" name="category" value={category} />
+      </label>
+
       <label className={classes.ideaForm__fileInput}>
-        Фото профиля
+        {typeof value === 'string' ? value : value.pic}
         <div
           className={classes.ideaForm__fileInput__container}
           style={{
@@ -139,7 +174,7 @@ export function IdeaForm() {
                 width={32}
                 height={32}
               />
-              <span>Прикрепите фото профиля</span>
+              <span>{formData.photo.label}</span>
             </div>
           )}
           <input type="file" name="image" onChange={handleFileChange} />
@@ -147,11 +182,11 @@ export function IdeaForm() {
       </label>
 
       <label>
-        Теги #
+        {formData.tags.label + ' ' + '#'}
         <input type="text" name="tags" placeholder="#" />
       </label>
 
-      <button type="submit">Отправить</button>
+      <button type="submit">{formData.button.title}</button>
     </form>
   )
 }

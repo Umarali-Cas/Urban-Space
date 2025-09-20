@@ -1,21 +1,17 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+    productionBrowserSourceMaps: false,
   images: {
     // добавляй сюда все домены, с которых будут подгружаться картинки
-    domains: ['example.com', 'cdn.yourapp.com'],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: 'http://localhost:8000/:path*',
-      },
-    ]
+    domains: ['example.com', 'cdn.yourapp.com', 'api.urbanspace.sdinis.org'],
   },
   // Рекомендуется для продакшна
   output: 'standalone',
   reactStrictMode: true,
 }
 
-export default nextConfig
+const withNextIntl = require("next-intl/plugin")("./src/i18n/request.ts");
+
+module.exports = withNextIntl(nextConfig);

@@ -4,6 +4,7 @@ import avatar from '../assets/UserImage.jpg'
 import { ArticlesCardProps } from '../types/type'
 
 export function ArticlesCard({
+  color,
   role,
   userName,
   avatarUrl,
@@ -12,7 +13,7 @@ export function ArticlesCard({
 }: ArticlesCardProps) {
   return (
     <div className={classes.articlesCard}>
-      <h3 className={classes.articlesCard__title}>{articleName}</h3>
+      <h3 style={{ color: color }} className={classes.articlesCard__title}>{articleName}</h3>
       <p className={classes.articlesCard__subtitle}>{article}</p>
       <div className={classes.articlesCard__user}>
         <Image

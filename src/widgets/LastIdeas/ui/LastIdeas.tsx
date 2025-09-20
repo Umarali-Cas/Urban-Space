@@ -1,15 +1,41 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
 import { IdeaCard } from '@/entities/IdeaCard'
 import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
+import Image from 'next/image'
+import { DropDown } from '@/features/DropDown'
+import { useCrowdfundingData, useDropDownSearchs, useInputSearchLocale, useNothingDefined } from '@/i18n/useNativeLocale'
 
-export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
+export function LastIdeas({
+  title,
+  subtitle,
+  viewCards = 6,
+  selected,
+  showSelectButton = false,
+}: LastIdeasProps) {
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
+  const [searchInput, setSearchInput] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = viewCards
   const offset = (page - 1) * limit
+
+  const data = useCrowdfundingData()
+
+  // debounce для поиска
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchInput)
+      setPage(1) // сбрасываем на первую страницу
+    }, 500)
+    return () => clearTimeout(handler)
+  }, [searchInput])
+
+  const sortOptions = useDropDownSearchs()
 
   const {
     data: ideas = [],
@@ -18,45 +44,88 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
   } = useGetIdeasQuery({
     limit,
     offset,
+    sort_by: sortBy,
+    search: debouncedSearch,
   })
 
   const { data: totalCount } = useGetTotalCountQuery()
-
-  console.log(ideas.map(idea => idea.id))
-  console.log(totalCount)
-
   const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
-  // const totalPages = 5;
 
   return (
     <section className={classes.lastIdeas}>
       <h1 className={classes.lastIdeas__title}>{title}</h1>
-      <p className={classes.lastIdeas__subtitle}>{subtitle}</p>
+      <p
+        style={showSelectButton ? { color: 'black' } : { color: '#7A8894' }}
+        className={classes.lastIdeas__subtitle}
+      >
+        {subtitle}
+      </p>
 
-      {isLoading && (
+      {showSelectButton && (
+        <p className={classes.lastIdeas__description}>
+          {data.label}
+        </p>
+      )}
+
+      <div className={classes.sorting}>
+        <input
+          type="text"
+          className={classes.sorting__input}
+          placeholder={useInputSearchLocale()}
+          value={searchInput}
+          onChange={e => setSearchInput(e.target.value)}
+        />
+        <DropDown
+          arr={sortOptions as unknown as string[]}
+          onSelect={val => {
+            setPage(1)
+            setSortBy(val as 'new' | 'popular' | 'active')
+          }}
+          className={classes.sorting__dropdown}
+        />
+      </div>
+
+      {isLoading ? (
         <p style={{ textAlign: 'center', color: 'gray' }}>Загрузка...</p>
-      )}
-      {error && (
-        <p style={{ textAlign: 'center', color: 'gray' }}>Ошибка загрузки</p>
-      )}
-
-      <div className={classes.lastIdeas__ideas}>
-        {ideas.length === 0 && !isLoading && !error ? (
-          <p
-            style={{
-              textAlign: 'center',
-              color: 'gray',
-              position: 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              textWrap: 'nowrap',
-            }}
-          >
-            Нет идей
+      ) : error ? (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            width: '100%',
+            marginTop: '20px',
+          }}
+          className={classes.noIdeas}
+        >
+          <Image
+            className="global-image-nothing"
+            src="/nothing.svg"
+            alt="404"
+            width={600}
+            height={400}
+          />
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>
+            {useNothingDefined()}
           </p>
-        ) : (
-          ideas.map((idea, index) => (
+        </div>
+      ) : ideas.length === 0 ? (
+        <p
+          style={{
+            textAlign: 'center',
+            color: 'gray',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            textWrap: 'nowrap',
+          }}
+        >
+          {useNothingDefined()}
+        </p>
+      ) : (
+        <div className={classes.lastIdeas__ideas}>
+          {ideas.map((idea, index) => (
             <IdeaCard
               slug={idea.slug || ''}
               uniqueId={idea.id}
@@ -69,12 +138,15 @@ export function LastIdeas({ title, subtitle, viewCards = 6 }: LastIdeasProps) {
               userName={idea.author_name}
               avatarUrl={idea.author_avatar}
               imageUrl={idea.media?.[0]?.meta?.url}
+              onSelect={
+                showSelectButton && selected ? () => selected(idea) : undefined
+              } // передаём выбранную идею наверх
             />
-          ))
-        )}
-      </div>
+          ))}
+        </div>
+      )}
 
-      {/* 🔢 Пагинация */}
+      {/* Пагинация */}
       <div className={classes.pagination}>
         {Array.from({ length: totalPages }, (_, i) => i + 1).map(num => (
           <button

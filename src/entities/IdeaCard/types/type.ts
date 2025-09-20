@@ -12,4 +12,5 @@ export interface IdeaCardProps {
     uniqueId: number | string
     slug: string
     status: string
+    onSelect?: () => void
   }

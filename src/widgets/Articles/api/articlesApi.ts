@@ -1,33 +1,62 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { RootState } from '@/app/store/store'  // Добавь этот импорт, если нет
+import type { RootState } from '@/app/store/store' 
 
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token  // Изменил на .token
+      const token = (getState() as RootState).auth.token 
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`)  // Большая A в Authorization (для consistency с authApi)
+        headers.set('Authorization', `Bearer ${token}`)
       }
       return headers
     },
   }),
   tagTypes: ['Articles'],
   endpoints: builder => ({
-    getArticles: builder.query<any[], { limit?: number; offset?: number }>({
-      query: ({ limit = 6, offset = 0 }) => ({
-        url: '/articles',
-        params: { limit, offset },
+    getArticles: builder.query<
+      any[],
+      {
+        limit?: number
+        offset?: number
+        sort_by?: 'new' | 'popular' | 'active'
+        search?: string
+        category?: string
+        author_id?: string
+        status?: string
+      }
+    >({
+      query: ({
+        limit = 6,
+        offset = 0,
+        sort_by = 'new',
+        search,
+        category,
+        author_id,
+        status,
+      }) => ({
+        url: '/articles/',
+        params: {
+          limit,
+          offset,
+          sort_by,
+          search,
+          category,
+          author_id,
+          status,
+        },
       }),
       providesTags: ['Articles'],
     }),
+
     getArticleBySlug: builder.query<any, string>({
       query: slug => `/articles/${slug}`,
       providesTags: ['Articles'],
     }),
+
     getTotalCount: builder.query<number, void>({
-      query: () => '/articles/count',
+      query: () => '/articles/counts',
     }),
     updateArticle: builder.mutation<any, { articleId: string; data: Partial<Article> }>({
       query: ({ articleId, data }) => ({

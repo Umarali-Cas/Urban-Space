@@ -6,7 +6,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease-in-out;
 
-
   &__imageWrapper {
     width: 100%;
     height: 240px;
@@ -104,9 +103,9 @@
         transition: all 0.2s ease-in-out;
         cursor: pointer;
 
-        &:hover{
-            transform: scale(1.05);
-            transition: all 0.2s ease-in-out;
+        &:hover {
+          transform: scale(1.05);
+          transition: all 0.2s ease-in-out;
         }
       }
     }
@@ -117,11 +116,42 @@
       line-height: 145%;
       font-weight: 600;
       cursor: pointer;
+      transition: all 0.1s ease-in-out;
 
-      &:hover{
+      &:hover {
         text-decoration: underline;
         transform: scale(1.05);
+        transition: all 0.1s ease-in-out;
       }
+
+      &:active {
+        transform: scale(0.95);
+        color: #146318;
+      }
+    }
+  }
+
+  &__button {
+    width: 100%;
+    height: 40px;
+    margin-top: 16px;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 18px;
+    border-radius: 8px;
+    background: #80bf58;
+    color: #ffffff;
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+      background: #6da246;
+      transform: scale(1.01);
+      transition: all 0.1s ease-in-out;
+    }
+
+    &:active {
+      transform: scale(0.98);
+      transition: all 0.1s ease-in-out;
     }
   }
 }
