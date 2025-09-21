@@ -122,14 +122,14 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
 
       const payload = {
         username: formData.username.trim(),
-        region: formData.region || null,
+        region: formData.region || undefined,
         email: formData.email.trim(),
-        phone_number: formData.phone_number || null,
+        phone_number: formData.phone_number || undefined,
         password: formData.password,
       }
 
       const result = await registerUser(payload).unwrap()
-      dispatch(setCredentials({ user: result, token: null }))
+      dispatch(setCredentials({ user: result, token: ""})) //Исправил typeScript проблему но не уверен использует ли токен строку
 
       if (rememberMe) {
         localStorage.setItem(

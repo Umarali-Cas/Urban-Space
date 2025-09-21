@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import React, { useEffect } from 'react'
 import cls from './AdminArticles.module.scss'
@@ -122,7 +123,7 @@ export const AdminArticles = () => {
               <p className={cls.articleDescription}>{article.summary}</p>
               <div className={cls.articleMeta}>
                 <div className={cls.tags}>
-                  {article.tags.map((tag, index) => (
+                  {article.tags.map((tag : string, index : number) => (
                     <span key={index} className={cls.tag}>
                       {tag}
                     </span>

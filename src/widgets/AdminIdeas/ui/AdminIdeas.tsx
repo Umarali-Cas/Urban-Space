@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import React, { useEffect } from 'react'
 import cls from './AdminIdeas.module.scss'
@@ -107,7 +108,7 @@ export const AdminIdeas = () => {
               <p className={cls.ideaDescription}>{idea.description}</p>
               <div className={cls.ideaMeta}>
                 <div className={cls.tags}>
-                  {(idea.tags ?? []).map((tag, i) => (
+                  {(idea.tags ?? []).map((tag : string, i : number) => (
                     <span key={i} className={cls.tag}>
                       {tag}
                     </span>
