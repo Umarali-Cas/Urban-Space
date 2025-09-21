@@ -138,10 +138,8 @@ export function LastIdeas({
               userName={idea.author_name}
               avatarUrl={idea.author_avatar}
               imageUrl={idea.media?.[0]?.meta?.url}
-              onSelect={
-                showSelectButton && selected ? () => selected(idea) : undefined
-              } // передаём выбранную идею наверх
-            />
+              onSelect={showSelectButton && selected ? () => selected(idea) : undefined} // передаём выбранную идею наверх
+              status={'APPROVED'}/>
           ))}
         </div>
       )}

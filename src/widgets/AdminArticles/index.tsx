@@ -1,0 +1,1 @@
+export { AdminArticles } from "./ui/AdminArticles";

@@ -9,9 +9,7 @@ import cls from './Register.module.scss'
 import userIcon from '@/features/auth/assets/user-icon.svg'
 import eyesIcon from '@/features/auth/assets/eye-icon.svg'
 import closedEyesIcon from '@/features/auth/assets/closed-eye-icon.svg'
-import {
-  useRegisterMutation,
-} from '@/features/auth/api/authApi'
+import { useRegisterMutation } from '@/features/auth/api/authApi'
 import { useAppDispatch } from '@/shared/hooks/reduxHooks'
 import { setCredentials } from '@/features/auth/lib/authSlice'
 import { useRouter } from 'next/navigation'
@@ -123,14 +121,15 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
       setIsModalOpen(false)
 
       const payload = {
-        username: formData.username,
-        region: formData.region,
-        email: formData.email,
-        phone_number: formData.phone_number,
+        username: formData.username.trim(),
+        region: formData.region || null,
+        email: formData.email.trim(),
+        phone_number: formData.phone_number || null,
         password: formData.password,
       }
+
       const result = await registerUser(payload).unwrap()
-      dispatch(setCredentials(result))
+      dispatch(setCredentials({ user: result, token: null }))
 
       if (rememberMe) {
         localStorage.setItem(
@@ -145,17 +144,17 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
       }
 
       router.push('/')
-    } catch (err: unknown) {
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'data' in err &&
-        typeof (err as { data?: { message?: string } }).data?.message === 'string'
-      ) {
-        setError((err as { data: { message: string } }).data.message)
+    } catch (err: any) {
+      console.error('Ошибка регистрации:', err)
+
+      if (err?.data?.detail) {
+        setError(err.data.detail)
+      } else if (err?.data?.message) {
+        setError(err.data.message)
       } else {
-        setError('Ошибка регистрации')
+        setError('Ошибка регистрации, попробуйте снова')
       }
+
       setIsModalOpen(true)
     }
   }

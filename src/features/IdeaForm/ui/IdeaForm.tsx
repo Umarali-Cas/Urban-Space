@@ -98,7 +98,7 @@ function LocationPicker({
   return (
     <div
       ref={containerRef}
-      style={{ width: '100%', height: `${height}px`, marginTop: '8px' }}
+      style={{ width: '100%', height: `${height}px`, marginTop: '8px', borderRadius: '8px' }}
     />
   )
 }

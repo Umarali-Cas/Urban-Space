@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     return new Response(Buffer.from(arrayBuffer), {
       headers: {
         'Content-Type': 'image/png',
-        'Access-Control-Allow-Origin': '*', // CORS для браузера
+        'Access-Control-Allow-Origin': '*',
       },
     })
   } catch (err) {
