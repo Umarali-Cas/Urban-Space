@@ -45,6 +45,8 @@
 .mapSection {
   display: flex;
   gap: 24px;
+  max-height: 397px;
+  height: 100%;
 
   @media (max-width: 900px) {
     flex-direction: column;
