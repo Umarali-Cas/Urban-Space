@@ -4,6 +4,9 @@
 import React, { useState, useEffect, useRef, ReactNode } from 'react'
 import classes from './DropDown.module.scss'
 import Cookies from 'js-cookie'
+import topArrow from '../assets/icons/top-arrow-svgrepo-com.svg'
+import bottomArrow from '../assets/icons/bottom-arrow-svgrepo-com.svg'
+import Image from 'next/image'
 
 type LangOption = { label: ReactNode; value: string }
 type Option = string | number | LangOption
@@ -39,6 +42,8 @@ export function DropDown({
   const [selected, setSelected] = useState<Option | ''>('')
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null) // реф на контейнер
+  const [mounted, setMounted] = useState(false)
+useEffect(() => setMounted(true), [])
 
   // установка выбранного значения из куки
   useEffect(() => {
@@ -96,12 +101,11 @@ export function DropDown({
         type={type}
       >
         {selected ? getLabel(selected) : null}{' '}
-        <span
-          style={{ display: visibleArrow ? 'block' : 'none' }}
-          className={classes.arrow}
-        >
-          {open ? '▲' : '▼'}
-        </span>
+         {visibleArrow && (
+           <span className={classes.arrow} suppressHydrationWarning>
+             {open ? <Image src={topArrow} alt='arrow' width={16} height={16}/> : <Image src={bottomArrow} alt='arrow' width={16} height={16}/>}
+           </span>
+         )}
       </button>
 
       <ul
@@ -112,7 +116,7 @@ export function DropDown({
         {options.map(item => (
           <li
             key={String(getValue(item))}
-            style={isLanguage ? {justifyContent: 'center'} : {justifyContent: 'space-between'}}
+   style={mounted ? { justifyContent: isLanguage ? 'center' : 'space-between' } : undefined}
             className={classes.dropDown__list__item}
             onClick={() => {
               setSelected(item)
