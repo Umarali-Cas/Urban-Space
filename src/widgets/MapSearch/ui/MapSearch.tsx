@@ -17,7 +17,7 @@ export function MapSearch() {
           placeholder="Поиск"
           className={classes.mapSearch__search__input}
         />
-        <DropDown />
+        <DropDown arr={['Предложения', 'Проблемы', 'Реализованные проекты']}/>
       </div>
       <CustomMap />
     </section>

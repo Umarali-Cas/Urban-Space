@@ -31,6 +31,8 @@ export default function ArticleDetailPage() {
       </div>
     )
 
+  console.log(article)
+
   return (
     <>
       <ArticlesInfo desc={article.summary} title={article.title} />

@@ -11,5 +11,6 @@ export interface IdeaCardProps {
     avatarUrl?: string | StaticImageData
     uniqueId: number | string
     slug: string
+    status: string
     onSelect?: () => void
   }
