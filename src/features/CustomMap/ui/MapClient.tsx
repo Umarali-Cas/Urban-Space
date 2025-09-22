@@ -107,7 +107,7 @@ export default function MapClient() {
         ],
         fillColor: '#ff0000',
         fillOpacity: 0.4,
-        onClick: (lngLat) =>
+        onClick: lngLat =>
           openModal({
             id: 'polygon-1',
             title: 'Полигон 1',
@@ -129,7 +129,7 @@ export default function MapClient() {
         ],
         fillColor: '#078800',
         fillOpacity: 0.4,
-        onClick: (lngLat) =>
+        onClick: lngLat =>
           openModal({
             id: 'polygon-2',
             title: 'Полигон 2',
@@ -143,37 +143,39 @@ export default function MapClient() {
 
   // Создаём и удаляем карту
   useEffect(() => {
-  if (!mapContainerRef.current) return
+    if (!mapContainerRef.current) return
 
-  // определяем zoom в зависимости от ширины экрана
-  const isMobile = window.innerWidth < 768
-  const initialZoom = isMobile ? 4.7 : 5.7
+    // определяем zoom в зависимости от ширины экрана
+    const isMobile = window.innerWidth < 768
+    const initialZoom = isMobile ? 4.7 : 5.7
 
-  const map = new maplibregl.Map({
-    container: mapContainerRef.current,
-    style:
-      'https://api.maptiler.com/maps/0199685b-a8f6-7754-9745-0ddb7e67df92/style.json?key=YRJ9dctyMJuyJh43IZUs',
-    center: [74.61934986021016, 41.47522939797829],
-    zoom: initialZoom,
-    attributionControl: false,
-  })
+    const map = new maplibregl.Map({
+      container: mapContainerRef.current,
+      style:
+        'https://api.maptiler.com/maps/0199685b-a8f6-7754-9745-0ddb7e67df92/style.json?key=YRJ9dctyMJuyJh43IZUs',
+      center: [74.61934986021016, 41.47522939797829],
+      zoom: initialZoom,
+      attributionControl: false,
+    })
 
-  mapRef.current = map
-  map.addControl(new maplibregl.NavigationControl(), 'top-right')
-  map.on('load', () => setMapReady(true))
+    mapRef.current = map
+    map.addControl(new maplibregl.NavigationControl(), 'top-right')
+    map.on('load', () => setMapReady(true))
 
-  return () => {
-    map.remove()
-  }
-}, [])
-
+    return () => {
+      map.remove()
+    }
+  }, [])
 
   return (
     <>
       <div ref={mapContainerRef} className={classes.mapContainer} />
 
       {selectedData && (
-        <MapModal mapData={selectedData} onClose={() => setSelectedData(null)} />
+        <MapModal
+          mapData={selectedData}
+          onClose={() => setSelectedData(null)}
+        />
       )}
     </>
   )

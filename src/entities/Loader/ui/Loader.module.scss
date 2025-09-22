@@ -9,7 +9,7 @@
 
 .loader::before,
 .loader::after {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   border-radius: 50%;
@@ -22,7 +22,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(0.95);
     background: rgba(255, 255, 255, 0.2);
   }

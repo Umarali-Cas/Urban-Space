@@ -9,7 +9,7 @@ import classes from './IdeaDetailPage.module.scss'
 export default function IdeaDetailPage() {
   const { slug } = useParams<{ slug: string }>()
   console.log(slug)
-    if (!slug) return <p>Идентификатор идеи не найден</p>
+  if (!slug) return <p>Идентификатор идеи не найден</p>
   const { data: idea, isLoading, error } = useGetIdeaBySlugQuery(slug)
 
   if (isLoading) return <p>Загрузка...</p>

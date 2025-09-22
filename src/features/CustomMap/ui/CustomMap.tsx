@@ -8,7 +8,7 @@ const MapClient = dynamic(() => import('./MapClient'), { ssr: false })
 export default function CustomMap() {
   return (
     <div className={classes.mapSection}>
-      <MapClient key={1}/>
+      <MapClient key={1} />
     </div>
   )
 }

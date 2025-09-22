@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { RootState } from '@/app/store/store' 
+import type { RootState } from '@/app/store/store'
 
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).auth.token 
+      const token = (getState() as RootState).auth.token
       if (token) {
         headers.set('Authorization', `Bearer ${token}`)
       }
@@ -59,7 +59,10 @@ export const articlesApi = createApi({
     getTotalCount: builder.query<number, void>({
       query: () => '/articles/counts',
     }),
-    updateArticle: builder.mutation<any, { articleId: string; data: Partial<Article> }>({
+    updateArticle: builder.mutation<
+      any,
+      { articleId: string; data: Partial<Article> }
+    >({
       query: ({ articleId, data }) => ({
         url: `/articles/${articleId}`,
         method: 'PUT',
@@ -68,7 +71,7 @@ export const articlesApi = createApi({
       invalidatesTags: ['Articles'],
     }),
     deleteArticle: builder.mutation<void, string>({
-      query: (articleId) => ({
+      query: articleId => ({
         url: `/articles/${articleId}`,
         method: 'DELETE',
       }),
@@ -86,7 +89,12 @@ interface Article {
   body_md: string
   tags: string[]
   cover_key: string
-  attachments: { file_key: string; mime: string; size_bytes: number; meta: any }[]
+  attachments: {
+    file_key: string
+    mime: string
+    size_bytes: number
+    meta: any
+  }[]
   author_id: string
   status: 'DRAFT' | 'PUBLISHED' | 'REJECTED'
   views_count: number

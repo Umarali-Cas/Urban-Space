@@ -7,11 +7,16 @@ interface NavBarItem {
   href: string
 }
 
-export function NavBar({localizedTitles} : {localizedTitles: string[]}) {
+export function NavBar({ localizedTitles }: { localizedTitles: string[] }) {
   return (
     <nav className={classes.navbar}>
       {NavBarTitles.map((item: NavBarItem, index: number) => (
-        <Link href={item.href} key={item.title} className={classes.navbar__link} prefetch> 
+        <Link
+          href={item.href}
+          key={item.title}
+          className={classes.navbar__link}
+          prefetch
+        >
           {localizedTitles?.[index] ?? item.title}
         </Link>
       ))}

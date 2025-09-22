@@ -15,7 +15,17 @@ import { setCredentials } from '@/features/auth/lib/authSlice'
 import { useRouter } from 'next/navigation'
 import { Modal } from '@/shared/Modal'
 
-export const RegisterW = ({title, form, remember, pass} : {title: string, form: any, remember: any | string, pass: any | string}) => {
+export const RegisterW = ({
+  title,
+  form,
+  remember,
+  pass,
+}: {
+  title: string
+  form: any
+  remember: any | string
+  pass: any | string
+}) => {
   const dispatch = useAppDispatch()
   const router = useRouter()
   const [registerUser, { isLoading: isRegisterLoading }] = useRegisterMutation()
@@ -129,7 +139,7 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
       }
 
       const result = await registerUser(payload).unwrap()
-      dispatch(setCredentials({ user: result, token: ""})) //Исправил typeScript проблему но не уверен использует ли токен строку
+      dispatch(setCredentials({ user: result, token: '' })) //Исправил typeScript проблему но не уверен использует ли токен строку
 
       if (rememberMe) {
         localStorage.setItem(
@@ -175,7 +185,7 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
               onChange={handleChange}
             >
               <option value="">{form.region.placeholder}</option>
-              {form.region.regions.map((city : any)  => (
+              {form.region.regions.map((city: any) => (
                 <option key={city} value={city}>
                   {city}
                 </option>
@@ -256,9 +266,7 @@ export const RegisterW = ({title, form, remember, pass} : {title: string, form: 
         />
 
         <Button
-          text={
-            isRegisterLoading ? 'Загрузка...' : form.title
-          }
+          text={isRegisterLoading ? 'Загрузка...' : form.title}
           className={cls.registerButton}
           onClick={handleSubmit}
           disabled={isRegisterLoading}

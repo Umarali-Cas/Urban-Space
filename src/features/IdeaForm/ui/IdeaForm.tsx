@@ -56,7 +56,7 @@ function LocationPicker({
       attributionControl: false,
     })
 
-    map.on('click', (e) => {
+    map.on('click', e => {
       onSelect(e.lngLat.lat, e.lngLat.lng)
     })
 
@@ -98,7 +98,12 @@ function LocationPicker({
   return (
     <div
       ref={containerRef}
-      style={{ width: '100%', height: `${height}px`, marginTop: '8px', borderRadius: '8px' }}
+      style={{
+        width: '100%',
+        height: `${height}px`,
+        marginTop: '8px',
+        borderRadius: '8px',
+      }}
     />
   )
 }
@@ -148,48 +153,48 @@ export function IdeaForm({ formData }: { formData: any }) {
   }, [])
 
   // превью файла
-const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const selectedFile = e.target.files?.[0] || null
-  setFile(selectedFile)
-  setPreview(selectedFile ? URL.createObjectURL(selectedFile) : null)
-}
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0] || null
+    setFile(selectedFile)
+    setPreview(selectedFile ? URL.createObjectURL(selectedFile) : null)
+  }
 
   // сабмит формы
-const handleSubmit = (e: React.FormEvent) => {
-  e.preventDefault()
-  const form = e.currentTarget as HTMLFormElement
-  const fd = new FormData(form)
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const form = e.currentTarget as HTMLFormElement
+    const fd = new FormData(form)
 
-  if (coords) {
-    fd.append('lat', coords.lat.toString())
-    fd.append('lng', coords.lng.toString())
-  }
-  fd.append('category', category)
-
-  // выводим все поля
-  const data: Record<string, any> = {}
-  fd.forEach((value, key) => {
-    if (value instanceof File) {
-      data[key] = {
-        name: value.name,
-        size: value.size,
-        type: value.type,
-        file: value, // сам объект File
-      }
-    } else {
-      data[key] = value
+    if (coords) {
+      fd.append('lat', coords.lat.toString())
+      fd.append('lng', coords.lng.toString())
     }
-  })
+    fd.append('category', category)
 
-  console.log('📦 Собранные данные формы:', data)
+    // выводим все поля
+    const data: Record<string, any> = {}
+    fd.forEach((value, key) => {
+      if (value instanceof File) {
+        data[key] = {
+          name: value.name,
+          size: value.size,
+          type: value.type,
+          file: value, // сам объект File
+        }
+      } else {
+        data[key] = value
+      }
+    })
 
-  // очистка формы (опционально)
-  form.reset()
-  setCoords(null)
-  setFile(null)
-  setPreview(null)
-  setCategory('Проблемы')
-}
+    console.log('📦 Собранные данные формы:', data)
+
+    // очистка формы (опционально)
+    form.reset()
+    setCoords(null)
+    setFile(null)
+    setPreview(null)
+    setCategory('Проблемы')
+  }
   const value = useCrowdsourcingData()
   const categoryNames = Object.values(formData.category.categories)
 
@@ -228,23 +233,21 @@ const handleSubmit = (e: React.FormEvent) => {
         />
         {coords && (
           <small>
-            {typeof value === 'string' ? value : value.label}: {' '}
+            {typeof value === 'string' ? value : value.label}:{' '}
             {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
           </small>
         )}
       </label>
 
-      <label>
-        {formData.category.label}
-        </label>
-        <DropDown
-          button={classes.dropDown__button}
-          arr={categoryNames as string[]}
-          onSelect={(v) => setCategory(String(v))}
-          className={classes.dropDown}
-          visibleArrow
-        />
-        <input type="hidden" name="category" value={category} />
+      <label>{formData.category.label}</label>
+      <DropDown
+        button={classes.dropDown__button}
+        arr={categoryNames as string[]}
+        onSelect={v => setCategory(String(v))}
+        className={classes.dropDown}
+        visibleArrow
+      />
+      <input type="hidden" name="category" value={category} />
 
       <label className={classes.ideaForm__fileInput}>
         {typeof value === 'string' ? value : value.pic}

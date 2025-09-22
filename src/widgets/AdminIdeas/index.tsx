@@ -1,1 +1,1 @@
-export { AdminIdeas } from "./ui/AdminIdeas";
+export { AdminIdeas } from './ui/AdminIdeas'

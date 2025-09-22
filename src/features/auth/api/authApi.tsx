@@ -9,7 +9,7 @@ export const authApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`) // 🔥 фиксировано Bearer
+        headers.set('Authorization', `Bearer ${token}`)
       }
       return headers
     },
@@ -33,12 +33,12 @@ export const authApi = createApi({
     }),
 
     login: builder.mutation<
-      { user: User; token: string },
+      { user: User ; token: string },
       { email: string; password: string }
     >({
       async queryFn(
         credentials,
-        { getState, dispatch },
+        { dispatch },
         _extraOptions,
         baseQuery
       ) {
@@ -64,8 +64,6 @@ export const authApi = createApi({
           url: '/auth/me',
           method: 'GET',
         })
-        console.log('Profile response:', profileResponse)
-        console.log('Profile response error data:', profileResponse.error);
         if (profileResponse.error) {
           console.error('Profile error:', profileResponse.error)
           return { error: profileResponse.error }

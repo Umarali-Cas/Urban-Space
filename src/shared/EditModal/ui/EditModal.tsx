@@ -20,7 +20,12 @@ interface EditModalProps {
   onClose: () => void
 }
 
-export const EditModal: React.FC<EditModalProps> = ({ isOpen, article, onSave, onClose }) => {
+export const EditModal: React.FC<EditModalProps> = ({
+  isOpen,
+  article,
+  onSave,
+  onClose,
+}) => {
   const [formData, setFormData] = useState({
     title: '',
     summary: '',
@@ -37,9 +42,11 @@ export const EditModal: React.FC<EditModalProps> = ({ isOpen, article, onSave, o
     }
   }, [article, isOpen])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSave = () => {
@@ -48,7 +55,10 @@ export const EditModal: React.FC<EditModalProps> = ({ isOpen, article, onSave, o
         ...article,
         title: formData.title,
         summary: formData.summary,
-        tags: formData.tags.split(',').map((tag) => tag.trim()).filter(Boolean),
+        tags: formData.tags
+          .split(',')
+          .map(tag => tag.trim())
+          .filter(Boolean),
       }
       onSave(updatedArticle)
       onClose()
@@ -91,7 +101,11 @@ export const EditModal: React.FC<EditModalProps> = ({ isOpen, article, onSave, o
           />
         </div>
         <div className={cls.actions}>
-          <Button text="Сохранить" onClick={handleSave} className={cls.saveBtn} />
+          <Button
+            text="Сохранить"
+            onClick={handleSave}
+            className={cls.saveBtn}
+          />
           <Button text="Отмена" onClick={onClose} className={cls.cancelBtn} />
         </div>
       </div>

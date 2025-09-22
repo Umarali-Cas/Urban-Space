@@ -1,4 +1,4 @@
 export interface ArticlesInfoProps {
-    title: string
-    desc: string
-  }
+  title: string
+  desc: string
+}

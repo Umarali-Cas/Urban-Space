@@ -40,7 +40,10 @@ export const AdminArticles = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (!profileLoading && (!user || (user.role !== 'admin' && user.is_superuser !== true))) {
+    if (
+      !profileLoading &&
+      (!user || (user.role !== 'admin' && user.is_superuser !== true))
+    ) {
       router.push('/')
     }
   }, [profileLoading, user, router])
@@ -123,7 +126,7 @@ export const AdminArticles = () => {
               <p className={cls.articleDescription}>{article.summary}</p>
               <div className={cls.articleMeta}>
                 <div className={cls.tags}>
-                  {article.tags.map((tag : string, index : number) => (
+                  {article.tags.map((tag: string, index: number) => (
                     <span key={index} className={cls.tag}>
                       {tag}
                     </span>

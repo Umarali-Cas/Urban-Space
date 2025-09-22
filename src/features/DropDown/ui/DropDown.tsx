@@ -32,18 +32,18 @@ export function DropDown({
     arr && arr.length > 0
       ? arr
       : isLanguage
-      ? [
-          { value: 'ru', label: 'ru' },
-          { value: 'en', label: 'en' },
-          { value: 'kg', label: 'kg' },
-        ]
-      : ['ru', 'en', 'kg']
+        ? [
+            { value: 'ru', label: 'ru' },
+            { value: 'en', label: 'en' },
+            { value: 'kg', label: 'kg' },
+          ]
+        : ['ru', 'en', 'kg']
 
   const [selected, setSelected] = useState<Option | ''>('')
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null) // реф на контейнер
   const [mounted, setMounted] = useState(false)
-useEffect(() => setMounted(true), [])
+  useEffect(() => setMounted(true), [])
 
   // установка выбранного значения из куки
   useEffect(() => {
@@ -51,14 +51,17 @@ useEffect(() => setMounted(true), [])
     if (locale) {
       if (isLanguage) {
         const found = options.find(
-          item => typeof item === 'object' && 'value' in item && item.value === locale
+          item =>
+            typeof item === 'object' && 'value' in item && item.value === locale
         ) as Option | undefined
         if (found) {
           setSelected(found)
           return
         }
       } else {
-        const found = options.find(item => item === (locale as unknown as Option))
+        const found = options.find(
+          item => item === (locale as unknown as Option)
+        )
         if (found) {
           setSelected(found)
           return
@@ -82,7 +85,9 @@ useEffect(() => setMounted(true), [])
   }, [])
 
   const getLabel = (item: Option | ''): ReactNode =>
-    item && typeof item === 'object' && 'label' in item ? item.label : (item as ReactNode)
+    item && typeof item === 'object' && 'label' in item
+      ? item.label
+      : (item as ReactNode)
 
   const getValue = (item: Option | ''): string | number =>
     item && typeof item === 'object' && 'value' in item
@@ -101,11 +106,15 @@ useEffect(() => setMounted(true), [])
         type={type}
       >
         {selected ? getLabel(selected) : null}{' '}
-         {visibleArrow && (
-           <span className={classes.arrow} suppressHydrationWarning>
-             {open ? <Image src={topArrow} alt='arrow' width={16} height={16}/> : <Image src={bottomArrow} alt='arrow' width={16} height={16}/>}
-           </span>
-         )}
+        {visibleArrow && (
+          <span className={classes.arrow} suppressHydrationWarning>
+            {open ? (
+              <Image src={topArrow} alt="arrow" width={16} height={16} />
+            ) : (
+              <Image src={bottomArrow} alt="arrow" width={16} height={16} />
+            )}
+          </span>
+        )}
       </button>
 
       <ul
@@ -116,7 +125,11 @@ useEffect(() => setMounted(true), [])
         {options.map(item => (
           <li
             key={String(getValue(item))}
-   style={mounted ? { justifyContent: isLanguage ? 'center' : 'space-between' } : undefined}
+            style={
+              mounted
+                ? { justifyContent: isLanguage ? 'center' : 'space-between' }
+                : undefined
+            }
             className={classes.dropDown__list__item}
             onClick={() => {
               setSelected(item)

@@ -3,12 +3,12 @@ name: build-and-deploy
 on:
   push:
     branches:
-      - main   # или другая ветка, с которой хочешь деплоить
+      - main # или другая ветка, с которой хочешь деплоить
 
 env:
-  REGISTRY: urbanspace.azurecr.io        # имя ACR
-  IMAGE_NAME: next-frontend            # имя образа
-  RESOURCE_GROUP: urban_space            # имя resource group
+  REGISTRY: urbanspace.azurecr.io # имя ACR
+  IMAGE_NAME: next-frontend # имя образа
+  RESOURCE_GROUP: urban_space # имя resource group
   CONTAINERAPP_NAME: urban-space-frontend # имя Container App
 
 jobs:

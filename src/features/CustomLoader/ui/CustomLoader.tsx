@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useEffect } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function CustomLoader() {
   const pathname = usePathname()
@@ -32,7 +32,7 @@ export default function CustomLoader() {
           <motion.div
             className="w-12 h-12 border-4 border-gray-400 border-t-blue-500 rounded-full"
             animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+            transition={{ repeat: Infinity, duration: 1, ease: 'linear' }}
           />
         </motion.div>
       )}

@@ -14,6 +14,11 @@ import { setCredentials } from '@/features/auth/lib/authSlice'
 import { useRouter } from 'next/navigation'
 import { Modal } from '@/shared/Modal'
 
+interface InputProps {
+  label: string
+  placeholder: string
+}
+
 export const LoginW = ({
   title,
   mail,
@@ -23,8 +28,8 @@ export const LoginW = ({
   remember,
 }: {
   title: string
-  mail: any
-  pass: any
+  mail: InputProps
+  pass: InputProps
   loginBtn: string
   regBtn: string
   remember: string
@@ -70,8 +75,7 @@ export const LoginW = ({
       setIsModalOpen(false)
 
       const result = await login({ email, password }).unwrap()
-
-      dispatch(setCredentials(result)) // { user, token }
+      dispatch(setCredentials(result))
 
       if (rememberMe) {
         localStorage.setItem('authData', JSON.stringify({ email, password }))
@@ -80,8 +84,28 @@ export const LoginW = ({
       }
 
       router.push('/')
-    } catch (err) {
-      setError('Ошибка авторизации')
+    } catch (err: unknown) {
+      let errorMessage = 'Ошибка авторизации'
+
+      if (typeof err === 'object' && err !== null) {
+        if (
+          'data' in err &&
+          typeof err.data === 'object' &&
+          err.data !== null
+        ) {
+          const errorData = err.data as { detail?: string }
+          errorMessage = errorData.detail || errorMessage
+        } else if (
+          'error' in err &&
+          typeof err.error === 'object' &&
+          err.error !== null
+        ) {
+          const errorObj = err.error as { data?: { detail?: string } }
+          errorMessage = errorObj.data?.detail || errorMessage
+        }
+      }
+
+      setError(errorMessage)
       setIsModalOpen(true)
     }
   }

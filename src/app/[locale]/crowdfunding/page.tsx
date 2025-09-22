@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-
 import { SupportUs } from '@/features/SupportUs/ui/SupportUs'
 
 export default async function crowdfunding({
@@ -11,7 +10,7 @@ export default async function crowdfunding({
   params: { locale: string } & Promise<any>
   searchParams: any
 }) {
-    const { locale } = await params
+  const { locale } = await params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/crowdfunding?locale=${locale}`
@@ -23,7 +22,11 @@ export default async function crowdfunding({
   console.log(crowdfundingData)
   return (
     <>
-      <SupportUs title={crowdfundingData.title} desc={crowdfundingData.desc} formData={crowdfundingData.form}/>
+      <SupportUs
+        title={crowdfundingData.title}
+        desc={crowdfundingData.desc}
+        formData={crowdfundingData.form}
+      />
     </>
   )
 }

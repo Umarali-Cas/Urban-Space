@@ -3,7 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import classes from './MapModal.module.scss'
 import Image from 'next/image'
 
-export function MapModal({ mapData, onClose }: { mapData: any; onClose: () => void }) {
+export function MapModal({
+  mapData,
+  onClose,
+}: {
+  mapData: any
+  onClose: () => void
+}) {
   return (
     <AnimatePresence>
       {mapData && (
@@ -17,7 +23,7 @@ export function MapModal({ mapData, onClose }: { mapData: any; onClose: () => vo
         >
           <motion.div
             className={classes.overlay__mapModal}
-            onClick={(e) => e.stopPropagation()}
+            onClick={e => e.stopPropagation()}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
