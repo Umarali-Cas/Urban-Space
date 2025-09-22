@@ -10,7 +10,7 @@ export default async function Register({
   params: { locale: string } & Promise<any>
   searchParams: any
 }) {
-  const { locale } = params
+  const { locale } = await params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`

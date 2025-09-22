@@ -60,6 +60,7 @@ export function SupportUs({title, desc, formData} : {title: string, desc: string
           </h2>
           {selectedIdea ? (
             <IdeaCard
+              status=''
               slug={selectedIdea.slug || ''}
               uniqueId={selectedIdea.id}
               date={selectedIdea.created_at || ''}

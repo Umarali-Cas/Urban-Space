@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 import React, { useEffect } from 'react'
 import cls from './AdminDashboard.module.scss'

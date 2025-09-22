@@ -12,7 +12,7 @@ export default async function ArticlesPage({
   params: { locale: string } & Promise<any>
   searchParams: any
 }) {
-  const { locale } = params
+  const { locale } = await params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/urban-articles?locale=${locale}`

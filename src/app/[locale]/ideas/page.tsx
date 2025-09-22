@@ -10,7 +10,7 @@ export default async function BankIdeas({
   params: { locale: string } & Promise<any>
   searchParams: any
 }) {
-  const { locale } = params
+  const { locale } = await params
 
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/bank-of-ideas?locale=${locale}`
