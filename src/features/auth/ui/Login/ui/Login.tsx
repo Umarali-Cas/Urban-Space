@@ -1,112 +1,90 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import userIcon from '@/features/auth/assets/user-icon.svg';
-import { Button } from '@/shared/Button';
-import Link from 'next/link';
-import cls from './Login.module.scss';
-import { Input } from '@/shared/Input';
-import eyesIcon from '@/features/auth/assets/eye-icon.svg';
-import closedEyesIcon from '@/features/auth/assets/closed-eye-icon.svg';
-import { useLoginMutation } from '@/features/auth/api/authApi';
-import { useAppDispatch } from '@/shared/hooks/reduxHooks';
-import { setCredentials } from '@/features/auth/lib/authSlice';
-import { useRouter } from 'next/navigation';
-import { Modal } from '@/shared/Modal';
+'use client'
+import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
+import userIcon from '@/features/auth/assets/user-icon.svg'
+import { Button } from '@/shared/Button'
+import Link from 'next/link'
+import cls from './Login.module.scss'
+import { Input } from '@/shared/Input'
+import eyesIcon from '@/features/auth/assets/eye-icon.svg'
+import closedEyesIcon from '@/features/auth/assets/closed-eye-icon.svg'
+import { useLoginMutation } from '@/features/auth/api/authApi'
+import { useAppDispatch } from '@/shared/hooks/reduxHooks'
+import { setCredentials } from '@/features/auth/lib/authSlice'
+import { useRouter } from 'next/navigation'
+import { Modal } from '@/shared/Modal'
 
-export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title: string, mail: any, pass: any, loginBtn: string, regBtn: string, remember: string}) => {
-  const dispatch = useAppDispatch();
-  const router = useRouter();
-  const [login, { isLoading }] = useLoginMutation();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export const LoginW = ({
+  title,
+  mail,
+  pass,
+  loginBtn,
+  regBtn,
+  remember,
+}: {
+  title: string
+  mail: any
+  pass: any
+  loginBtn: string
+  regBtn: string
+  remember: string
+}) => {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const [login, { isLoading }] = useLoginMutation()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [rememberMe, setRememberMe] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem('authData');
+    const saved = localStorage.getItem('authData')
     if (saved) {
-      const parsed = JSON.parse(saved);
-      setEmail(parsed.email || '');
-      setPassword(parsed.password || '');
-      setRememberMe(true);
+      const parsed = JSON.parse(saved)
+      setEmail(parsed.email || '')
+      setPassword(parsed.password || '')
+      setRememberMe(true)
     }
-  }, []);
+  }, [])
 
   const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
-      setError('Заполните все поля');
-      setIsModalOpen(true);
-      return;
+      setError('Заполните все поля')
+      setIsModalOpen(true)
+      return
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError('Некорректный формат email');
-      setIsModalOpen(true);
-      return;
+      setError('Некорректный формат email')
+      setIsModalOpen(true)
+      return
     }
 
     try {
-      setError(null);
-      setIsModalOpen(false);
-      const loginResult = await login({ email, password }).unwrap();
+      setError(null)
+      setIsModalOpen(false)
 
-      const response = await fetch('http://localhost:8000/auth/me', {
-        headers: {
-          Authorization: `Bearer ${loginResult.access_token}`,
-        },
-      });
-      const userResult = await response.json();
+      const result = await login({ email, password }).unwrap()
 
-      dispatch(setCredentials({
-        user: userResult,
-        token: loginResult.access_token,
-      }));
+      dispatch(setCredentials(result)) // { user, token }
 
       if (rememberMe) {
-        localStorage.setItem(
-          'authData',
-          JSON.stringify({
-            email,
-            password,
-          })
-        );
+        localStorage.setItem('authData', JSON.stringify({ email, password }))
       } else {
-        localStorage.removeItem('authData');
+        localStorage.removeItem('authData')
       }
 
-      router.push('/');
-    } catch (err: unknown) {
-      interface LoginError {
-        data?: {
-          detail?: Array<{
-            loc: string[];
-            msg: string;
-            type: string;
-          }>;
-        };
-      }
-
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'data' in err &&
-        (err as LoginError).data?.detail
-      ) {
-        const errorMsg = (err as LoginError).data!.detail![0].msg;
-        setError(errorMsg);
-      } else {
-        setError('Ошибка авторизации');
-      }
-      setIsModalOpen(true);
+      router.push('/')
+    } catch (err) {
+      setError('Ошибка авторизации')
+      setIsModalOpen(true)
     }
-  };
+  }
 
   return (
     <section className={cls.loginWidget}>
@@ -119,7 +97,7 @@ export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title:
           text={mail.placeholder}
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           name="email"
         />
       </div>
@@ -131,7 +109,7 @@ export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title:
             text={pass.placeholder}
             type={showPassword ? 'text' : 'password'}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             name="password"
           />
           <Button
@@ -152,7 +130,7 @@ export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title:
             type="checkbox"
             className={cls.checkBox}
             checked={rememberMe}
-            onChange={(e) => setRememberMe(e.target.checked)}
+            onChange={e => setRememberMe(e.target.checked)}
           />
           <p className={cls.rememberMe}>{remember}</p>
         </div>
@@ -175,5 +153,5 @@ export const LoginW = ({title, mail, pass, loginBtn, regBtn, remember} : {title:
         <Button text={regBtn} className={cls.registerButton} />
       </Link>
     </section>
-  );
-};
+  )
+}
