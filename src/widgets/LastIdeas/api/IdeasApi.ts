@@ -26,7 +26,15 @@ export const IdeasApi = createApi({
         status?: string
       }
     >({
-      query: ({ limit = 6, offset = 0, sort_by = 'new', search, category, author_id, status }) => ({
+      query: ({
+        limit = 6,
+        offset = 0,
+        sort_by = 'new',
+        search,
+        category,
+        author_id,
+        status,
+      }) => ({
         url: '/ideas/',
         params: { limit, offset, sort_by, search, category, author_id, status },
       }),
@@ -41,7 +49,9 @@ export const IdeasApi = createApi({
 
     getIdeaBySlug: builder.query<any, string>({
       query: slug => `/ideas/${slug}`,
-      providesTags: (result, error, slug) => [{ type: 'Idea' as const, id: slug }],
+      providesTags: (result, error, slug) => [
+        { type: 'Idea' as const, id: slug },
+      ],
     }),
 
     getTotalCount: builder.query<number, void>({

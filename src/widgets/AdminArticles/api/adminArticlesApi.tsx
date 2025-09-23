@@ -17,7 +17,19 @@ export const adminArticlesApi = createApi({
   endpoints: builder => ({
     updateArticleStatus: builder.mutation<
       void,
-      { articleId: string; data: { status: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'NEEDS_CLARIFICATION' | 'PUBLISHED'; reason?: string } }
+      {
+        articleId: string
+        data: {
+          status:
+            | 'DRAFT'
+            | 'PENDING'
+            | 'APPROVED'
+            | 'REJECTED'
+            | 'NEEDS_CLARIFICATION'
+            | 'PUBLISHED'
+          reason?: string
+        }
+      }
     >({
       query: ({ articleId, data }) => ({
         url: `/admin/articles/${articleId}/status`,

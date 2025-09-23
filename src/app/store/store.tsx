@@ -22,7 +22,7 @@ const rootReducer = combineReducers({
   [mapApi.reducerPath]: mapApi.reducer,
   [getAreasApi.reducerPath]: getAreasApi.reducer,
   [adminPagesApi.reducerPath]: adminPagesApi.reducer,
-  [pagesApi.reducerPath]: pagesApi.reducer
+  [pagesApi.reducerPath]: pagesApi.reducer,
 })
 
 const persistConfig = {

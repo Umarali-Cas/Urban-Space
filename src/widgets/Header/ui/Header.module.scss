@@ -20,13 +20,13 @@
     padding: 24px 64px;
     margin: 0 auto;
 
-      @media (max-width: 1200px) {
-    padding: 24px 32px;
-  }
+    @media (max-width: 1200px) {
+      padding: 24px 32px;
+    }
 
-  @media (max-width: 475px) {
-    padding: 16px 24px;
-  }
+    @media (max-width: 475px) {
+      padding: 16px 24px;
+    }
   }
 
   &__actions {
@@ -36,7 +36,6 @@
 
     @media (max-width: 1380px) {
       column-gap: 18px;
-      
     }
 
     @media (max-width: 1200px) {

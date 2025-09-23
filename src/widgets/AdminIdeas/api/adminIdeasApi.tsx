@@ -6,7 +6,13 @@ export interface AdminIdea {
   title: string
   description: string
   tags: string[]
-  status: 'DRAFT' | 'PENDING' | 'APPROVED' | 'REJECTED' | 'NEEDS_CLARIFICATION' | 'PUBLISHED'
+  status:
+    | 'DRAFT'
+    | 'PENDING'
+    | 'APPROVED'
+    | 'REJECTED'
+    | 'NEEDS_CLARIFICATION'
+    | 'PUBLISHED'
   featured: boolean
 }
 
@@ -25,7 +31,10 @@ export const adminIdeasApi = createApi({
   tagTypes: ['Ideas'],
   endpoints: builder => ({
     // 🔹 получение всех идей (с фильтром по статусу)
-    getAdminIdeas: builder.query<AdminIdea[], { limit?: number; offset?: number; status?: string }>({
+    getAdminIdeas: builder.query<
+      AdminIdea[],
+      { limit?: number; offset?: number; status?: string }
+    >({
       query: ({ limit = 20, offset = 0, status }) => {
         const params = new URLSearchParams({
           limit: String(limit),

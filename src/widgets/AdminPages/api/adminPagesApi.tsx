@@ -47,7 +47,15 @@ export const adminPagesApi = createApi({
 
     addPageBlock: builder.mutation<
       Block,
-      { pageId: string; body: { locale: string; type: string; order: number; data: Record<string, any> } }
+      {
+        pageId: string
+        body: {
+          locale: string
+          type: string
+          order: number
+          data: Record<string, any>
+        }
+      }
     >({
       query: ({ pageId, body }) => ({
         url: `/admin/pages/${pageId}/blocks`,
@@ -59,7 +67,10 @@ export const adminPagesApi = createApi({
 
     updatePageLocale: builder.mutation<
       Page,
-      { pageId: string; body: { locale: string; title: string; is_published: boolean } }
+      {
+        pageId: string
+        body: { locale: string; title: string; is_published: boolean }
+      }
     >({
       query: ({ pageId, body }) => ({
         url: `/admin/pages/${pageId}/locales`,
@@ -71,7 +82,15 @@ export const adminPagesApi = createApi({
 
     updateBlockLocale: builder.mutation<
       Block,
-      { blockId: string; body: { locale: string; type: string; order: number; data: Record<string, any> } }
+      {
+        blockId: string
+        body: {
+          locale: string
+          type: string
+          order: number
+          data: Record<string, any>
+        }
+      }
     >({
       query: ({ blockId, body }) => ({
         url: `/admin/pages/blocks/${blockId}/locales`,
@@ -94,7 +113,10 @@ export const adminPagesApi = createApi({
 
     updateBlock: builder.mutation<
       Block,
-      { blockId: string; body: { type?: string; order?: number; data?: Record<string, any> } }
+      {
+        blockId: string
+        body: { type?: string; order?: number; data?: Record<string, any> }
+      }
     >({
       query: ({ blockId, body }) => ({
         url: `/admin/pages/blocks/${blockId}`,
@@ -104,10 +126,7 @@ export const adminPagesApi = createApi({
       invalidatesTags: ['Blocks'],
     }),
 
-    deleteBlock: builder.mutation<
-      void,
-      { blockId: string }
-    >({
+    deleteBlock: builder.mutation<void, { blockId: string }>({
       query: ({ blockId }) => ({
         url: `/admin/pages/blocks/${blockId}`,
         method: 'DELETE',

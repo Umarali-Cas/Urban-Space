@@ -11,13 +11,19 @@ export function MapSearch() {
     <section className={classes.mapSearch}>
       <h1 className={classes.mapSearch__title}>Эко-карта</h1>
       <div className={classes.mapSearch__search}>
-        <Image src={search} alt='search' width={16} height={16} className={classes.mapSearch__search__icon}/>
+        <Image
+          src={search}
+          alt="search"
+          width={16}
+          height={16}
+          className={classes.mapSearch__search__icon}
+        />
         <input
           type="text"
           placeholder="Поиск"
           className={classes.mapSearch__search__input}
         />
-        <DropDown arr={['Предложения', 'Проблемы', 'Реализованные проекты']}/>
+        <DropDown arr={['Предложения', 'Проблемы', 'Реализованные проекты']} />
       </div>
       <CustomMap />
     </section>

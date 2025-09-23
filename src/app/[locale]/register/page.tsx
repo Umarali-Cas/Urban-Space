@@ -25,7 +25,6 @@ export default async function Register({
   const regData = await registerRes.json()
   const logData = await loginRes.json()
 
-
   const ecoBaner = data.blocks.find((b: any) => b.type === 'features')?.data
   console.log(regData?.blocks[0].data)
   return (

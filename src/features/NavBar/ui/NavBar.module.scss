@@ -2,11 +2,11 @@
   display: flex;
   align-items: center;
   column-gap: 32px;
-  
+
   @media (max-width: 1400px) {
-    column-gap: 23px; 
+    column-gap: 23px;
   }
-  
+
   @media (max-width: 1355px) {
     display: none;
   }
@@ -21,8 +21,8 @@
     text-wrap: nowrap;
 
     &:hover {
-        transform: scale(1.05);
-        color: #008F00;
+      transform: scale(1.05);
+      color: #008f00;
     }
 
     &:active {

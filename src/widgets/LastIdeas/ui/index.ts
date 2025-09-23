@@ -1,1 +1,1 @@
-export { LastIdeas } from './LastIdeas';
+export { LastIdeas } from './LastIdeas'

@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-
 export const mapApi = createApi({
   reducerPath: 'mapApi',
   baseQuery: fetchBaseQuery({
@@ -18,7 +17,7 @@ export const mapApi = createApi({
     getMap: builder.query<any[], void>({
       query: () => '/map/places/',
     }),
-}),
+  }),
 })
 
 export const { useGetMapQuery } = mapApi

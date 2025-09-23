@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { RootState } from '@/app/store/store'
-import { User } from '@/features/auth/lib/authSlice'
+import { setCredentials, User } from '@/features/auth/lib/authSlice'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
@@ -16,7 +16,7 @@ export const authApi = createApi({
   }),
   endpoints: builder => ({
     register: builder.mutation<
-      User, // только user
+      User,
       {
         email: string
         password: string
@@ -33,18 +33,60 @@ export const authApi = createApi({
     }),
 
     login: builder.mutation<
-      { access_token: string; token_type: string },
+      { user: User ; token: string },
       { email: string; password: string }
     >({
-      query: credentials => ({
-        url: '/auth/login-body',
+      async queryFn(
+        credentials,
+        { dispatch },
+        _extraOptions,
+        baseQuery
+      ) {
+        const loginResponse = await baseQuery({
+          url: '/auth/login-body',
+          method: 'POST',
+          body: credentials,
+        })
+        if (loginResponse.error) {
+          console.error('Login error:', loginResponse.error)
+          return { error: loginResponse.error }
+        }
+        const { access_token } = loginResponse.data as {
+          access_token: string
+          token_type: string
+        }
+        console.log('Access token:', access_token)
+
+        // Сохраняем токен в стор перед запросом /auth/me
+        dispatch(setCredentials({ user: null, token: access_token }))
+
+        const profileResponse = await baseQuery({
+          url: '/auth/me',
+          method: 'GET',
+        })
+        if (profileResponse.error) {
+          console.error('Profile error:', profileResponse.error)
+          return { error: profileResponse.error }
+        }
+        const user = profileResponse.data as User
+        return { data: { user, token: access_token } }
+      },
+    }),
+
+    refresh: builder.mutation<
+      { access_token: string; token_type: string },
+      void
+    >({
+      query: () => ({
+        url: '/auth/refresh',
         method: 'POST',
-        body: credentials,
       }),
     }),
+
     getProfile: builder.query<User, void>({
       query: () => '/auth/me',
     }),
+
     updateProfile: builder.mutation<User, Partial<User>>({
       query: profileData => ({
         url: '/profile/update-profile',
@@ -52,12 +94,14 @@ export const authApi = createApi({
         body: profileData,
       }),
     }),
+
     deleteProfile: builder.mutation<void, void>({
       query: () => ({
         url: '/profile/delete-profile',
         method: 'DELETE',
       }),
     }),
+
     uploadAvatar: builder.mutation<{ avatar_url: string }, FormData>({
       query: formData => ({
         url: '/auth/me/avatar',
@@ -75,4 +119,5 @@ export const {
   useUpdateProfileMutation,
   useDeleteProfileMutation,
   useUploadAvatarMutation,
+  useRefreshMutation,
 } = authApi

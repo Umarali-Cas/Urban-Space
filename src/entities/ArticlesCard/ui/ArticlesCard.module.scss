@@ -12,13 +12,13 @@
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 
-  &:hover{
+  &:hover {
     transform: scale(0.97);
     transition: all 0.2s ease-in-out;
     filter: brightness(0.9);
   }
 
-  &:active{
+  &:active {
     transform: scale(0.95);
   }
 

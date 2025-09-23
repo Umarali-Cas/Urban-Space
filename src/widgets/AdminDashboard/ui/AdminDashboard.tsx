@@ -16,14 +16,14 @@ export const AdminDashboard = () => {
   const { user } = useSelector((state: RootState) => state.auth)
   const router = useRouter()
 
-    useEffect(() => {
-      if (
-        !profileLoading &&
-        (!user || (user.role !== 'admin' && user.is_superuser !== true))
-      ) {
-        router.push('/')
-      }
-    }, [profileLoading, user, router])
+  useEffect(() => {
+    if (
+      !profileLoading &&
+      (!user || (user.role !== 'admin' && user.is_superuser !== true))
+    ) {
+      router.push('/')
+    }
+  }, [profileLoading, user, router])
 
   if (profileLoading) {
     return (

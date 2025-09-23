@@ -5,13 +5,26 @@
 import { useState, useEffect } from 'react'
 import classes from './ArticlesPage.module.scss'
 import { ArticlesCard } from '@/entities/ArticlesCard'
-import { useGetArticlesQuery, useGetTotalCountQuery } from '@/widgets/Articles/api/articlesApi'
+import {
+  useGetArticlesQuery,
+  useGetTotalCountQuery,
+} from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
 import { DropDown } from '@/features/DropDown'
 import Image from 'next/image'
-import { useDropDownSearchs, useInputSearchLocale, useNothingDefined } from '@/i18n/useNativeLocale'
+import {
+  useDropDownSearchs,
+  useInputSearchLocale,
+  useNothingDefined,
+} from '@/i18n/useNativeLocale'
 
-export default function ArticlesWrapp({title, desc} : {title: string, desc: string}) {
+export default function ArticlesWrapp({
+  title,
+  desc,
+}: {
+  title: string
+  desc: string
+}) {
   const [page, setPage] = useState(1)
   const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
   const [searchInput, setSearchInput] = useState('')
@@ -30,7 +43,11 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
 
   const sortOptions = useDropDownSearchs()
 
-  const { data: articles = [], isLoading, error } = useGetArticlesQuery({
+  const {
+    data: articles = [],
+    isLoading,
+    error,
+  } = useGetArticlesQuery({
     limit,
     offset,
     sort_by: sortBy,
@@ -73,9 +90,7 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
   return (
     <section className={classes.articlesPage}>
       <h1 className={classes.articlesPage__title}>{title}</h1>
-      <p className={classes.articlesPage__description}>
-        {desc}
-      </p>
+      <p className={classes.articlesPage__description}>{desc}</p>
 
       {/* Сортировка */}
       <div className={classes.sorting}>
@@ -97,11 +112,20 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
       </div>
 
       <div
-        style={articles.length !== 0 ? { justifyContent: 'space-between' } : { justifyContent: 'center' }}
+        style={
+          articles.length !== 0
+            ? { justifyContent: 'space-between' }
+            : { justifyContent: 'center' }
+        }
         className={classes.articlesPage__cardsContainer}
       >
         {isLoading ? (
-          <p style={{ textAlign: 'center', color: 'gray' }} className={classes.loading}>Загрузка...</p>
+          <p
+            style={{ textAlign: 'center', color: 'gray' }}
+            className={classes.loading}
+          >
+            Загрузка...
+          </p>
         ) : error ? (
           <div
             style={{
@@ -113,8 +137,16 @@ export default function ArticlesWrapp({title, desc} : {title: string, desc: stri
             }}
             className={classes.noArticles}
           >
-            <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>{useNothingDefined()}</p>
+            <Image
+              className="global-image-nothing"
+              src="/nothing.svg"
+              alt="404"
+              width={600}
+              height={400}
+            />
+            <p style={{ textAlign: 'center', marginTop: '20px' }}>
+              {useNothingDefined()}
+            </p>
           </div>
         ) : (
           <CardsBox />

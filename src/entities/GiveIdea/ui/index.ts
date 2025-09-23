@@ -1,1 +1,1 @@
-export { GiveIdea } from './GiveIdea';
+export { GiveIdea } from './GiveIdea'

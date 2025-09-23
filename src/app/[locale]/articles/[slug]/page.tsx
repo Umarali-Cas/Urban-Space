@@ -24,7 +24,13 @@ export default function ArticleDetailPage() {
           width: '100%',
         }}
       >
-        <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
+        <Image
+          className="global-image-nothing"
+          src="/nothing.svg"
+          alt="404"
+          width={600}
+          height={400}
+        />
         <p style={{ textAlign: 'center', marginTop: '20px' }}>
           Статья не найдена
         </p>

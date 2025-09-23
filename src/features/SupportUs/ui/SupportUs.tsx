@@ -9,7 +9,15 @@ import { IdeaCard } from '@/entities/IdeaCard'
 import { LastIdeas } from '@/widgets/LastIdeas'
 import { useCrowdfundingData } from '@/i18n/useNativeLocale'
 
-export function SupportUs({title, desc, formData} : {title: string, desc: string, formData: any}) {
+export function SupportUs({
+  title,
+  desc,
+  formData,
+}: {
+  title: string
+  desc: string
+  formData: any
+}) {
   const [selectedIdea, setSelectedIdea] = useState<any | null>(null)
   const crowdfunding = useCrowdfundingData()
 
@@ -60,7 +68,7 @@ export function SupportUs({title, desc, formData} : {title: string, desc: string
           </h2>
           {selectedIdea ? (
             <IdeaCard
-              status=''
+              status=""
               slug={selectedIdea.slug || ''}
               uniqueId={selectedIdea.id}
               date={selectedIdea.created_at || ''}

@@ -1,1 +1,1 @@
-export { EditModal } from "./ui/EditModal";
+export { EditModal } from './ui/EditModal'

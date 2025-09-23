@@ -1,26 +1,26 @@
 @use './reset.scss';
 @use './variable.scss';
 
-@import "leaflet/dist/leaflet.css";
+@import 'leaflet/dist/leaflet.css';
 
-*{
-    font-family: var(--font-family);
+* {
+  font-family: var(--font-family);
 }
 
-main{
-    padding: 120px 0 0 0;
-    margin: 0 auto;
+main {
+  padding: 120px 0 0 0;
+  margin: 0 auto;
 }
 
-input[type=password]::-ms-reveal {
+input[type='password']::-ms-reveal {
   display: none;
 }
 
-input[type=password]::-webkit-textfield-decoration-container {
+input[type='password']::-webkit-textfield-decoration-container {
   display: none;
 }
 
-.global-image-nothing{
+.global-image-nothing {
   width: 600px;
   height: 400px;
 

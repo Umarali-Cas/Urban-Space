@@ -25,7 +25,10 @@ export const AdminIdeas = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (!profileLoading && (!user || (user.role !== 'admin' && user.is_superuser !== true))) {
+    if (
+      !profileLoading &&
+      (!user || (user.role !== 'admin' && user.is_superuser !== true))
+    ) {
       router.push('/')
     }
   }, [profileLoading, user, router])
@@ -108,7 +111,7 @@ export const AdminIdeas = () => {
               <p className={cls.ideaDescription}>{idea.description}</p>
               <div className={cls.ideaMeta}>
                 <div className={cls.tags}>
-                  {(idea.tags ?? []).map((tag : string, i : number) => (
+                  {(idea.tags ?? []).map((tag: string, i: number) => (
                     <span key={i} className={cls.tag}>
                       {tag}
                     </span>

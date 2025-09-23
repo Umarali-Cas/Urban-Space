@@ -56,7 +56,9 @@ export function IdeaCard({
               height={32}
               className={classes.ideaCard__box__profile__avatar}
             />
-            <span className={classes.ideaCard__box__profile__name}>{userName}</span>
+            <span className={classes.ideaCard__box__profile__name}>
+              {userName}
+            </span>
           </div>
           <span className={classes.ideaCard__box__time}>{date}</span>
         </div>
@@ -74,7 +76,9 @@ export function IdeaCard({
               height={24}
               className={classes.ideaCard__tags__likes__icon}
             />
-            <span className={classes.ideaCard__tags__likes__count}>{likes}</span>
+            <span className={classes.ideaCard__tags__likes__count}>
+              {likes}
+            </span>
           </div>
 
           <Link
@@ -86,10 +90,7 @@ export function IdeaCard({
         </div>
 
         {onSelect && (
-          <button
-            className={classes.ideaCard__button}
-            onClick={onSelect}
-          >
+          <button className={classes.ideaCard__button} onClick={onSelect}>
             {useSupportProjectIdea()}
           </button>
         )}

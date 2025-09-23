@@ -1,24 +1,24 @@
-import React, { useEffect } from 'react';
-import cls from "./Modal.module.scss"
+import React, { useEffect } from 'react'
+import cls from './Modal.module.scss'
 
 interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  message: string;
+  isOpen: boolean
+  onClose: () => void
+  message: string
 }
 
 export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message }) => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    if (isOpen) {
-      document.addEventListener('keydown', handleEscape);
-      return () => document.removeEventListener('keydown', handleEscape);
+      if (e.key === 'Escape') onClose()
     }
-  }, [isOpen, onClose]);
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      return () => document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen, onClose])
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className={cls.modalOverlay}>
@@ -30,5 +30,5 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, message }) => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}

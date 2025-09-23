@@ -36,43 +36,46 @@ export default async function RootLayout({
 }) {
   let { locale } = await params
 
-const res = await fetch(
-  `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`,
-  { cache: 'no-store' }
-)
+  const res = await fetch(
+    `https://api.urbanspace.sdinis.org/pages/home?locale=${locale}`,
+    { cache: 'no-store' }
+  )
   const data = await res.json()
 
   // Преобразуем в messages
 
-const messages: Record<string, any> = {}
-data.blocks.forEach((block: { type: string; data: any }, index: number) => {
-  if (data.blocks.filter((b: { type: string }) => b.type === block.type).length > 1) {
-    messages[`${block.type}${index}`] = block.data
-  } else {
-    messages[block.type] = block.data
+  const messages: Record<string, any> = {}
+  data.blocks.forEach((block: { type: string; data: any }, index: number) => {
+    if (
+      data.blocks.filter((b: { type: string }) => b.type === block.type)
+        .length > 1
+    ) {
+      messages[`${block.type}${index}`] = block.data
+    } else {
+      messages[block.type] = block.data
+    }
+  })
+
+  const cookieStore = await cookies()
+  const cookieLocale = cookieStore.get('locale')?.value
+  if (cookieLocale && ['ru', 'en', 'kg'].includes(cookieLocale)) {
+    locale = cookieLocale
   }
-})
 
-const cookieStore = await cookies()
-const cookieLocale = cookieStore.get('locale')?.value
-if (cookieLocale && ['ru', 'en', 'kg'].includes(cookieLocale)) {
-  locale = cookieLocale
-}
-
-    const navCta = data.blocks.filter((b: any) => b.type === 'html');
-    const navBarTiles = navCta?.[0].data.navBar
-    const headerBtn = navCta?.[0].data.button
+  const navCta = data.blocks.filter((b: any) => b.type === 'html')
+  const navBarTiles = navCta?.[0].data.navBar
+  const headerBtn = navCta?.[0].data.button
 
   return (
     <html lang={locale}>
       <body className={`${inter.variable}`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Loader />
-          <HeaderWrapper button={headerBtn} languages={navBarTiles}/>
+          <HeaderWrapper button={headerBtn} languages={navBarTiles} />
           <Providers>
             <main>{children}</main>
           </Providers>
-          <Footer currentLocale={navBarTiles}/>
+          <Footer currentLocale={navBarTiles} />
         </NextIntlClientProvider>
       </body>
     </html>

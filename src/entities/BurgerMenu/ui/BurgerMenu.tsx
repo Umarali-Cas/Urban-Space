@@ -1,44 +1,56 @@
 'use client'
 
-import React, { useEffect, useState, useRef } from "react";
-import classes from "./BurgerMenu.module.scss";
-import Link from "next/link";
-import { BurgerMenuItems } from "../lib/BurgerMenu.helpers";
-import { Button } from "@/shared/Button";
+import React, { useEffect, useState, useRef } from 'react'
+import classes from './BurgerMenu.module.scss'
+import Link from 'next/link'
+import { BurgerMenuItems } from '../lib/BurgerMenu.helpers'
+import { Button } from '@/shared/Button'
 
-export function BurgerMenu({ localizedTitles, btn } : { localizedTitles: string[], btn: string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [width, setWidth] = useState<number | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
+export function BurgerMenu({
+  localizedTitles,
+  btn,
+}: {
+  localizedTitles: string[]
+  btn: string
+}) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [width, setWidth] = useState<number | null>(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const handleResize = () => setWidth(window.innerWidth);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+    const handleResize = () => setWidth(window.innerWidth)
+    handleResize()
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
-        setIsOpen(false);
+        setIsOpen(false)
       }
     }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   return (
     <>
       {width !== null && width < 1355 && (
         <div className={classes.burgerMenu} ref={ref}>
-          <button 
-            className={`${classes.burgerMenu__icon} ${isOpen ? classes.burgerMenu__icon__active : ''}`} 
+          <button
+            className={`${classes.burgerMenu__icon} ${isOpen ? classes.burgerMenu__icon__active : ''}`}
             onClick={() => setIsOpen(!isOpen)}
           >
-            <span className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}></span>
-            <span className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}></span>
-            <span className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}></span>
+            <span
+              className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}
+            ></span>
+            <span
+              className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}
+            ></span>
+            <span
+              className={`${classes.burgerMenu__icon__line} ${isOpen ? classes.burgerMenu__icon__active__line : ''}`}
+            ></span>
           </button>
 
           <ul
@@ -51,9 +63,9 @@ export function BurgerMenu({ localizedTitles, btn } : { localizedTitles: string[
           >
             {BurgerMenuItems.map((item, index) => (
               <li className={classes.burgerMenu__list__item} key={item.href}>
-                <Link 
-                  className={classes.burgerMenu__list__item__link} 
-                  href={item.href} 
+                <Link
+                  className={classes.burgerMenu__list__item__link}
+                  href={item.href}
                   prefetch
                   onClick={() => setIsOpen(false)}
                 >
@@ -63,9 +75,28 @@ export function BurgerMenu({ localizedTitles, btn } : { localizedTitles: string[
             ))}
 
             {width !== null && width < 555 && (
-              <div style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '10px 0' }}>
-                <Link style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} href="/login" onClick={() => setIsOpen(false)}>
-                  <Button style={{ width: '95%', borderRadius: '8px' }} text={btn} />
+              <div
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  padding: '10px 0',
+                }}
+              >
+                <Link
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                  href="/login"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Button
+                    style={{ width: '95%', borderRadius: '8px' }}
+                    text={btn}
+                  />
                 </Link>
               </div>
             )}
@@ -73,5 +104,5 @@ export function BurgerMenu({ localizedTitles, btn } : { localizedTitles: string[
         </div>
       )}
     </>
-  );
+  )
 }

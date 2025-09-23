@@ -117,7 +117,8 @@ export const useMapFeatures = ({
       // удаляем маркеры
       markerInstances.forEach((m, i) => {
         const cfg = markers[i]
-        if (cfg?.onClick) m.getElement().removeEventListener('click', cfg.onClick)
+        if (cfg?.onClick)
+          m.getElement().removeEventListener('click', cfg.onClick)
         if (cfg?.onHover) {
           m.getElement().removeEventListener('mouseenter', cfg.onHover)
           m.getElement().removeEventListener('mouseleave', () => {
@@ -129,7 +130,7 @@ export const useMapFeatures = ({
 
       // удаляем слои/источники полигонов
       polygons.forEach(p => {
-        if (map.getLayer(p.id))  map.removeLayer(p.id)
+        if (map.getLayer(p.id)) map.removeLayer(p.id)
         if (map.getSource(p.id)) map.removeSource(p.id)
       })
     }

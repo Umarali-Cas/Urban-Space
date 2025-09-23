@@ -8,7 +8,12 @@ import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
 import { DropDown } from '@/features/DropDown'
-import { useCrowdfundingData, useDropDownSearchs, useInputSearchLocale, useNothingDefined } from '@/i18n/useNativeLocale'
+import {
+  useCrowdfundingData,
+  useDropDownSearchs,
+  useInputSearchLocale,
+  useNothingDefined,
+} from '@/i18n/useNativeLocale'
 
 export function LastIdeas({
   title,
@@ -62,9 +67,7 @@ export function LastIdeas({
       </p>
 
       {showSelectButton && (
-        <p className={classes.lastIdeas__description}>
-          {data.label}
-        </p>
+        <p className={classes.lastIdeas__description}>{data.label}</p>
       )}
 
       <div className={classes.sorting}>
@@ -138,8 +141,11 @@ export function LastIdeas({
               userName={idea.author_name}
               avatarUrl={idea.author_avatar}
               imageUrl={idea.media?.[0]?.meta?.url}
-              onSelect={showSelectButton && selected ? () => selected(idea) : undefined} // передаём выбранную идею наверх
-              status={'APPROVED'}/>
+              onSelect={
+                showSelectButton && selected ? () => selected(idea) : undefined
+              } // передаём выбранную идею наверх
+              status={'APPROVED'}
+            />
           ))}
         </div>
       )}
