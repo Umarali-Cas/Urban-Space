@@ -144,7 +144,7 @@ export function LastIdeas({
               onSelect={
                 showSelectButton && selected ? () => selected(idea) : undefined
               } // передаём выбранную идею наверх
-              status={'APPROVED'}
+              status={idea.status || 'DRAFT'}
             />
           ))}
         </div>
