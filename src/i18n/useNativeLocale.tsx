@@ -1,9 +1,9 @@
 'use client'
 
-import { useParams } from 'next/navigation'
+import { useLocale } from 'next-intl'
 
 export function useInputSearchLocale() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return 'Поиск...'
@@ -17,7 +17,7 @@ export function useInputSearchLocale() {
 }
 
 export function useDropDownSearchs() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return [
@@ -47,7 +47,7 @@ export function useDropDownSearchs() {
 }
 
 export function useMoreButton() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return 'Подробнее'
@@ -61,7 +61,7 @@ export function useMoreButton() {
 }
 
 export function useCrowdfundingData() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return {
@@ -91,7 +91,7 @@ export function useCrowdfundingData() {
 }
 
 export function useSupportProjectIdea() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return 'Поддержать проект'
@@ -105,7 +105,7 @@ export function useSupportProjectIdea() {
 }
 
 export function useNothingDefined() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return 'Ничего не найдено'
@@ -119,7 +119,7 @@ export function useNothingDefined() {
 }
 
 export function useCrowdsourcingData() {
-  const { locale } = useParams() as { locale: string }
+  const locale = useLocale()
   switch (locale) {
     case 'ru':
       return {
@@ -137,6 +137,9 @@ export function useCrowdsourcingData() {
         pic: 'Профиль сүрөтү',
       }
     default:
-      return 'Ничего не найдено'
+      return {
+        label: 'Выбрано:',
+        pic: 'Фото профиля',
+      }
   }
 }

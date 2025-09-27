@@ -63,13 +63,13 @@ export const AdminPages = () => {
   const [editBlock, setEditBlock] = useState<Block | null>(null)
 
   useEffect(() => {
-    if (
-      !profileLoading &&
-      (!user || (user.role !== 'admin' && user.is_superuser !== true))
-    ) {
-      router.push('/')
-    }
-  }, [profileLoading, user, router])
+      if (
+        !profileLoading &&
+        (!user || (user.role !== 'SUPERADMIN'))
+      ) {
+        router.push('/')
+      }
+    }, [profileLoading, user, router])
 
   if (profileLoading) {
     return (
