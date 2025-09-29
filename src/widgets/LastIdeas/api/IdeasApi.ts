@@ -19,7 +19,6 @@ export const IdeasApi = createApi({
       {
         limit?: number
         offset?: number
-        sort_by?: 'new' | 'popular' | 'active'
         search?: string
         category?: string
         author_id?: string
@@ -29,14 +28,13 @@ export const IdeasApi = createApi({
       query: ({
         limit = 6,
         offset = 0,
-        sort_by = 'new',
         search,
         category,
         author_id,
         status,
       }) => ({
         url: '/ideas/',
-        params: { limit, offset, sort_by, search, category, author_id, status },
+        params: { limit, offset, search, category, author_id, status },
       }),
       providesTags: result =>
         result

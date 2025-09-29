@@ -10,13 +10,12 @@ import {
   useGetTotalCountQuery,
 } from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
-import { DropDown } from '@/features/DropDown'
 import Image from 'next/image'
 import {
-  useDropDownSearchs,
   useInputSearchLocale,
   useNothingDefined,
 } from '@/i18n/useNativeLocale'
+import { AddArticleOrIdea } from '@/entities/AddArticleOrIdea/ui/AddArticleOrIdea'
 
 export default function ArticlesWrapp({
   title,
@@ -26,7 +25,6 @@ export default function ArticlesWrapp({
   desc: string
 }) {
   const [page, setPage] = useState(1)
-  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
   const [searchInput, setSearchInput] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = 6
@@ -41,7 +39,6 @@ export default function ArticlesWrapp({
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = useDropDownSearchs()
 
   const {
     data: articles = [],
@@ -50,7 +47,6 @@ export default function ArticlesWrapp({
   } = useGetArticlesQuery({
     limit,
     offset,
-    sort_by: sortBy,
     search: debouncedSearch,
   })
 
@@ -91,6 +87,7 @@ export default function ArticlesWrapp({
     <section className={classes.articlesPage}>
       <h1 className={classes.articlesPage__title}>{title}</h1>
       <p className={classes.articlesPage__description}>{desc}</p>
+      <AddArticleOrIdea show={true} isArticle={true} />
 
       {/* Сортировка */}
       <div className={classes.sorting}>
@@ -100,14 +97,6 @@ export default function ArticlesWrapp({
           placeholder={useInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
-        />
-        <DropDown
-          arr={sortOptions}
-          onSelect={val => {
-            setPage(1)
-            setSortBy(val as 'new' | 'popular' | 'active')
-          }}
-          className={classes.sorting__dropdown}
         />
       </div>
 

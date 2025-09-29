@@ -1,0 +1,115 @@
+.addArticleOrIdea_wrapper {
+  position: absolute;
+  top: 200px;
+  right: 100px;
+
+  @media (max-width: 1250px) {
+    right: 80px;
+  }
+
+  @media (max-width: 966px) {
+    top: 130px;
+  }
+
+  @media (max-width: 768px) {
+    top: 110px;
+    right: 20px;
+  }
+}
+
+.addArticleOrIdea {
+  display: flex;
+  column-gap: 16px;
+
+  @media (max-width: 1060px) {
+    column-gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    column-gap: 4px;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+
+    @media (max-width: 1060px) {
+      row-gap: 8px;
+    }
+
+    @media (max-width: 768px) {
+      row-gap: 4px;
+    }
+
+    &__text {
+      max-width: 270px;
+      font-family: var(--font-family);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 120%;
+      letter-spacing: -0.02em;
+      color: #000;
+
+      @media (max-width: 1060px) {
+        font-size: 12px;
+        max-width: 200px;
+      }
+
+        @media (max-width: 768px) {
+            font-size: 10px;
+            max-width: 150px;
+        }
+    }
+
+    &__button {
+      border-radius: 12px;
+      padding: 12px 40px;
+      width: 252px;
+      height: 47px;
+      background: #80bf58;
+      font-family: var(--font-family);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 145%;
+      letter-spacing: -0.01em;
+      text-align: center;
+      color: #fff;
+
+      @media (max-width: 1060px) {
+        font-size: 14px;
+        padding: 6px 16px;
+        width: 180px;
+        height: 36px;
+      }
+
+        @media (max-width: 768px) {
+            font-size: 12px;
+            padding: 4px 8px;
+            width: 140px;
+            height: 30px;
+            border-radius: 8px;
+        }
+    }
+  }
+
+  .yellowlight {
+    width: 100px;
+    height: 100px;
+
+    @media (max-width: 1060px) {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  .typewritter{
+        width: 100px;
+    height: 100px;
+
+    @media (max-width: 1060px) {
+      width: 80px;
+      height: 80px;
+    }
+  }
+}

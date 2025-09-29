@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
+import { AddArticleOrIdea } from '@/entities/AddArticleOrIdea/ui/AddArticleOrIdea'
+import { useGetProfileQuery } from '@/features/auth/api/authApi'
 import { LastIdeas } from '@/widgets/LastIdeas'
 
 export default async function BankIdeas({
@@ -11,7 +13,7 @@ export default async function BankIdeas({
   searchParams: any
 }) {
   const { locale } = await params
-
+  
   const res = await fetch(
     `https://api.urbanspace.sdinis.org/pages/bank-of-ideas?locale=${locale}`
   )
@@ -27,6 +29,7 @@ export default async function BankIdeas({
         title={heroData.title}
         subtitle={heroData.desc}
         viewCards={9}
+        showAddButton={true}
       />
     </>
   )

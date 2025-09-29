@@ -21,7 +21,6 @@ export const articlesApi = createApi({
       {
         limit?: number
         offset?: number
-        sort_by?: 'new' | 'popular' | 'active'
         search?: string
         category?: string
         author_id?: string
@@ -31,7 +30,6 @@ export const articlesApi = createApi({
       query: ({
         limit = 6,
         offset = 0,
-        sort_by = 'new',
         search,
         category,
         author_id,
@@ -41,7 +39,6 @@ export const articlesApi = createApi({
         params: {
           limit,
           offset,
-          sort_by,
           search,
           category,
           author_id,

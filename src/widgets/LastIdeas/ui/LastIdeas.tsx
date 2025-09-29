@@ -7,13 +7,12 @@ import { LastIdeasProps } from '../types/type'
 import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
 import Image from 'next/image'
-import { DropDown } from '@/features/DropDown'
 import {
   useCrowdfundingData,
-  useDropDownSearchs,
   useInputSearchLocale,
   useNothingDefined,
 } from '@/i18n/useNativeLocale'
+import { AddArticleOrIdea } from '@/entities/AddArticleOrIdea/ui/AddArticleOrIdea'
 
 export function LastIdeas({
   title,
@@ -21,9 +20,9 @@ export function LastIdeas({
   viewCards = 6,
   selected,
   showSelectButton = false,
+  showAddButton = false,
 }: LastIdeasProps) {
   const [page, setPage] = useState(1)
-  const [sortBy, setSortBy] = useState<'new' | 'popular' | 'active'>('new')
   const [searchInput, setSearchInput] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = viewCards
@@ -40,8 +39,6 @@ export function LastIdeas({
     return () => clearTimeout(handler)
   }, [searchInput])
 
-  const sortOptions = useDropDownSearchs()
-
   const {
     data: ideas = [],
     isLoading,
@@ -49,7 +46,6 @@ export function LastIdeas({
   } = useGetIdeasQuery({
     limit,
     offset,
-    sort_by: sortBy,
     search: debouncedSearch,
   })
 
@@ -66,6 +62,8 @@ export function LastIdeas({
         {subtitle}
       </p>
 
+      <AddArticleOrIdea show={showAddButton} isArticle={false} />
+
       {showSelectButton && (
         <p className={classes.lastIdeas__description}>{data.label}</p>
       )}
@@ -77,14 +75,6 @@ export function LastIdeas({
           placeholder={useInputSearchLocale()}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
-        />
-        <DropDown
-          arr={sortOptions as unknown as string[]}
-          onSelect={val => {
-            setPage(1)
-            setSortBy(val as 'new' | 'popular' | 'active')
-          }}
-          className={classes.sorting__dropdown}
         />
       </div>
 
@@ -144,7 +134,7 @@ export function LastIdeas({
               onSelect={
                 showSelectButton && selected ? () => selected(idea) : undefined
               } // передаём выбранную идею наверх
-              status={'APPROVED'}
+              status={idea.status || 'DRAFT'}
             />
           ))}
         </div>

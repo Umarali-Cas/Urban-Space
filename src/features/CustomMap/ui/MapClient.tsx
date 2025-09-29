@@ -61,7 +61,7 @@ export default function MapClient() {
     return markerEl
   }
 
-  // Подключаем фичи карт
+  // Подключаем маркеры / полигоны
   useMapFeatures({
     map: mapReady ? mapRef.current : null,
     markers: [
@@ -141,11 +141,9 @@ export default function MapClient() {
     ],
   })
 
-  // Создаём и удаляем карту
   useEffect(() => {
     if (!mapContainerRef.current) return
 
-    // определяем zoom в зависимости от ширины экрана
     const isMobile = window.innerWidth < 768
     const initialZoom = isMobile ? 4.7 : 5.7
 
@@ -160,7 +158,31 @@ export default function MapClient() {
 
     mapRef.current = map
     map.addControl(new maplibregl.NavigationControl(), 'top-right')
-    map.on('load', () => setMapReady(true))
+
+    map.on('load', () => {
+      setMapReady(true)
+
+      // Добавляем слой границы Кыргызстана
+      map.addLayer(
+        {
+          id: 'kyrgyzstan-border',
+          type: 'line',
+          source: 'openmaptiles',            // возможно имя другое — проверь в style.json
+          'source-layer': 'boundary',        // возможно другое имя слоя
+          paint: {
+            'line-color': '#ff0000',
+            'line-width': 3,
+          },
+          filter: [
+            'all',
+            ['==', 'admin_level', 2],         // границы стран
+            ['==', 'iso_a2', 'KG'],            // код Кыргызстана
+          ],
+        },
+        // вставляем перед слоем с лейблами, чтобы граница была видна
+        findLabelLayerId(map) // функция, определяющая правильный слой перед которым вставить
+      )
+    })
 
     return () => {
       map.remove()
@@ -170,13 +192,21 @@ export default function MapClient() {
   return (
     <>
       <div ref={mapContainerRef} className={classes.mapContainer} />
-
       {selectedData && (
-        <MapModal
-          mapData={selectedData}
-          onClose={() => setSelectedData(null)}
-        />
+        <MapModal mapData={selectedData} onClose={() => setSelectedData(null)} />
       )}
     </>
   )
+}
+
+// вспомогательная функция: находит первый слой с текстом/символами, перед которым можно вставлять
+function findLabelLayerId(map: maplibregl.Map): string | undefined {
+  const layers = map.getStyle().layers
+  if (!layers) return undefined
+  for (const layer of layers) {
+    if (layer.type === 'symbol' && layer.layout && (layer.layout['text-field'] || layer.layout['icon-image'])) {
+      return layer.id
+    }
+  }
+  return undefined
 }

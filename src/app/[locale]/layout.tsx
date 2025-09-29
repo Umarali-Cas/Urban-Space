@@ -8,7 +8,7 @@ import { Providers } from '@/app/[locale]/providers'
 import { Loader } from '@/entities/Loader'
 import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
-import { HeaderWrapper } from '@/widgets/Header'
+import HeaderWrapper from '@/widgets/Header/ui/HeaderWrapper'
 import { cookies } from 'next/headers'
 
 const inter = Inter({
@@ -71,8 +71,8 @@ export default async function RootLayout({
       <body className={`${inter.variable}`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Loader />
-          <HeaderWrapper button={headerBtn} languages={navBarTiles} />
           <Providers>
+          <HeaderWrapper button={headerBtn} languages={navBarTiles} />
             <main>{children}</main>
           </Providers>
           <Footer currentLocale={navBarTiles} />

@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import React, { useEffect, useState, useRef } from 'react'
 import classes from './BurgerMenu.module.scss'
 import Link from 'next/link'
 import { BurgerMenuItems } from '../lib/BurgerMenu.helpers'
-import { Button } from '@/shared/Button'
 
 export function BurgerMenu({
   localizedTitles,
   btn,
+  isVisibleLoginButton,
 }: {
   localizedTitles: string[]
   btn: string
+  isVisibleLoginButton: boolean
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const [width, setWidth] = useState<number | null>(null)
@@ -74,7 +76,7 @@ export function BurgerMenu({
               </li>
             ))}
 
-            {width !== null && width < 555 && (
+            {/* {width !== null && width < 555 && (
               <div
                 style={{
                   width: '100%',
@@ -99,7 +101,7 @@ export function BurgerMenu({
                   />
                 </Link>
               </div>
-            )}
+            )} */}
           </ul>
         </div>
       )}
