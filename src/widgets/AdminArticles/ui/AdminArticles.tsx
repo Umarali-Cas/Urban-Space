@@ -40,13 +40,13 @@ export const AdminArticles = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (
-      !profileLoading &&
-      (!user || (user.role !== 'admin' && user.is_superuser !== true))
-    ) {
-      router.push('/')
-    }
-  }, [profileLoading, user, router])
+      if (
+        !profileLoading &&
+        (!user || (user.role !== 'SUPERADMIN'))
+      ) {
+        router.push('/')
+      }
+    }, [profileLoading, user, router])
 
   if (profileLoading) {
     return (

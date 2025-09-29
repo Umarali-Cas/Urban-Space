@@ -25,10 +25,7 @@ export const AdminIdeas = () => {
   const router = useRouter()
 
   useEffect(() => {
-    if (
-      !profileLoading &&
-      (!user || (user.role !== 'admin' && user.is_superuser !== true))
-    ) {
+    if (!profileLoading && (!user || user.role !== 'SUPERADMIN')) {
       router.push('/')
     }
   }, [profileLoading, user, router])
