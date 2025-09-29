@@ -1,6 +1,7 @@
 'use client'
 
 import { useLocale } from 'next-intl'
+import { useParams } from 'next/navigation'
 
 export function useInputSearchLocale() {
   const locale = useLocale()
