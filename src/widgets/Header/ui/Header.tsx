@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
 import { Logo } from '@/entities/Logo'
@@ -15,6 +16,10 @@ import uk from '../assets/images/uk.jpg'
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { useGetProfileQuery } from '@/features/auth/api/authApi'
+import profileImg from '../assets/images/profile.svg'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/app/store/store'
 
 const BurgerMenu = dynamic(
   () =>
@@ -34,6 +39,16 @@ const languages = [
 export function Header({ localize, btn }: { localize: string[]; btn: string }) {
   const router = useRouter()
   const pathname = usePathname() // текущий путь без домена
+  const token = useSelector((state: RootState) => state.auth.token)
+  const { data: user, isLoading, refetch } = useGetProfileQuery(undefined, {
+    skip: !token, // если нет токена — пропускаем запрос
+  })
+
+  useEffect(() => {
+  if (token) {
+    refetch()
+  }
+}, [token])
 
   const [width, setWidth] = useState<number | null>(null)
 
@@ -57,6 +72,34 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
     router.push(newPath, { scroll: false })
   }
 
+  const showProfileOrButton = () => {
+    if (isLoading) return null
+    if (user)
+      return (
+        <Link href="/profile">
+          <Button
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '12px 16px',
+            }}
+            text={
+              <Image src={profileImg} alt={'profile'} width={24} height={24} />
+            }
+          />
+        </Link>
+      )
+    if (width !== null && width >= 555)
+      return (
+        <Link href="/login">
+          <Button text={btn} />
+        </Link>
+      )
+    return null
+  }
+  const shouldShowLoginButton = !user && width !== null && width < 555
+
+
   return (
     <header className={classes.header}>
       <div className={classes.header__content}>
@@ -70,12 +113,13 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
             onSelect={value => handleLanguageChange(value as string)}
             isLanguage={true}
           />
-          {width !== null && width > 555 && (
+          {/* {width !== null && width > 555 && (
             <Link href="/login">
               <Button text={btn} />
             </Link>
-          )}
-          <BurgerMenu btn={btn} localizedTitles={localize} />
+          )} */}
+          {showProfileOrButton()}
+          <BurgerMenu isVisibleLoginButton={shouldShowLoginButton} btn={btn} localizedTitles={localize} />
         </div>
       </div>
     </header>

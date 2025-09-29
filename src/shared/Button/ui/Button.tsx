@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ButtonHTMLAttributes } from 'react'
 import classes from './Button.module.scss'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  text?: string | React.ReactNode
+  text?: string | React.ReactNode | any
   className?: string
 }
 

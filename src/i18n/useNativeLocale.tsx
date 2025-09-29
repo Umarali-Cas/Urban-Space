@@ -143,3 +143,53 @@ export function useCrowdsourcingData() {
       }
   }
 }
+
+export function useDetailPageLocale() {
+  const { locale } = useParams() as { locale: string }
+  switch (locale) {
+    case 'ru':
+      return {
+        titleIdea: 'Урбан-идеи',
+        subtitleIdea: 'Ознакомьтесь с идеями наших пользователей',
+        titleArticle: 'Урбан-статьи',
+        subtitleArticle: 'Ознакомьтесь с последними новостями',
+        share: 'Поделится',
+        map: 'Где пользователь советует реализовать идею',
+        otherIdeas: 'Другие публикации',
+        otherArticles: 'Другие статьи',
+      }
+    case 'en':
+      return {
+        titleIdea: 'Urban Ideas',
+        subtitleIdea: 'Check out ideas from our users',
+        titleArticle: 'Urban Articles',
+        subtitleArticle: 'Check out the latest news',
+        share: 'Share',
+        map: 'Where the user suggests to realize the idea',
+        otherIdeas: 'Other publications',
+        otherArticles: 'Other articles',
+      }
+    case 'kg':
+      return {
+        titleIdea: 'Урбан-идеялар',
+        subtitleIdea: 'Биздин колдонуучулардын идеяларын карап көрүңүз',
+        titleArticle: 'Урбан-статьялар',
+        subtitleArticle: 'Акыркы жаңылыктарды көрүңүз',
+        share: 'Бөлүшүү',
+        map: 'Колдонуучу идеяны ишке ашырууга кеңеш берген жерде',
+        otherIdeas: 'Башка публикациялар',
+        otherArticles: 'Башка макалалар',
+      }
+    default:
+      return {
+        titleIdea: 'Урбан-идеи',
+        subtitleIdea: 'Ознакомьтесь с идеями наших пользователей',
+        titleArticle: 'Урбан-статьи',
+        subtitleArticle: 'Ознакомьтесь с последними новостями',
+        share: 'Поделится',
+        map: 'Где пользователь советует реализовать идею',
+        otherIdeas: 'Другие публикации',
+        otherArticles: 'Другие статьи',
+      }
+  }
+}

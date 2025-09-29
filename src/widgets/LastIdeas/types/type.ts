@@ -5,4 +5,5 @@ export interface LastIdeasProps {
   viewCards?: number
   selected?: (idea: any) => void
   showSelectButton?: boolean
+  showAddButton?: boolean
 }

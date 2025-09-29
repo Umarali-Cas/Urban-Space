@@ -23,7 +23,6 @@ export default async function Login({
   const logData = await logRes.json()
 
   const ecoBaner = data.blocks.find((b: any) => b.type === 'features')?.data
-  console.log(logData?.blocks[0].data)
 
   return (
     <>

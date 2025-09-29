@@ -12,6 +12,10 @@
     background: rgb(132, 132, 132);
     border-radius: 14px 14px 0 0;
     overflow: hidden;
+
+    @media (max-width: 1250px) {
+      height: 200px;
+    }
   }
 
   &__image {
@@ -24,6 +28,9 @@
 
   &__content {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 
     @media (max-width: 1250px) {
       padding: 16px;
@@ -37,6 +44,8 @@
     line-height: 145%;
     letter-spacing: -2%;
     min-height: 70px;
+    text-overflow: ellipsis;
+    // white-space: nowrap;
 
     @media (max-width: 1250px) {
       font-size: 20px;
@@ -47,10 +56,24 @@
     font-size: 16px;
     color: #354052;
     font-weight: 400;
-    min-height: 66px;
+    min-height: 100px;
+    // max-height: 66px;
     margin-top: 8px;
     letter-spacing: -0.5%;
     line-height: 140%;
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* ← ставим 3 строки */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    /* чтобы работало во всех случаях */
+    text-overflow: ellipsis;
+    word-break: break-word;
+
+    @media (max-width: 1250px) {
+      font-size: 14px;
+      min-height: 40px;
+    }
   }
 
   &__box {
@@ -59,6 +82,10 @@
     height: 30px;
     align-items: center;
     margin: 8px 0 32px;
+
+    @media (max-width: 1250px) {
+      margin: 8px 0 24px;
+    }
 
     &__profile {
       display: flex;
