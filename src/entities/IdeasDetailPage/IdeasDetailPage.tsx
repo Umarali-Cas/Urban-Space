@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image, { StaticImageData } from 'next/image'
 import classes from './IdeasDetailPage.module.scss'
-import { ArticlesCard } from '@/entities/ArticlesCard'
 import { useGetIdeasQuery } from '@/widgets/LastIdeas/api/IdeasApi'
 import { IdeaCard } from '../IdeaCard'
+import { useDetailPageLocale } from '@/i18n/useNativeLocale'
 
 export function IdeasDetailPage({
   title,
@@ -13,18 +14,19 @@ export function IdeasDetailPage({
   desc: string
   image: StaticImageData | string
 }) {
-  const { data: ideas = [], isLoading } = useGetIdeasQuery({ limit: 6 })
+  const { data: ideas = [], isLoading } = useGetIdeasQuery({ limit: 3 })
+  const { titleIdea, subtitleIdea, share, map, otherIdeas } = useDetailPageLocale()
 
   return (
     <section className={classes.ideasDetailPage}>
       <div className={classes.ideasDetailPage__upper}>
-        <h1>Урбан-идеи</h1>
-        <p>Ознакомьтесь с последними предложениями</p>
+        <h1>{titleIdea}</h1>
+        <p>{subtitleIdea}</p>
       </div>
       <div className={classes.ideasDetailPage__content}>
         <div className={classes.ideasDetailPage__content__upWrapper}>
-          <span>20 января</span>
-          <a href="#">Поделится</a>
+          <span>20 января <Image className={classes.calendarImg} src="/calendar.svg" alt="calendar" width={24} height={24}/></span>
+          <a href="#"><Image className={classes.shareImg} src="/share.svg" alt='share' width={24} height={24}/>{share}</a>
         </div>
         <h1 className={classes.ideasDetailPage__content__title}>{title}</h1>
         <div className={classes.ideasDetailPage__content__imageWrapper}>
@@ -78,7 +80,7 @@ export function IdeasDetailPage({
         </div>
         <p className={classes.ideasDetailPage__content__desc}>{desc}</p>
       </div>
-      <h1 className={classes.ideasDetailPage__others__title}>Другие идеи</h1>
+      <h1 className={classes.ideasDetailPage__others__title}>{otherIdeas}</h1>
       <div className={classes.ideasDetailPage__others}>
         {isLoading && <p>Загрузка...</p>}
         {ideas.map((idea, index) => (

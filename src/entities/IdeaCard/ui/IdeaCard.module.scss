@@ -28,6 +28,9 @@
 
   &__content {
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 
     @media (max-width: 1250px) {
       padding: 16px;
@@ -53,7 +56,8 @@
     font-size: 16px;
     color: #354052;
     font-weight: 400;
-    min-height: 66px;
+    min-height: 100px;
+    // max-height: 66px;
     margin-top: 8px;
     letter-spacing: -0.5%;
     line-height: 140%;
@@ -65,6 +69,11 @@
     /* чтобы работало во всех случаях */
     text-overflow: ellipsis;
     word-break: break-word;
+
+    @media (max-width: 1250px) {
+      font-size: 14px;
+      min-height: 40px;
+    }
   }
 
   &__box {
