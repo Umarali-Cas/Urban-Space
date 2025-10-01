@@ -7,7 +7,7 @@ export const IdeasApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
     prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as any).auth?.accessToken
+      const token = (getState() as any).auth?.token
       if (token) headers.set('authorization', `Bearer ${token}`)
       return headers
     },
@@ -67,6 +67,41 @@ export const IdeasApi = createApi({
         { type: 'Idea', id: 'LIST' },
       ],
     }),
+    createIdea: builder.mutation<
+      any,
+      {
+        title: string
+        slug: string
+        description_md: string
+        category: string
+        tags: string[]
+        media: any[]
+        lat: number
+        lon: number
+        status: 'PENDING'
+      }
+    >({
+      query: idea => ({
+        url: '/ideas/',
+        method: 'POST',
+        body: idea,
+      }),
+      invalidatesTags: ['Idea'],
+    }),
+
+    uploadIdeaMedia: builder.mutation<any[], { ideaId: string; files: File[] }>(
+      {
+        query: ({ ideaId, files }) => {
+          const formData = new FormData()
+          files.forEach(file => formData.append('files', file))
+          return {
+            url: `/ideas/${ideaId}/media`,
+            method: 'POST',
+            body: formData,
+          }
+        },
+      }
+    ),
   }),
 })
 
@@ -75,4 +110,6 @@ export const {
   useGetIdeaBySlugQuery,
   useGetTotalCountQuery,
   useLikeIdeaMutation,
+  useCreateIdeaMutation,
+  useUploadIdeaMediaMutation,
 } = IdeasApi
