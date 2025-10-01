@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
@@ -8,6 +7,7 @@ import {
   useCreateIdeaMutation,
   useUploadIdeaMediaMutation,
 } from '@/widgets/LastIdeas/api/IdeasApi'
+import { Uploaded } from './Uploaded'
 
 export function AddIdea() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
@@ -15,6 +15,8 @@ export function AddIdea() {
   const [pdfFiles, setPdfFiles] = useState<File[]>([])
   const [createIdea] = useCreateIdeaMutation()
 const [uploadIdeaMedia] = useUploadIdeaMediaMutation()
+  const [uploaded, setUploaded] = useState<boolean | null>(null)
+
   
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,11 +81,16 @@ const [uploadIdeaMedia] = useUploadIdeaMediaMutation()
       }).unwrap()
     }
 
-    alert('Идея успешно отправлена!')
-  } catch (error: any) {
-    console.error('Ошибка при отправке идеи:', error)
-    alert(JSON.stringify(error?.data?.detail || error))
+    setUploaded(true)
+  } catch (error) {
+    console.error('Ошибка при публикации:', error)
+    setUploaded(false) // ❌ ошибка
   }
+}
+
+if (uploaded !== null) {
+  setTimeout(() => setUploaded(null), 3000)
+  return <Uploaded isUploaded={uploaded} />
 }
 
   return (
