@@ -83,9 +83,9 @@
 
 .fileGroup {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-//   margin-top: 12px;
+  flex-direction: row;
+  gap: 4px;
+  //   margin-top: 12px;
 }
 
 .fileLabel {
@@ -115,6 +115,15 @@
   max-width: 100%;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+
+  &:hover + .removeButton {
+    opacity: 1;
+  }
+
+  &:hover {
+    filter: brightness(0.9);
+  }
 }
 
 .fileList {
@@ -129,13 +138,21 @@
 }
 
 .coverPreviewBox {
+  max-width: 40%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
   gap: 8px;
+  position: relative;
 }
 
 .removeButton {
+  opacity: 0;
+  transition: all 0.2s ease-in-out;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   background-color: #e53935;
   color: white;
   border: none;
@@ -147,10 +164,99 @@
 
   &:hover {
     background-color: #c62828;
+    opacity: 1;
+  }
+
+  &:hover + .coverPreview {
+    filter: brightness(0.9);
   }
 }
 
+.uploaded {
+  text-align: center;
+  padding: 20px;
 
+  &__title {
+    font-family: var(--font3);
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 120%;
+    text-align: center;
+    color: #0c0d13;
+  }
+
+  &__text {
+    font-family: var(--third-family);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 160%;
+    text-align: center;
+    color: #5c5d61;
+    margin: 12px 0 16px;
+  }
+
+  &__icon__success {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background: #23ca9b;
+    border-radius: 16px;
+    position: relative;
+  }
+
+  &__icon__reject {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background: #ff4d4f;
+    border-radius: 16px;
+    position: relative;
+  }
+
+  &__line__one {
+    width: 35px;
+    height: 8px;
+    top: 54%;
+    transform: translateX(-50%) rotate(45deg);
+    left: 32%;
+    background: #ffffff;
+    position: absolute;
+    border-radius: 5px 0 0 5px;
+
+    &__reject{
+      position: absolute;
+      width: 80px;
+      height: 8px;
+      background: #ffffff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(45deg);
+      border-radius: 5px;
+    }
+  }
+
+  &__line__two {
+    position: absolute;
+    width: 60px;
+    height: 8px;
+    background: #ffffff;
+    top: 50%;
+    right: -25%;
+    border-radius: 0 5px 5px 0;
+    transform: translateX(-50%) rotate(-45deg);
+
+        &__reject{
+      position: absolute;
+      width: 80px;
+      height: 8px;
+      background: #ffffff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-45deg);
+      border-radius: 5px;
+    }
+  }
+}
 
 @keyframes fadeIn {
   from {

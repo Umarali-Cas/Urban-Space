@@ -1,14 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { useState } from 'react'
 import classes from './AddModal.module.scss'
+import {
+  useCreateIdeaMutation,
+  useUploadIdeaMediaMutation,
+} from '@/widgets/LastIdeas/api/IdeasApi'
+import { Uploaded } from './Uploaded'
 
 export function AddIdea() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [pdfFiles, setPdfFiles] = useState<File[]>([])
+  const [createIdea] = useCreateIdeaMutation()
+const [uploadIdeaMedia] = useUploadIdeaMediaMutation()
+  const [uploaded, setUploaded] = useState<boolean | null>(null)
+
+  
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -30,10 +39,59 @@ export function AddIdea() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    alert('Идея отправлена!')
+ const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+
+  const form = e.target as HTMLFormElement
+  const title = (form[0] as HTMLInputElement).value
+  const description_md = (form[1] as HTMLTextAreaElement).value
+
+  try {
+    // 1. Создание идеи
+
+    console.log('Отправка идеи:', {
+      title,
+      slug: title.toLowerCase().replace(/\s+/g, '-'),
+      description_md,
+      category: 'general',
+      tags: [],
+      media: [],
+      lat: 0,
+      lon: 0,
+      status: 'PENDING',
+    })
+    const newIdea = await createIdea({
+      title,
+      slug: title.toLowerCase().replace(/\s+/g, '-'),
+      description_md,
+      category: 'general',
+      tags: [],
+      media: [],
+      lat: 0,
+      lon: 0,
+      status: 'PENDING',
+    }).unwrap()
+
+    // 2. Загрузка медиа
+    const allFiles = [...(coverFile ? [coverFile] : []), ...pdfFiles]
+    if (allFiles.length > 0) {
+      await uploadIdeaMedia({
+        ideaId: newIdea.id,
+        files: allFiles,
+      }).unwrap()
+    }
+
+    setUploaded(true)
+  } catch (error) {
+    console.error('Ошибка при публикации:', error)
+    setUploaded(false) // ❌ ошибка
   }
+}
+
+if (uploaded !== null) {
+  setTimeout(() => setUploaded(null), 3000)
+  return <Uploaded isUploaded={uploaded} />
+}
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>

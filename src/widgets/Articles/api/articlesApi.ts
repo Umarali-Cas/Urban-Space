@@ -2,6 +2,17 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { RootState } from '@/app/store/store'
 
+  interface CreateArticlePayload {
+  slug: string
+  title: string
+  summary: string
+  body_md: string
+  category: string
+  tags: string[]
+  cover_key: string
+  attachments: any[]
+}
+
 export const articlesApi = createApi({
   reducerPath: 'articlesApi',
   baseQuery: fetchBaseQuery({
@@ -74,6 +85,40 @@ export const articlesApi = createApi({
       }),
       invalidatesTags: ['Articles'],
     }),
+createArticle: builder.mutation<any, CreateArticlePayload>({
+  query: article => ({
+    url: '/articles/',
+    method: 'POST',
+    body: article,
+  }),
+}),
+
+    uploadCover: builder.mutation<string, File>({
+      query: file => {
+        const formData = new FormData()
+        formData.append('cover', file)
+        return {
+          url: '/articles/upload-cover',
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
+
+    uploadAttachments: builder.mutation<
+      string[],
+      { articleId: string; files: File[] }
+    >({
+      query: ({ articleId, files }) => {
+        const formData = new FormData()
+        files.forEach(file => formData.append('files', file))
+        return {
+          url: `/articles/${articleId}/attachments`,
+          method: 'POST',
+          body: formData,
+        }
+      },
+    }),
   }),
 })
 
@@ -106,4 +151,7 @@ export const {
   useGetTotalCountQuery,
   useUpdateArticleMutation,
   useDeleteArticleMutation,
+  useCreateArticleMutation,
+  useUploadCoverMutation,
+  useUploadAttachmentsMutation,
 } = articlesApi

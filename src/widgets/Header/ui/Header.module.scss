@@ -34,6 +34,26 @@
     column-gap: 24px;
     align-items: center;
 
+    &__lang{
+
+
+      &__btn{
+        display: block !important;
+        background: #fff !important;
+
+        &:hover{
+          background: #f3f4f9 !important;}
+      }
+
+      &__item{
+        background: #fff !important;
+
+        &:hover{
+          background: #f3f4f9 !important;
+        }
+      }
+    }
+
     @media (max-width: 1380px) {
       column-gap: 18px;
     }

@@ -18,6 +18,7 @@ export function DropDown({
   visibleArrow = true,
   button,
   type = 'button',
+  itemsClassName,
   isLanguage = false,
 }: {
   arr?: Option[]
@@ -25,6 +26,7 @@ export function DropDown({
   className?: string
   visibleArrow?: boolean
   button?: string
+  itemsClassName?: string
   type?: 'button' | 'submit' | 'reset'
   isLanguage?: boolean
 }) {
@@ -120,7 +122,7 @@ export function DropDown({
       <ul
         className={`${classes.dropDown__list} ${
           open ? classes.open : classes.closed
-        }`}
+        } ${itemsClassName ?? ''}`}
       >
         {options.map(item => (
           <li
@@ -130,7 +132,7 @@ export function DropDown({
                 ? { justifyContent: isLanguage ? 'center' : 'space-between' }
                 : undefined
             }
-            className={classes.dropDown__list__item}
+            className={`${classes.dropDown__list__item} ${itemsClassName ?? ''}`}
             onClick={() => {
               setSelected(item)
               setOpen(false)

@@ -10,9 +10,6 @@ import dynamic from 'next/dynamic'
 import { DropDown } from '@/features/DropDown'
 import { usePathname, useRouter } from 'next/navigation'
 import Cookies from 'js-cookie'
-import kg from '../assets/images/kg.jpg'
-import ru from '../assets/images/ru.jpg'
-import uk from '../assets/images/uk.jpg'
 
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
@@ -30,25 +27,29 @@ const BurgerMenu = dynamic(
 const languages = [
   {
     value: 'ru',
-    label: <Image src={ru} width={30} height={20} alt="ru" />,
+    label: 'ru',
   },
-  { value: 'en', label: <Image src={uk} width={30} height={20} alt="en" /> },
-  { value: 'kg', label: <Image src={kg} width={30} height={20} alt="kg" /> },
+  { value: 'en', label: 'en' },
+  { value: 'kg', label: 'kg' },
 ]
 
 export function Header({ localize, btn }: { localize: string[]; btn: string }) {
   const router = useRouter()
   const pathname = usePathname() // текущий путь без домена
   const token = useSelector((state: RootState) => state.auth.token)
-  const { data: user, isLoading, refetch } = useGetProfileQuery(undefined, {
+  const {
+    data: user,
+    isLoading,
+    refetch,
+  } = useGetProfileQuery(undefined, {
     skip: !token, // если нет токена — пропускаем запрос
   })
 
   useEffect(() => {
-  if (token) {
-    refetch()
-  }
-}, [token])
+    if (token) {
+      refetch()
+    }
+  }, [token])
 
   const [width, setWidth] = useState<number | null>(null)
 
@@ -99,7 +100,6 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
   }
   const shouldShowLoginButton = !user && width !== null && width < 555
 
-
   return (
     <header className={classes.header}>
       <div className={classes.header__content}>
@@ -112,6 +112,8 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
             arr={languages}
             onSelect={value => handleLanguageChange(value as string)}
             isLanguage={true}
+            button={classes.header__actions__lang__btn}
+            itemsClassName={classes.header__actions__lang__item}
           />
           {/* {width !== null && width > 555 && (
             <Link href="/login">
@@ -119,7 +121,11 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
             </Link>
           )} */}
           {showProfileOrButton()}
-          <BurgerMenu isVisibleLoginButton={shouldShowLoginButton} btn={btn} localizedTitles={localize} />
+          <BurgerMenu
+            isVisibleLoginButton={shouldShowLoginButton}
+            btn={btn}
+            localizedTitles={localize}
+          />
         </div>
       </div>
     </header>
