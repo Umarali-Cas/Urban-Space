@@ -1,14 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client'
 
 import { useState } from 'react'
 import classes from './AddModal.module.scss'
+import {
+  useCreateArticleMutation,
+  useUploadAttachmentsMutation,
+  useUploadCoverMutation,
+} from '@/widgets/Articles/api/articlesApi'
+import { Uploaded } from './Uploaded'
 
 export function AddArticle() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
   const [pdfFiles, setPdfFiles] = useState<File[]>([])
+  const [createArticle] = useCreateArticleMutation()
+  const [uploadCover] = useUploadCoverMutation()
+  const [uploadAttachments] = useUploadAttachmentsMutation()
+  const [uploaded, setUploaded] = useState<boolean | null>(null)
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -30,10 +39,65 @@ export function AddArticle() {
     }
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    alert('Статья отправлена!')
+
+    const form = e.target as HTMLFormElement
+    const title = (form[0] as HTMLInputElement).value
+    const summary = (form[1] as HTMLTextAreaElement).value
+    const body_md = (form[2] as HTMLTextAreaElement).value
+
+    try {
+      let cover_key = ''
+      if (coverFile) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const result: any = await uploadCover(coverFile).unwrap()
+        cover_key = result.cover_key
+        console.log('Cover uploaded, key:', cover_key)
+      }
+
+      console.log('Отправка статьи:', {
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        title,
+        summary,
+        body_md,
+        category: 'general',
+        tags: [],
+        cover_key,
+        attachments: [],
+      })
+
+      console.log('cover_key:', cover_key)
+
+      const newArticle = await createArticle({
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        title,
+        summary,
+        body_md,
+        category: 'general',
+        tags: [],
+        cover_key: cover_key,
+        attachments: [],
+      }).unwrap()
+
+      if (pdfFiles.length > 0) {
+        await uploadAttachments({
+          articleId: newArticle.id,
+          files: pdfFiles,
+        }).unwrap()
+      }
+
+    setUploaded(true) // ✅ успех
+  } catch (error) {
+    console.error('Ошибка при публикации:', error)
+    setUploaded(false) // ❌ ошибка
   }
+  }
+
+if (uploaded !== null) {
+  setTimeout(() => setUploaded(null), 3000)
+  return <Uploaded isUploaded={uploaded} />
+}
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
@@ -65,8 +129,16 @@ export function AddArticle() {
           </>
         ) : (
           <div className={classes.coverPreviewBox}>
-            <img src={coverPreview} alt="Обложка" className={classes.coverPreview} />
-            <button type="button" onClick={handleRemoveCover} className={classes.removeButton}>
+            <img
+              src={coverPreview}
+              alt="Обложка"
+              className={classes.coverPreview}
+            />
+            <button
+              type="button"
+              onClick={handleRemoveCover}
+              className={classes.removeButton}
+            >
               Удалить
             </button>
           </div>
