@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
@@ -16,17 +15,14 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 
 import classes from './IdeaForm.module.scss'
 import profilePic from '../assets/user-icon.svg'
-import { DropDown } from '@/features/DropDown'
-import { useCrowdsourcingData } from '@/i18n/useNativeLocale'
+import { useCrowdsourcingData, useSelectFile } from '@/i18n/useNativeLocale'
+import { useCreateCrowdsourceMutation } from '../api/CrowdsourceApi'
 
-/** Стабильный дефолт для центра карты */
 const DEFAULT_CENTER: [number, number] = [74.61934986021016, 41.47522939797829]
 
-/** Пропсы для LocationPicker */
 type LocationPickerProps = {
   onSelect: (lat: number, lng: number) => void
   selected: { lat: number; lng: number } | null
-  /** при желании можно переопределить центр */
   initialCenter?: [number, number]
   height?: number
   createMarkerElement?: () => HTMLElement
@@ -42,11 +38,9 @@ function LocationPicker({
   const containerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const markerRef = useRef<maplibregl.Marker | null>(null)
-
-  // 1) инициализация карты — один раз
+  
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return
-
     const map = new maplibregl.Map({
       container: containerRef.current,
       style:
@@ -55,13 +49,10 @@ function LocationPicker({
       zoom: 5,
       attributionControl: false,
     })
-
     map.on('click', e => {
       onSelect(e.lngLat.lat, e.lngLat.lng)
     })
-
     mapRef.current = map
-
     return () => {
       map.remove()
       mapRef.current = null
@@ -69,12 +60,10 @@ function LocationPicker({
     }
   }, [onSelect])
 
-  // 2) прорисовка/движение маркера при изменении selected
   useEffect(() => {
     const map = mapRef.current
     if (!map) return
 
-    // сброс маркера
     if (!selected) {
       markerRef.current?.remove()
       markerRef.current = null
@@ -86,12 +75,8 @@ function LocationPicker({
     if (markerRef.current) {
       markerRef.current.setLngLat([lng, lat])
     } else {
-      const opts = createMarkerElement
-        ? { element: createMarkerElement() }
-        : { color: '#ff0000' }
-      markerRef.current = new maplibregl.Marker(opts)
-        .setLngLat([lng, lat])
-        .addTo(map)
+      const opts = createMarkerElement ? { element: createMarkerElement() } : { color: '#ff0000' }
+      markerRef.current = new maplibregl.Marker(opts).setLngLat([lng, lat]).addTo(map)
     }
   }, [selected, createMarkerElement])
 
@@ -108,22 +93,19 @@ function LocationPicker({
   )
 }
 
-/** Форма идеи с выбором локации */
 export function IdeaForm({ formData }: { formData: any }) {
-  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(
-    null
-  )
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null)
   const [file, setFile] = useState<File | null>(null)
-
   const [preview, setPreview] = useState<string | null>(null)
-  const [category, setCategory] = useState<string>('Проблемы')
+  const [category, setCategory] = useState<string>('city') // используем валидную категорию
+  const [createCrowdsource] = useCreateCrowdsourceMutation()
+  const value = useCrowdsourcingData()
+  const fileNameLocale = useSelectFile()
 
-  // стабильный колбэк на выбор локации
   const handleSelect = useCallback((lat: number, lng: number) => {
     setCoords({ lat, lng })
   }, [])
 
-  // фабрика вашего кастомного маркера
   const createMarkerElement = useCallback(() => {
     const markerEl = document.createElement('div')
     markerEl.style.width = '25px'
@@ -135,68 +117,47 @@ export function IdeaForm({ formData }: { formData: any }) {
     markerEl.style.justifyContent = 'center'
     markerEl.style.alignItems = 'center'
     markerEl.style.cursor = 'pointer'
-
-    markerEl.addEventListener('mouseenter', () => {
-      markerEl.style.filter = 'brightness(0.9)'
-    })
-    markerEl.addEventListener('mouseleave', () => {
-      markerEl.style.filter = 'brightness(1)'
-    })
-
     const img = document.createElement('img')
     img.src = '/map.svg'
     img.style.width = '60%'
     img.style.height = '60%'
     markerEl.appendChild(img)
-
     return markerEl
   }, [])
 
-  // превью файла
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0] || null
     setFile(selectedFile)
     setPreview(selectedFile ? URL.createObjectURL(selectedFile) : null)
   }
 
-  // сабмит формы
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const form = e.currentTarget as HTMLFormElement
     const fd = new FormData(form)
 
-    if (coords) {
-      fd.append('lat', coords.lat.toString())
-      fd.append('lng', coords.lng.toString())
+    const payload = {
+      theme: fd.get('theme') as string,
+      description: fd.get('description') as string,
+      category,
+      tags: fd.get('tags') as string || '',
+      lat: coords?.lat || 0,
+      lng: coords?.lng || 0,
+      image: file ? { name: file.name, type: file.type } : {}, // простой объект для отправки
     }
-    fd.append('category', category)
 
-    // выводим все поля
-    const data: Record<string, any> = {}
-    fd.forEach((value, key) => {
-      if (value instanceof File) {
-        data[key] = {
-          name: value.name,
-          size: value.size,
-          type: value.type,
-          file: value, // сам объект File
-        }
-      } else {
-        data[key] = value
-      }
-    })
-
-    console.log('📦 Собранные данные формы:', data)
-
-    // очистка формы (опционально)
-    form.reset()
-    setCoords(null)
-    setFile(null)
-    setPreview(null)
-    setCategory('Проблемы')
+    try {
+      const res = await createCrowdsource(payload).unwrap()
+      console.log('✅ Создано:', res)
+      form.reset()
+      setCoords(null)
+      setFile(null)
+      setPreview(null)
+      setCategory('')
+    } catch (err) {
+      console.error('❌ Ошибка при отправке:', err)
+    }
   }
-  const value = useCrowdsourcingData()
-  const categoryNames = Object.values(formData.category.categories)
 
   return (
     <form className={classes.ideaForm} onSubmit={handleSubmit}>
@@ -204,23 +165,12 @@ export function IdeaForm({ formData }: { formData: any }) {
 
       <label>
         {formData.them.label}
-        <input
-          type="text"
-          name="theme"
-          maxLength={100}
-          placeholder={formData.them.placeholder}
-          required
-        />
+        <input type="text" name="theme" maxLength={100} placeholder={formData.them.placeholder} required />
       </label>
 
       <label>
         {formData.description.label}
-        <input
-          type="text"
-          name="description"
-          placeholder={formData.description.placeholder}
-          required
-        />
+        <input type="text" name="description" placeholder={formData.description.placeholder} required />
       </label>
 
       <label>
@@ -231,26 +181,11 @@ export function IdeaForm({ formData }: { formData: any }) {
           createMarkerElement={createMarkerElement}
           height={250}
         />
-        {coords && (
-          <small>
-            {typeof value === 'string' ? value : value.label}:{' '}
-            {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}
-          </small>
-        )}
+        {coords && <small>{typeof value === 'string' ? value : value.label}: {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}</small>}
       </label>
 
-      <label>{formData.category.label}</label>
-      <DropDown
-        button={classes.dropDown__button}
-        arr={categoryNames as string[]}
-        onSelect={v => setCategory(String(v))}
-        className={classes.dropDown}
-        visibleArrow
-      />
-      <input type="hidden" name="category" value={category} />
-
       <label className={classes.ideaForm__fileInput}>
-        {typeof value === 'string' ? value : value.pic}
+        {fileNameLocale}
         <div
           className={classes.ideaForm__fileInput__container}
           style={{
@@ -263,13 +198,8 @@ export function IdeaForm({ formData }: { formData: any }) {
         >
           {!preview && (
             <div className={classes.ideaForm__fileInput__image}>
-              <Image
-                src={profilePic}
-                alt="profile picture"
-                width={32}
-                height={32}
-              />
-              <span>{formData.photo.label}</span>
+              <Image src={profilePic} alt="profile picture" width={32} height={32} />
+              <span>{fileNameLocale}</span>
             </div>
           )}
           <input type="file" name="image" onChange={handleFileChange} />

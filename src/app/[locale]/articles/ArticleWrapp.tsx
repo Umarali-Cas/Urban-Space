@@ -29,6 +29,8 @@ export default function ArticlesWrapp({
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const limit = 6
   const offset = (page - 1) * limit
+  const nothing = useNothingDefined()
+  const inputPlaceholder = useInputSearchLocale()
 
   // debounce для поиска
   useEffect(() => {
@@ -72,10 +74,8 @@ export default function ArticlesWrapp({
             <ArticlesCard
               color={'#000000'}
               articleName={article.title}
-              article={article.summary}
-              role={article.tags ?? 'Автор'}
-              userName={article.slug ?? 'Неизвестный'}
-              avatarUrl={article.attachments ?? ''}
+              article={article.body_html}
+              userName={article.author_id ?? 'Неизвестный'}
             />
           </Link>
         ))}
@@ -94,7 +94,7 @@ export default function ArticlesWrapp({
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder={useInputSearchLocale()}
+          placeholder={inputPlaceholder}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -134,7 +134,7 @@ export default function ArticlesWrapp({
               height={400}
             />
             <p style={{ textAlign: 'center', marginTop: '20px' }}>
-              {useNothingDefined()}
+              {nothing}
             </p>
           </div>
         ) : (

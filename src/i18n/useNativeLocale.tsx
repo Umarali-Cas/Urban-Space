@@ -3,6 +3,7 @@
 import { useLocale } from 'next-intl'
 import { useParams } from 'next/navigation'
 
+
 export function useInputSearchLocale() {
   const locale = useLocale()
   switch (locale) {
@@ -14,6 +15,86 @@ export function useInputSearchLocale() {
       return 'издөө...'
     default:
       return 'Поиск...'
+  }
+}
+
+export function useLoginButton() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return 'Войти'
+    case 'en':
+      return 'Login'
+    case 'kg':
+      return 'Кирүү'
+    default:
+      return 'Войти'
+  }
+}
+
+export function useSelectFile() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return 'Прикрепите файлы'
+    case 'en':
+      return 'Attach files'
+    case 'kg':
+      return 'Файлдарды тиркөө'
+    default:
+      return 'Прикрепите файлы'
+  }
+}
+
+export function useProfileLocale() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return {
+        profile: 'Мой профиль',
+        articles: "Мои статьи",
+        notArticles: 'У вас пока нет опубликованных статей.',
+        ideas: 'Мои идеи',
+        noIdeas: 'У вас пока нет опубликованных идей.'
+      }
+    case 'en':
+      return {
+        profile: 'My profile',
+        articles: "My articles",
+        notArticles: 'You have no published articles yet.',
+        ideas: 'My ideas',
+        noIdeas: 'You have no published ideas yet.'
+      }
+    case 'kg':
+      return {
+        profile: 'Менин профилем',
+        articles: "Менин макалаларым",
+        notArticles: 'Сизде азырынча жарыяланган макалалар жок.',
+        ideas: 'Менин идеяларым',
+        noIdeas: 'Сизде азырынча жарыяланган идеялар жок.'
+      }
+    default:
+      return {
+        profile: 'Мой профиль',
+        articles: "Мои статьи",
+        notArticles: 'У вас пока нет опубликованных статей.',
+        ideas: 'Мои идеи',
+        noIdeas: 'У вас пока нет опубликованных идей.'
+      }
+  }
+}
+
+export function useNavBarTiles() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return ['Урбан-карта', 'Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
+    case 'en':
+      return ['Urban Map', 'Urban Ideas Bank', 'Urban Articles', 'Crowdfunding', 'Crowdsourcing', 'About us']
+    case 'kg':
+      return ['Урбан-карта', 'Урбан идеялар банкы', 'макалалар', 'Краудфандинг', 'Краудсорсинг', 'Биз жөнүндө']
+    default:
+      return ['Урбан-карта', 'Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
   }
 }
 

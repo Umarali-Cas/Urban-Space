@@ -1,16 +1,19 @@
+'use client'
+
 import Image from 'next/image'
 import classes from './ArticlesCard.module.scss'
 import avatar from '../assets/UserImage.jpg'
 import { ArticlesCardProps } from '../types/type'
+import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
 
 export function ArticlesCard({
   color,
-  role,
   userName,
-  avatarUrl,
   articleName,
   article,
 }: ArticlesCardProps) {
+    const { data: userInfo } = useGetUserByIdQuery(userName)
+  
   return (
     <div className={classes.articlesCard}>
       <h3 style={{ color: color }} className={classes.articlesCard__title}>
@@ -19,7 +22,7 @@ export function ArticlesCard({
       <p className={classes.articlesCard__subtitle}>{article}</p>
       <div className={classes.articlesCard__user}>
         <Image
-          src={avatarUrl || avatar}
+          src={userInfo?.avatar_url || avatar}
           alt="avatar"
           className={classes.articlesCard__user__avatar}
           width={48}
@@ -27,9 +30,9 @@ export function ArticlesCard({
         />
         <div className={classes.articlesCard__user__info}>
           <span className={classes.articlesCard__user__info__name}>
-            {userName}
+            {userInfo?.username || 'неизвестный'}
           </span>
-          <span className={classes.articlesCard__user__info__role}>{role}</span>
+          <span className={classes.articlesCard__user__info__role}>Публицист</span>
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 
-import { useGetProfileQuery } from '@/features/auth/api/authApi'
+import { useGetProfileQuery, useUploadAvatarMutation } from '@/features/auth/api/authApi'
 import classes from './ProfilePage.module.scss'
 import settings from '../assets/icons/settings.svg'
 import Image from 'next/image'
@@ -10,13 +11,39 @@ import { useGetArticlesQuery } from '@/widgets/Articles/api/articlesApi'
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import noAricles from '../assets/images/articles.svg'
 import noIdeas from '../assets/images/ideas.svg'
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+// import edit from '../assets/icons/imageEdit.svg'
+import { useProfileLocale } from '@/i18n/useNativeLocale'
+import { getAvatarUrl } from '@/shared/hooks/getAvatarUrl'
 
 export function ProfilePage() {
   const router = useRouter()
   const { data: user } = useGetProfileQuery()
+  console.log(user)
+  const locale = useProfileLocale()
+  const [uploadAvatar] = useUploadAvatarMutation()
+  const [avatarUrl, setAvatarUrl] = useState<any | string>(user?.avatar_url)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
+ const handleAvatarChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const file = event.target.files?.[0]
+  if (file && user?.id) {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const response = await uploadAvatar(formData).unwrap()
+      const fileKey = response.avatar_url // 👈 убедись, что сервер возвращает avatar_url
+
+      const newAvatarUrl = getAvatarUrl(user.id, fileKey)
+      setAvatarUrl(newAvatarUrl)
+    } catch (error) {
+      console.error('Ошибка загрузки аватара:', error)
+    }
+  }
+}
+  
   const {
     data: articles = [],
     isLoading: loadingArticles,
@@ -42,17 +69,26 @@ export function ProfilePage() {
 
   return (
     <section className={classes.profilePage}>
-      <h1 className={classes.profilePage__title}>Мой профиль</h1>
+      <h1 className={classes.profilePage__title}>{locale.profile}</h1>
 
       <div className={classes.profilePage__container}>
         <div className={classes.profilePage__container__item}>
-          <Image
-            className={classes.profilePage__container__item__avatar}
-            src={user?.avatar_url || '/grey.jpg'}
-            alt="Avatar"
-            width={180}
-            height={180}
-          />
+          <label className={classes.profilePage__container__item__avatarWrapper} style={{ cursor: 'pointer', position: 'relative' }}>
+            <Image
+              className={classes.profilePage__container__item__avatar}
+              src={ avatarUrl || '/grey.jpg'}
+              alt="Avatar"
+              width={180}
+              height={180}
+            />
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={handleAvatarChange}
+            />
+          </label>
           <div className={classes.profilePage__container__item__info}>
             <h2 className={classes.profilePage__container__item__info__username}>
               {user?.username}
@@ -76,14 +112,14 @@ export function ProfilePage() {
 
       {/* Статьи */}
       <div className={classes.profilePage__myArticles}>
-        <h1 className={classes.profilePage__myArticles__title}>Мои статьи</h1>
+        <h1 className={classes.profilePage__myArticles__title}>{locale.articles}</h1>
         <div className={classes.profilePage__myArticles__container}>
           {loadingArticles ? (
             <p style={{textAlign: 'center'}}>Загрузка статей...</p>
           ) : userArticles.length === 0 ? (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
               <Image className={classes.profilePage__myArticles__container__noArticles} src={noAricles} alt='Нет статей' width={180} height={180}/>
-              <p style={{textAlign: 'center', color: 'gray', marginTop: '20px'}}>У вас пока нет опубликованных статей.</p>
+              <p style={{textAlign: 'center', color: 'gray', marginTop: '20px'}}>{locale.notArticles}</p>
             </div>
           ) : (
             userArticles.map(article => (
@@ -96,9 +132,7 @@ export function ProfilePage() {
                   color={'#000000'}
                   articleName={article.title}
                   article={article.summary}
-                  role={article.tags ?? 'Автор'}
                   userName={user?.username ?? 'Неизвестный'}
-                  avatarUrl={article.attachments ?? ''}
                 />
               </Link>
             ))
@@ -108,14 +142,14 @@ export function ProfilePage() {
 
       {/* Идеи */}
       <div className={classes.profilePage__myIdeas}>
-        <h1 className={classes.profilePage__myIdeas__title}>Мои идеи</h1>
+        <h1 className={classes.profilePage__myIdeas__title}>{locale.ideas}</h1>
         <div className={classes.profilePage__myIdeas__container}>
           {loadingArticles ? (
             <p>Загрузка идей...</p>
           ) : userIdeas.length === 0 ? (
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
               <Image className={classes.profilePage__myArticles__container__noIdeas} src={noIdeas} alt='Нет статей' width={180} height={180}/>
-              <p style={{textAlign: 'center', color: 'gray', marginTop: '20px'}}>У вас пока нет опубликованных идей.</p>
+              <p style={{textAlign: 'center', color: 'gray', marginTop: '20px'}}>{locale.noIdeas}</p>
             </div>
           ) : (
             userIdeas.map(idea => (
@@ -128,9 +162,7 @@ export function ProfilePage() {
                   color={'#000000'}
                   articleName={idea.title}
                   article={idea.summary}
-                  role={idea.tags ?? 'Автор'}
                   userName={user?.username ?? 'Неизвестный'}
-                  avatarUrl={idea.attachments ?? ''}
                 />
               </Link>
             ))

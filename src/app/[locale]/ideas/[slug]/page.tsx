@@ -7,16 +7,18 @@ import { IdeasDetailPage } from '@/entities/IdeasDetailPage/IdeasDetailPage'
 
 export default function IdeaInfoPage() {
   const { slug } = useParams<{ slug: string }>()
-  console.log(slug)
   if (!slug) return <p>Идентификатор идеи не найден</p>
   const { data: idea, isLoading, error } = useGetIdeaBySlugQuery(slug)
 
+  
+  
+  
   if (isLoading) return <p style={{ textAlign: 'center' }}>Загрузка...</p>
   if (error || !idea) return <p>Статья не найдена</p>
 
   return (
     <>
-      <IdeasDetailPage image={idea.media?.[0]?.meta?.url} desc={idea.description_md} title={idea.title} />
+      <IdeasDetailPage timeCreate={idea.created_at} image={idea.media?.[0]?.meta?.url} desc={idea.description_md} title={idea.title} />
     </>
   )
 }

@@ -33,15 +33,10 @@ export const authApi = createApi({
     }),
 
     login: builder.mutation<
-      { user: User ; token: string },
+      { user: User; token: string },
       { email: string; password: string }
     >({
-      async queryFn(
-        credentials,
-        { dispatch },
-        _extraOptions,
-        baseQuery
-      ) {
+      async queryFn(credentials, { dispatch }, _extraOptions, baseQuery) {
         const loginResponse = await baseQuery({
           url: '/auth/login-body',
           method: 'POST',
@@ -101,6 +96,12 @@ export const authApi = createApi({
         method: 'DELETE',
       }),
     }),
+    getUserById: builder.query<
+      { username: string; avatar_url: string },
+      string
+    >({
+      query: userId => `/auth/${userId}/user`,
+    }),
 
     uploadAvatar: builder.mutation<{ avatar_url: string }, FormData>({
       query: formData => ({
@@ -120,4 +121,5 @@ export const {
   useDeleteProfileMutation,
   useUploadAvatarMutation,
   useRefreshMutation,
+  useGetUserByIdQuery,
 } = authApi

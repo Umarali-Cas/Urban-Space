@@ -77,8 +77,6 @@ export function SupportUs({
               subtitle={selectedIdea.description_md || ''}
               title={selectedIdea.title || ''}
               userName={selectedIdea.author_name}
-              avatarUrl={selectedIdea.author_avatar}
-              imageUrl={selectedIdea.media?.[0]?.meta?.url}
             />
           ) : (
             <p style={{ color: 'gray' }}>{crowdfunding.unselected}</p>

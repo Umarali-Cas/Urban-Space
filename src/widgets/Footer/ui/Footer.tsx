@@ -1,3 +1,5 @@
+'use client'
+
 import { Logo } from '@/entities/Logo'
 import classes from './Footer.module.scss'
 import { NavBar } from '@/features/NavBar'
@@ -5,8 +7,10 @@ import Image from 'next/image'
 import instagram from '../assets/icons/instagram.svg'
 import telegram from '../assets/icons/telegram.svg'
 import Link from 'next/link'
+import { useNavBarTiles } from '@/i18n/useNativeLocale'
 
-export function Footer({ currentLocale }: { currentLocale: string[] }) {
+export function Footer() {
+  const currentLocale = useNavBarTiles()
   return (
     <footer className={classes.footer}>
       <Logo />
