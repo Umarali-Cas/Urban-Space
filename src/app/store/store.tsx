@@ -11,6 +11,7 @@ import { adminPagesApi } from '@/widgets/AdminPages/api/adminPagesApi'
 import { adminArticlesApi } from '@/widgets/AdminArticles/api/adminArticlesApi'
 import { adminIdeasApi } from '@/widgets/AdminIdeas/api/adminIdeasApi'
 import { pagesApi } from '@/widgets/AdminPages/api/PagesApi'
+import { CrowdsourceApi } from '@/features/IdeaForm/api/CrowdsourceApi'
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   [getAreasApi.reducerPath]: getAreasApi.reducer,
   [adminPagesApi.reducerPath]: adminPagesApi.reducer,
   [pagesApi.reducerPath]: pagesApi.reducer,
+  [CrowdsourceApi.reducerPath]: CrowdsourceApi.reducer,
 })
 
 const persistConfig = {
@@ -51,7 +53,8 @@ export const store = configureStore({
       adminPagesApi.middleware,
       adminArticlesApi.middleware,
       adminIdeasApi.middleware,
-      pagesApi.middleware
+      pagesApi.middleware,
+      CrowdsourceApi.middleware
     ),
 })
 

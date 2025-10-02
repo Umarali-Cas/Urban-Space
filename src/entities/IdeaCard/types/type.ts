@@ -8,7 +8,6 @@ export interface IdeaCardProps {
   likes: number
   link: string
   imageUrl?: string | StaticImageData
-  avatarUrl?: string | StaticImageData
   uniqueId: number | string
   slug: string
   status: string

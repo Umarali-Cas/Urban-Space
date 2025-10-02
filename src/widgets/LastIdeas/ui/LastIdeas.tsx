@@ -6,6 +6,7 @@ import classes from './LastIdeas.module.scss'
 import { LastIdeasProps } from '../types/type'
 import { useState, useEffect } from 'react'
 import { useGetIdeasQuery, useGetTotalCountQuery } from '../api/IdeasApi'
+import { getImageUrlFromMedia } from '@/shared/hooks/getImageUrlFromMedia'
 import Image from 'next/image'
 import {
   useCrowdfundingData,
@@ -128,9 +129,8 @@ export function LastIdeas({
               link={idea.link || ''}
               subtitle={idea.description_md || ''}
               title={idea.title || ''}
-              userName={idea.author_name}
-              avatarUrl={idea.author_avatar}
-              imageUrl={idea.media?.[0]?.meta?.url}
+              userName={idea.author_id}
+              imageUrl={getImageUrlFromMedia(idea.media)}
               onSelect={
                 showSelectButton && selected ? () => selected(idea) : undefined
               } // передаём выбранную идею наверх

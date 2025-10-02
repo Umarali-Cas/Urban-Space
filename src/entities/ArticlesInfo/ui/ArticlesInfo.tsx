@@ -6,9 +6,18 @@ import Link from 'next/link'
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import { useDetailPageLocale } from '@/i18n/useNativeLocale'
 
-export function ArticlesInfo({ title, desc }: ArticlesInfoProps) {
+export function ArticlesInfo({ title, desc, timeCreate }: ArticlesInfoProps) {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 6 })
   const { otherArticles, titleArticle, subtitleArticle, share } = useDetailPageLocale()
+
+    const formatDate = () => {
+  const date = new Date(timeCreate)
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}
 
   return (
     <section className={classes.articlesInfo}>
@@ -18,7 +27,7 @@ export function ArticlesInfo({ title, desc }: ArticlesInfoProps) {
       </div>
       <div className={classes.articlesInfo__content}>
         <div className={classes.articlesInfo__content__upWrapper}>
-          <span>20 января <Image className={classes.calendarImg} src="/calendar.svg" alt="calendar" width={24} height={24}/></span>
+          <span>{formatDate()} <Image className={classes.calendarImg} src="/calendar.svg" alt="calendar" width={24} height={24}/></span>
           <a href="#"><Image className={classes.shareImg} src="/share.svg" alt='share' width={24} height={24}/>{share}</a>
         </div>
         <h1 className={classes.articlesInfo__content__title}>{title}</h1>
@@ -85,9 +94,7 @@ export function ArticlesInfo({ title, desc }: ArticlesInfoProps) {
               key={article.id}
               article={article.summary || 'Нет описания'}
               articleName={article.title || 'Без названия'}
-              role={article.tags ?? 'Автор'}
               userName={article.slug ?? 'Неизвестный'}
-              avatarUrl={article.attachments?.[0]?.url ?? ''}
             />
           </Link>
         ))}

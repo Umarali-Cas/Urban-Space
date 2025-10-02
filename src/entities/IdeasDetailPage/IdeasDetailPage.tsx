@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Image, { StaticImageData } from 'next/image'
 import classes from './IdeasDetailPage.module.scss'
 import { useGetIdeasQuery } from '@/widgets/LastIdeas/api/IdeasApi'
@@ -9,13 +8,24 @@ export function IdeasDetailPage({
   title,
   desc,
   image,
+  timeCreate,
 }: {
   title: string
   desc: string
   image: StaticImageData | string
+  timeCreate: string
 }) {
   const { data: ideas = [], isLoading } = useGetIdeasQuery({ limit: 3 })
-  const { titleIdea, subtitleIdea, share, map, otherIdeas } = useDetailPageLocale()
+  const { titleIdea, subtitleIdea, share, otherIdeas } = useDetailPageLocale()
+  
+  const formatDate = () => {
+  const date = new Date(timeCreate)
+  return new Intl.DateTimeFormat('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}
 
   return (
     <section className={classes.ideasDetailPage}>
@@ -25,7 +35,7 @@ export function IdeasDetailPage({
       </div>
       <div className={classes.ideasDetailPage__content}>
         <div className={classes.ideasDetailPage__content__upWrapper}>
-          <span>20 января <Image className={classes.calendarImg} src="/calendar.svg" alt="calendar" width={24} height={24}/></span>
+          <span>{formatDate()} <Image className={classes.calendarImg} src="/calendar.svg" alt="calendar" width={24} height={24}/></span>
           <a href="#"><Image className={classes.shareImg} src="/share.svg" alt='share' width={24} height={24}/>{share}</a>
         </div>
         <h1 className={classes.ideasDetailPage__content__title}>{title}</h1>
@@ -94,7 +104,6 @@ export function IdeasDetailPage({
               subtitle={idea.description_md || ''}
               title={idea.title || ''}
               userName={idea.author_name}
-              avatarUrl={idea.author_avatar}
               imageUrl={idea.media?.[0]?.meta?.url}
               status={idea.status || 'DRAFT'}
             />

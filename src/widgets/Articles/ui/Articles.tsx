@@ -20,9 +20,7 @@ export function Articles({ title, desc }: { title: string; desc: string }) {
         key={article.id}
         article={article.summary || 'Нет описания'}
         articleName={article.title || 'Без названия'}
-        role={article.tags ?? 'Автор'}
         userName={article.slug ?? 'Неизвестный'}
-        avatarUrl={article.attachments?.[0]?.url ?? ''}
       />
     </Link>
   ))
