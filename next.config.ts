@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   images: {
     // добавляй сюда все домены, с которых будут подгружаться картинки
-    domains: ['example.com', 'cdn.yourapp.com', 'api.urbanspace.sdinis.org'],
+    domains: ['example.com', 'cdn.yourapp.com', 'api.urbanspace.sdinis.org', 'urbanspaceblob.blob.core.windows.net'],
   },
   // Рекомендуется для продакшна
   output: 'standalone',

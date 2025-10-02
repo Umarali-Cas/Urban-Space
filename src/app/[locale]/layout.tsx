@@ -10,6 +10,7 @@ import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
 import HeaderWrapper from '@/widgets/Header/ui/HeaderWrapper'
 import { cookies } from 'next/headers'
+import { useNavBarTiles } from '@/i18n/useNativeLocale'
 
 const inter = Inter({
   variable: '--font-family',
@@ -63,8 +64,6 @@ export default async function RootLayout({
   }
 
   const navCta = data.blocks.filter((b: any) => b.type === 'html')
-  const navBarTiles = navCta?.[0].data.navBar
-  const headerBtn = navCta?.[0].data.button
 
   return (
     <html lang={locale}>
@@ -72,10 +71,10 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Loader />
           <Providers>
-          <HeaderWrapper button={headerBtn} languages={navBarTiles} />
+          <HeaderWrapper/>
             <main>{children}</main>
           </Providers>
-          <Footer currentLocale={navBarTiles} />
+          <Footer/>
         </NextIntlClientProvider>
       </body>
     </html>

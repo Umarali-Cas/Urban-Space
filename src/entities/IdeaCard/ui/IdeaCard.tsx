@@ -10,6 +10,7 @@ import heartIcon from '../assets/icons/heart.svg'
 import baseAvatar from '../assets/images/UserImage.jpg'
 import { IdeaCardProps } from '../types/type'
 import { useMoreButton, useSupportProjectIdea } from '@/i18n/useNativeLocale'
+import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
 
 export function IdeaCard({
   slug,
@@ -19,12 +20,12 @@ export function IdeaCard({
   date,
   likes,
   imageUrl,
-  avatarUrl,
   uniqueId,
   onSelect,
 }: IdeaCardProps & { uniqueId: string }) {
   // хук для лайка
   const [likeIdea, { isLoading: isLiking }] = useLikeIdeaMutation()
+  const { data: userInfo } = useGetUserByIdQuery(userName)
 
   const handleLike = () => {
     if (isLiking) return
@@ -50,14 +51,14 @@ export function IdeaCard({
         <div className={classes.ideaCard__box}>
           <div className={classes.ideaCard__box__profile}>
             <Image
-              src={avatarUrl || baseAvatar}
+              src={userInfo?.avatar_url || baseAvatar}
               alt="avatar"
               width={32}
               height={32}
               className={classes.ideaCard__box__profile__avatar}
             />
             <span className={classes.ideaCard__box__profile__name}>
-              {userName}
+              {userInfo?.username || 'User Name'}
             </span>
           </div>
           <span className={classes.ideaCard__box__time}>{date}</span>

@@ -46,7 +46,7 @@ export const articlesApi = createApi({
         author_id,
         status,
       }) => ({
-        url: '/articles/',
+        url: '/articles/public',
         params: {
           limit,
           offset,

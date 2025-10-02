@@ -41,7 +41,7 @@ export default function ArticleDetailPage() {
 
   return (
     <>
-      <ArticlesInfo desc={article.summary} title={article.title} />
+      <ArticlesInfo timeCreate={article.created_at} desc={article.summary} title={article.title} />
     </>
   )
 }

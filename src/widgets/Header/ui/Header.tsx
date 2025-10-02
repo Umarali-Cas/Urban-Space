@@ -122,7 +122,7 @@ export function Header({ localize, btn }: { localize: string[]; btn: string }) {
           )} */}
           {showProfileOrButton()}
           <BurgerMenu
-            isVisibleLoginButton={shouldShowLoginButton}
+            isVisibleLoginButton={shouldShowLoginButton ? true : false}
             btn={btn}
             localizedTitles={localize}
           />
