@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { storePersisted } from '@/app/store/store'
+import Cookies from 'js-cookie'
+// import { storePersisted } from '@/app/store/store'
 
 export interface User {
   id: string
@@ -21,10 +22,24 @@ export interface AuthState {
   token: string | null
 }
 
-const initialState: AuthState = {
-  user: null,
-  token: null,
+// 🔁 Восстановление из cookie
+const getInitialAuthState = (): AuthState => {
+  const token = Cookies.get('token') ?? null
+  const userRaw = Cookies.get('user')
+  let user: User | null = null
+
+  if (userRaw) {
+    try {
+      user = JSON.parse(userRaw)
+    } catch {
+      console.warn('Ошибка при парсинге user из cookie')
+    }
+  }
+
+  return { token, user }
 }
+
+const initialState: AuthState = getInitialAuthState()
 
 const authSlice = createSlice({
   name: 'auth',
@@ -36,14 +51,15 @@ const authSlice = createSlice({
     ) => {
       state.user = action.payload.user
       state.token = action.payload.token
+
+      Cookies.set('token', action.payload.token ?? '', { expires: 7 })
+      Cookies.set('user', JSON.stringify(action.payload.user ?? {}), { expires: 7 })
     },
     logout: state => {
       state.user = null
       state.token = null
-      storePersisted.purge()
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('authData')
-      }
+      Cookies.remove('token')
+      Cookies.remove('user')
     },
   },
 })

@@ -7,6 +7,7 @@ import typewritter from '../assets/icons/typewritter.svg'
 import yellowlight from '../assets/icons/yellowlight.svg'
 import { AddModal } from '@/entities/AddModal/ui/AddModal'
 import { useState } from 'react'
+import { useGetActionUser } from '@/i18n/useNativeLocale'
 
 type Props = {
   isArticle: boolean
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export function AddArticleOrIdea({ isArticle, show }: Props) {
+  const text = useGetActionUser()
   const { data: user } = useGetProfileQuery()
   const [isOpen, setIsOpen] = useState(false)
 
@@ -33,14 +35,14 @@ export function AddArticleOrIdea({ isArticle, show }: Props) {
         <div className={classes.addArticleOrIdea__content}>
           <p className={classes.addArticleOrIdea__content__text}>
             {isArticle
-              ? 'Поделитесь своими мыслями и исследованиями об урбанистике'
-              : 'Поделитесь своими идеями улучшения условий для горожан'}
+              ? text.titleArticle
+              : text.titleIdea}
           </p>
           <button
             onClick={() => setIsOpen(prev => !prev)}
             className={classes.addArticleOrIdea__content__button}
           >
-            {isArticle ? 'Добавить статью' : 'Предложить идею'}
+            {isArticle ? text.buttonArticle : text.buttonIdea}
           </button>
         </div>
       </div>
