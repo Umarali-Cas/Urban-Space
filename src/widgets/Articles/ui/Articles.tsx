@@ -20,7 +20,7 @@ export function Articles({ title, desc }: { title: string; desc: string }) {
         key={article.id}
         article={article.summary || 'Нет описания'}
         articleName={article.title || 'Без названия'}
-        userName={article.slug ?? 'Неизвестный'}
+        userName={article.author_id ?? 'Неизвестный'}
       />
     </Link>
   ))

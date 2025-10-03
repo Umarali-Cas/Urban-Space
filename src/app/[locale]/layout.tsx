@@ -10,7 +10,6 @@ import { NextIntlClientProvider } from 'next-intl'
 import { ReactNode } from 'react'
 import HeaderWrapper from '@/widgets/Header/ui/HeaderWrapper'
 import { cookies } from 'next/headers'
-import { useNavBarTiles } from '@/i18n/useNativeLocale'
 
 const inter = Inter({
   variable: '--font-family',
