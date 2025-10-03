@@ -46,6 +46,40 @@ export function useSelectFile() {
   }
 }
 
+export function useGetActionUser() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return {
+        titleArticle: 'Поделитесь своими мыслями и исследованиями об урбанистике',
+        buttonArticle: 'Добавить статью',
+        titleIdea: 'Поделитесь своими идеями улучшения условий для горожан',
+        buttonIdea: 'Добавить идею'
+      }
+    case 'en':
+      return {
+        titleArticle: 'Share your thoughts and research on urbanism',
+        buttonArticle: 'Add article',
+        titleIdea: 'Share your ideas for improving conditions for citizens',
+        buttonIdea: 'Add idea'
+      }
+    case 'kg':
+      return {
+        titleArticle: 'Урбанизм боюнча өз оюңузду жана изилдөөңүздү бөлүшүңүз',
+        buttonArticle: 'Макалаларды көшүңүз',
+        titleIdea: 'Шаар тургундарына шарттарды жакшыртуу боюнча өз идеяларыңыз менен бөлүшүңүз',
+        buttonIdea: 'Идеаларды көшүңүз'
+      }
+    default:
+      return {
+        titleArticle: 'Поделитесь своими мыслями и исследованиями об урбанистике',
+        buttonArticle: 'Добавить статью',
+        titleIdea: 'Поделитесь своими идеями улучшения условий для горожан',
+        buttonIdea: 'Добавить идею'
+      }
+  }
+}
+
 export function useProfileLocale() {
   const locale = useLocale()
   switch (locale) {
