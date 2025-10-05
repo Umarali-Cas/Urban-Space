@@ -38,7 +38,7 @@ export function MapModal({
             </button>
 
             <h1 className={classes.overlay__mapModal__title}>
-              {mapData.title}
+              {mapData.theme}
             </h1>
 
             {mapData.imageUrl && (
@@ -50,12 +50,12 @@ export function MapModal({
                 height={200}
               />
             )}
-            <p>{mapData.desc}</p>
+            <p>{mapData.description}</p>
 
-            <div className={classes.content}>
+            {/* <div className={classes.content}>
               <p>Широта: {mapData.lat}</p>
               <p>Долгота: {mapData.lng}</p>
-            </div>
+            </div> */}
           </motion.div>
         </motion.div>
       )}

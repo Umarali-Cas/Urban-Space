@@ -1,18 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client'
+
 import dynamic from 'next/dynamic'
+import { useState, useMemo } from 'react'
 import classes from './MapSearch.module.scss'
 import Image from 'next/image'
-import search from '../assets/icons/search.svg'
+import searchIcon from '../assets/icons/search.svg'
 import { DropDown } from '@/features/DropDown'
+import { useGetPublicDataQuery } from '@/features/CustomMap/api/getAreasApi'
+import { useSearchCategory } from '@/i18n/useNativeLocale'
 
-const CustomMap = dynamic(() => import('@/features/CustomMap/ui/CustomMap'))
+const MapClient = dynamic(() => import('@/features/CustomMap/ui/MapClient'), { ssr: false }) as any
+
+// объект соответствия ключей и текстов
 
 export function MapSearch() {
+  const locales = useSearchCategory()
+  const [search, setSearch] = useState('')
+  const [categoryKey, setCategoryKey] = useState<string>('all') // ключ по умолчанию
+  
+  const CATEGORY_MAP: Record<string, string> = {
+    all: locales.category.all,
+    suggested: locales.category.suggested,
+    problems: locales.category.problems,
+    solved: locales.category.solved,
+  }
+
+  // Запрос данных с фильтром
+  const { data, isLoading } = useGetPublicDataQuery({
+    limit: 50,
+    offset: 0,
+    category: categoryKey === 'all' ? undefined : categoryKey, // всегда английский ключ
+    search: search || undefined,
+  })
+
+  const filteredData = useMemo(() => data || [], [data])
+
   return (
     <section className={classes.mapSearch}>
-      <h1 className={classes.mapSearch__title}>Эко-карта</h1>
+      <h1 className={classes.mapSearch__title}>{locales.title}</h1>
+
       <div className={classes.mapSearch__search}>
         <Image
-          src={search}
+          src={searchIcon}
           alt="search"
           width={16}
           height={16}
@@ -20,12 +50,24 @@ export function MapSearch() {
         />
         <input
           type="text"
-          placeholder="Поиск"
+          placeholder={locales.input}
           className={classes.mapSearch__search__input}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
         />
-        <DropDown arr={['Предложения', 'Проблемы', 'Реализованные проекты']} />
+
+        <DropDown
+          arr={Object.values(CATEGORY_MAP)} // показываем переводы
+          onSelect={val => {
+            // находим ключ по выбранному значению
+            const key = Object.entries(CATEGORY_MAP).find(([text]) => text === val)?.[0] || 'all'
+            setCategoryKey(key)
+          }}
+        />
       </div>
-      <CustomMap />
+
+      {/* Карта */}
+      <MapClient key={1} mapData={filteredData} isLoading={isLoading} />
     </section>
   )
 }

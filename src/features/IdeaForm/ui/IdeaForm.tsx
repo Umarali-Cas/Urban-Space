@@ -131,34 +131,40 @@ export function IdeaForm({ formData }: { formData: any }) {
     setPreview(selectedFile ? URL.createObjectURL(selectedFile) : null)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const form = e.currentTarget as HTMLFormElement
-    const fd = new FormData(form)
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  const form = e.currentTarget as HTMLFormElement
+  const fd = new FormData(form)
 
-    const payload = {
-      theme: fd.get('theme') as string,
-      description: fd.get('description') as string,
-      category,
-      tags: fd.get('tags') as string || '',
-      lat: coords?.lat || 0,
-      lng: coords?.lng || 0,
-      image: file ? { name: file.name, type: file.type } : {}, // простой объект для отправки
-    }
+  // Создаём FormData для отправки на сервер
+  const formDataObj = new FormData()
+  formDataObj.append('theme', fd.get('theme') as string)
+  formDataObj.append('description', fd.get('description') as string)
+  formDataObj.append('category', category)
+  formDataObj.append('tags', (fd.get('tags') as string) || '')
+  formDataObj.append('lat', (coords?.lat || 0).toString())
+  formDataObj.append('lng', (coords?.lng || 0).toString())
 
-    try {
-      const res = await createCrowdsource(payload).unwrap()
-      console.log('✅ Создано:', res)
-      form.reset()
-      setCoords(null)
-      setFile(null)
-      setPreview(null)
-      setCategory('')
-    } catch (err) {
-      console.error('❌ Ошибка при отправке:', err)
-    }
+  if (file) {
+    formDataObj.append('file', file) // теперь отправляем реальный файл
   }
 
+  try {
+    const plainFormData = Object.fromEntries(formDataObj.entries()) as any;
+    // Предполагается, что createCrowdsource умеет работать с FormData
+    const res = await createCrowdsource(plainFormData).unwrap()
+    console.log('✅ Создано:', res)
+
+    // Сброс формы
+    form.reset()
+    setCoords(null)
+    setFile(null)
+    setPreview(null)
+    setCategory('city')
+  } catch (err) {
+    console.error('❌ Ошибка при отправке:', err)
+  }
+}
   return (
     <form className={classes.ideaForm} onSubmit={handleSubmit}>
       <h2 className={classes.ideaForm__title}>{formData.title}</h2>
@@ -183,6 +189,27 @@ export function IdeaForm({ formData }: { formData: any }) {
         />
         {coords && <small>{typeof value === 'string' ? value : value.label}: {coords.lat.toFixed(5)}, {coords.lng.toFixed(5)}</small>}
       </label>
+
+<label className={classes.ideaForm__categoryLabel}>
+  Категория
+  <div className={classes.categoryGroup} role="radiogroup" aria-label="Категория идеи">
+    {['suggested', 'problems', 'solved'].map(key => (
+      <button
+        key={key}
+        type="button"
+        role="radio"
+        aria-checked={category === key}
+        className={`${classes.categoryItem} ${category === key ? classes.categoryItemActive : ''}`}
+        onClick={() => setCategory(key)}
+      >
+        {key}
+      </button>
+    ))}
+  </div>
+  {/* скрытое поле чтобы FormData получало текущую категорию */
+  /* при отправке вы уже берёте category из state, но поле полезно для прямого чтения формы */ }
+  <input type="hidden" name="category" value={category} />
+</label>
 
       <label className={classes.ideaForm__fileInput}>
         {fileNameLocale}

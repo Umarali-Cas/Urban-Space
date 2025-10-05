@@ -34,6 +34,13 @@ const persistConfig = {
     authApi.reducerPath,
     articlesApi.reducerPath,
     IdeasApi.reducerPath,
+    mapApi.reducerPath,
+    getAreasApi.reducerPath,
+    adminPagesApi.reducerPath,
+    adminArticlesApi.reducerPath,
+    adminIdeasApi.reducerPath,
+    pagesApi.reducerPath,
+    CrowdsourceApi.reducerPath
   ],
 }
 

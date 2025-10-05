@@ -33,7 +33,7 @@ export const IdeasApi = createApi({
         author_id,
         status,
       }) => ({
-        url: '/ideas/',
+        url: '/ideas/public',
         params: { limit, offset, search, category, author_id, status },
       }),
       providesTags: result =>
