@@ -1,8 +1,6 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import { useParams } from 'next/navigation'
-
 
 export function useInputSearchLocale() {
   const locale = useLocale()
@@ -162,6 +160,56 @@ export function useDropDownSearchs() {
   }
 }
 
+export function useSearchCategory() {
+  const locale = useLocale()
+  switch (locale) {
+    case 'ru':
+      return {
+        title: "Эко-карта",
+        input: "Поиск...",
+        category: {
+          all: "Все категории",
+          suggested: "Предложения",
+          problems: "Проблемы",
+          solved: "Реализованные проекты",
+        }
+      }
+    case 'en':
+      return {
+        title: "Eco-map",
+        input: "Search...",
+        category: {
+          all: "All categories",
+          suggested: "Suggestions",
+          problems: "Problems",
+          solved: "Realized projects",
+        }
+      }
+    case 'kg':
+      return {
+        title: "Эко-карта",
+        input: "Издөө...",
+        category: {
+          all: "Бардык категориялар",
+          suggested: "Талаптар",
+          problems: "Көйгөйлөр",
+          solved: "Аяктаган долбоорлор",
+        }
+      }
+    default:
+      return {
+        title: "Эко-карта",
+        input: "Поиск...",
+        category: {
+          all: "Все категории",
+          suggested: "Предложения",
+          problems: "Проблемы",
+          solved: "Реализованные проекты",
+        }
+      }
+  }
+}
+
 export function useMoreButton() {
   const locale = useLocale()
   switch (locale) {
@@ -261,7 +309,7 @@ export function useCrowdsourcingData() {
 }
 
 export function useDetailPageLocale() {
-  const { locale } = useParams() as { locale: string }
+  const { locale } = useLocale() as unknown as { locale: string }
   switch (locale) {
     case 'ru':
       return {

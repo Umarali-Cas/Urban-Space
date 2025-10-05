@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
@@ -7,19 +8,28 @@ import classes from './CustomMap.module.scss'
 import { useMapFeatures } from '../hooks/useMapFeatures'
 import { MapModal } from '@/entities/MapModal'
 
+interface MapClientProps {
+  mapData: any
+}
+
 interface MapData {
   id: string
   lat: number
   lng: number
-  title: string
-  desc: string
-  imageUrl?: string
+  theme: string
+  description: string
+  image?: {
+    url?: string
+    alt?: string
+  }
+  polygon?: number[][]
 }
 
-export default function MapClient() {
+export default function MapClient({ mapData }: MapClientProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapRef = useRef<maplibregl.Map | null>(null)
   const [mapReady, setMapReady] = useState(false)
+  // const { data: mapData, isLoading } = useGetPublicDataQuery({ limit: 20, offset: 0 })
 
   const [selectedData, setSelectedData] = useState<MapData | null>(null)
 
@@ -27,13 +37,7 @@ export default function MapClient() {
     setSelectedData(data)
   }
 
-  const createCustomMarker = ({
-    bg,
-    shadow,
-  }: {
-    bg: string
-    shadow: string
-  }) => {
+  const createCustomMarker = ({ bg, shadow }: { bg: string; shadow: string }) => {
     const markerEl = document.createElement('div')
     markerEl.style.width = '25px'
     markerEl.style.height = '25px'
@@ -45,13 +49,6 @@ export default function MapClient() {
     markerEl.style.justifyContent = 'center'
     markerEl.style.alignItems = 'center'
 
-    markerEl.addEventListener('mouseenter', () => {
-      markerEl.style.filter = 'brightness(0.9)'
-    })
-    markerEl.addEventListener('mouseleave', () => {
-      markerEl.style.filter = 'brightness(1)'
-    })
-
     const img = document.createElement('img')
     img.src = '/map.svg'
     img.style.width = '60%'
@@ -61,84 +58,50 @@ export default function MapClient() {
     return markerEl
   }
 
-  // Подключаем маркеры / полигоны
+  // строим массив маркеров и полигонов из API
+  const markers = (mapData || []).map((item: MapData) => ({
+    id: item.id,
+    coordinates: [item.lng, item.lat] as [number, number],
+    element: createCustomMarker({ bg: '#078800ff', shadow: '#00951982' }),
+    onClick: () =>
+      openModal({
+        ...item,
+      }),
+  }))
+
+const polygons = (mapData || [])
+  .filter((item: { polygon: string | any[] }) => Array.isArray(item.polygon) && item.polygon.length > 2)
+  .map((item: MapData) => {
+    const coords = item.polygon ? item.polygon.map((p: number[]) => [p[1], p[0]]) : [];
+
+    // замыкаем контур (последняя точка = первая)
+    if (coords.length > 0) {
+      const first = coords[0]
+      const last = coords[coords.length - 1]
+      if (first[0] !== last[0] || first[1] !== last[1]) {
+        coords.push(first)
+      }
+    }
+
+
+    return {
+      id: `polygon-${item.id}`,
+      coordinates: [coords], // строго [[ [lng,lat], ... ]]
+      fillColor: '#ff0000',
+      fillOpacity: 0.4,
+      onClick: (lngLat: { lat: number; lng: number }) =>
+        openModal({
+          ...item,
+          lat: lngLat.lat,
+          lng: lngLat.lng,
+        }),
+    }
+  })
+  // подключаем в хук
   useMapFeatures({
     map: mapReady ? mapRef.current : null,
-    markers: [
-      {
-        id: 'marker-1',
-        coordinates: [74.62199857668969, 42.879476414488146],
-        element: createCustomMarker({ bg: '#078800ff', shadow: '#00951982' }),
-        onClick: () =>
-          openModal({
-            id: 'marker-1',
-            title: 'Первый маркер',
-            desc: 'Описание первого маркера',
-            imageUrl: '/grey.jpg',
-            lat: 42.879476414488146,
-            lng: 74.62199857668969,
-          }),
-      },
-      {
-        id: 'marker-2',
-        coordinates: [76.1876395059962, 42.21732119352707],
-        element: createCustomMarker({ bg: '#ff0000ea', shadow: '#b0000082' }),
-        onClick: () =>
-          openModal({
-            id: 'marker-2',
-            title: 'Второй маркер',
-            desc: 'Дополнительный текст',
-            lat: 42.21732119352707,
-            lng: 76.1876395059962,
-          }),
-      },
-    ],
-    polygons: [
-      {
-        id: 'polygon-1',
-        coordinates: [
-          [
-            [74.5, 41.4],
-            [74.7, 41.4],
-            [74.7, 41.6],
-            [74.5, 41.6],
-            [74.5, 41.4],
-          ],
-        ],
-        fillColor: '#ff0000',
-        fillOpacity: 0.4,
-        onClick: lngLat =>
-          openModal({
-            id: 'polygon-1',
-            title: 'Полигон 1',
-            desc: 'Описание полигона 1',
-            imageUrl: '/grey.jpg',
-            lat: lngLat.lat,
-            lng: lngLat.lng,
-          }),
-      },
-      {
-        id: 'polygon-2',
-        coordinates: [
-          [
-            [72.9813279943824, 41.69988911045577],
-            [73.89766034531843, 41.62225603819054],
-            [73.13247559866049, 41.054838805503444],
-            [72.9813279943824, 41.69988911045577],
-          ],
-        ],
-        fillColor: '#078800',
-        fillOpacity: 0.4,
-        onClick: lngLat =>
-          openModal({
-            id: 'polygon-2',
-            title: 'Полигон 2',
-            desc: 'Описание полигона 2',
-            lat: lngLat.lat,
-            lng: lngLat.lng,
-          }),
-      },
-    ],
+    markers,
+    polygons,
   })
 
   useEffect(() => {
@@ -161,33 +124,13 @@ export default function MapClient() {
 
     map.on('load', () => {
       setMapReady(true)
-
-      // Добавляем слой границы Кыргызстана
-      map.addLayer(
-        {
-          id: 'kyrgyzstan-border',
-          type: 'line',
-          source: 'openmaptiles',            // возможно имя другое — проверь в style.json
-          'source-layer': 'boundary',        // возможно другое имя слоя
-          paint: {
-            'line-color': '#ff0000',
-            'line-width': 3,
-          },
-          filter: [
-            'all',
-            ['==', 'admin_level', 2],         // границы стран
-            ['==', 'iso_a2', 'KG'],            // код Кыргызстана
-          ],
-        },
-        // вставляем перед слоем с лейблами, чтобы граница была видна
-        findLabelLayerId(map) // функция, определяющая правильный слой перед которым вставить
-      )
     })
 
     return () => {
       map.remove()
     }
   }, [])
+
 
   return (
     <>
@@ -197,16 +140,4 @@ export default function MapClient() {
       )}
     </>
   )
-}
-
-// вспомогательная функция: находит первый слой с текстом/символами, перед которым можно вставлять
-function findLabelLayerId(map: maplibregl.Map): string | undefined {
-  const layers = map.getStyle().layers
-  if (!layers) return undefined
-  for (const layer of layers) {
-    if (layer.type === 'symbol' && layer.layout && (layer.layout['text-field'] || layer.layout['icon-image'])) {
-      return layer.id
-    }
-  }
-  return undefined
 }

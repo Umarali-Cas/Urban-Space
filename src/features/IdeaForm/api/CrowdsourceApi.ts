@@ -16,24 +16,34 @@ export const CrowdsourceApi = createApi({
   }),
   tagTypes: ['Crowdsource'],
   endpoints: builder => ({
-    // создание краудсорс-идеи
-    createCrowdsource: builder.mutation<
-      any,
-      {
-        theme: string
-        description: string
-        category: string
-        image?: any // сюда можно передать объект с файлом или url
-        tags?: string
-        lat: number
-        lng: number
-      }
-    >({
-      query: idea => ({
-        url: '/crowdsource/',
-        method: 'POST',
-        body: idea,
-      }),
+    createCrowdsource: builder.mutation<any, {
+      theme: string
+      description: string
+      category: string
+      image?: File
+      tags?: string
+      lat: number
+      lng: number
+    }>({
+      query: idea => {
+        const formData = new FormData()
+        formData.append('theme', idea.theme)
+        formData.append('description', idea.description)
+        formData.append('category', idea.category)
+        formData.append('tags', idea.tags || '')
+        formData.append('lat', idea.lat.toString())
+        formData.append('lng', idea.lng.toString())
+
+        if (idea.image) {
+          formData.append('image', idea.image) // добавляем реальный файл
+        }
+
+        return {
+          url: '/crowdsource/',
+          method: 'POST',
+          body: formData, // FormData вместо JSON
+        }
+      },
       invalidatesTags: ['Crowdsource'],
     }),
   }),

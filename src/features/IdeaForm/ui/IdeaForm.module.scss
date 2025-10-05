@@ -137,3 +137,31 @@
     }
   }
 }
+
+.categoryGroup {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.categoryItem {
+  border: 1px solid #2e7d32 !important; /* зелёный 1px */
+  background: white !important;
+  color: #0c5710 !important;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 92px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.categoryItem:hover {
+  filter: brightness(0.98);
+}
+
+.categoryItemActive {
+  background: #2e7d32 !important; /* зелёный фон при активном выборе */
+  color: white !important;
+  box-shadow: 0 0 0 2px #2e7d3255;
+}

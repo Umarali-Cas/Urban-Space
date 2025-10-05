@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
 import { IdeaCard } from '@/entities/IdeaCard'
@@ -52,6 +51,8 @@ export function LastIdeas({
 
   const { data: totalCount } = useGetTotalCountQuery()
   const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
+  const l = useInputSearchLocale()
+  const not = useNothingDefined()
 
   return (
     <section className={classes.lastIdeas}>
@@ -73,7 +74,7 @@ export function LastIdeas({
         <input
           type="text"
           className={classes.sorting__input}
-          placeholder={useInputSearchLocale()}
+          placeholder={l}
           value={searchInput}
           onChange={e => setSearchInput(e.target.value)}
         />
@@ -100,7 +101,7 @@ export function LastIdeas({
             height={400}
           />
           <p style={{ textAlign: 'center', marginTop: '20px' }}>
-            {useNothingDefined()}
+            {not}
           </p>
         </div>
       ) : ideas.length === 0 ? (
@@ -115,7 +116,7 @@ export function LastIdeas({
             textWrap: 'nowrap',
           }}
         >
-          {useNothingDefined()}
+          {not}
         </p>
       ) : (
         <div className={classes.lastIdeas__ideas}>
