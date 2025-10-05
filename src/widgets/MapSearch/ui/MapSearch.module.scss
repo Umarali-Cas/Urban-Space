@@ -61,7 +61,12 @@
       border-radius: 8px;
       padding-left: 40px;
       font-size: 16px;
-      color: #6d758f;
+      color: black;
+
+      &::placeholder {
+        font-size: 16px;
+        color: #6d758f;
+      }
     }
   }
 }

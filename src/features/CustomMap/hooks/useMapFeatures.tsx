@@ -1,10 +1,10 @@
 // src/hooks/useMapFeatures.ts
 import { useEffect } from 'react'
-import { Map, Marker } from 'maplibre-gl'
+import { Map, Marker, LngLatLike } from 'maplibre-gl'
 
 type MarkerConfig = {
   id: string
-  coordinates: [number, number]
+  coordinates: [number, number] // [lng, lat]
   element?: HTMLElement
   title?: string
   desc?: string
@@ -15,7 +15,7 @@ type MarkerConfig = {
 
 type PolygonConfig = {
   id: string
-  coordinates: number[][][]
+  coordinates: number[][][] // [[[lng,lat], ...]]
   fillColor?: string
   fillOpacity?: number
   onClick?: (lngLat: { lng: number; lat: number }) => void
@@ -36,101 +36,115 @@ export const useMapFeatures = ({
   useEffect(() => {
     if (!map) return
 
-    let markerInstances: Marker[] = []
+    const markerInstances: Marker[] = []
 
     const addFeatures = () => {
-      // 🎯 Маркеры
-      markerInstances = markers.map(m => {
+      // === Маркеры ===
+      markers.forEach(m => {
         const marker = m.element
           ? new Marker({ element: m.element })
           : new Marker({ color: m.color || '#00951982' })
 
-        marker.setLngLat(m.coordinates).addTo(map)
+        marker.setLngLat(m.coordinates as LngLatLike).addTo(map)
 
         if (m.onClick) {
           marker.getElement().addEventListener('click', m.onClick)
         }
         if (m.onHover) {
-          marker.getElement().addEventListener('mouseenter', () => {
-            m.onHover!()
+          const enter = () => {
+            m.onHover?.()
             map.getCanvas().style.cursor = 'pointer'
-          })
-          marker.getElement().addEventListener('mouseleave', () => {
+          }
+          const leave = () => {
             map.getCanvas().style.cursor = ''
-          })
+          }
+          marker.getElement().addEventListener('mouseenter', enter)
+          marker.getElement().addEventListener('mouseleave', leave)
         }
 
-        return marker
+        markerInstances.push(marker)
       })
 
-      // 🟦 Полигоны
+      // === Полигоны ===
       polygons.forEach(p => {
-        if (!map.getSource(p.id)) {
-          map.addSource(p.id, {
-            type: 'geojson',
-            data: {
-              type: 'Feature',
-              geometry: { type: 'Polygon', coordinates: p.coordinates },
-              properties: {},
-            },
-          })
+  const geojson = {
+    type: 'Feature' as const,
+    geometry: { type: 'Polygon' as const, coordinates: p.coordinates }, // используем напрямую
+    properties: {},
+  }
 
-          map.addLayer({
-            id: p.id,
-            type: 'fill',
-            source: p.id,
-            paint: {
-              'fill-color': p.fillColor || '#0000ff',
-              'fill-opacity': p.fillOpacity ?? 0.3,
-            },
-          })
+  if (!map.getSource(p.id)) {
+    map.addSource(p.id, { type: 'geojson', data: geojson })
 
-          map.on('mouseenter', p.id, () => {
-            map.setPaintProperty(p.id, 'fill-opacity', 0.7)
-            map.getCanvas().style.cursor = 'pointer'
-            p.onHover?.()
-          })
-          map.on('mouseleave', p.id, () => {
-            map.setPaintProperty(p.id, 'fill-opacity', p.fillOpacity ?? 0.3)
-            map.getCanvas().style.cursor = ''
-          })
-        }
+    // fill (должен быть выше stroke, чтобы клики работали)
+    map.addLayer({
+      id: p.id,
+      type: 'fill',
+      source: p.id,
+      paint: {
+        'fill-color': p.fillColor || '#0000ff',
+        'fill-opacity': p.fillOpacity ?? 0.3,
+      },
+    })
 
-        if (p.onClick) {
-          map.on('click', p.id, e => p.onClick!(e.lngLat))
-        }
-      })
+    // stroke
+    map.addLayer({
+      id: `${p.id}-stroke`,
+      type: 'line',
+      source: p.id,
+      paint: {
+        'line-color': '#6d6d6dff',
+        'line-width': 2,
+      },
+    })
+  }
+
+  // hover
+  if (p.onHover) {
+    map.on('mouseenter', p.id, () => {
+      map.setPaintProperty(p.id, 'fill-opacity', 0.7)
+      map.getCanvas().style.cursor = 'pointer'
+      p.onHover?.()
+    })
+    map.on('mouseleave', p.id, () => {
+      map.setPaintProperty(p.id, 'fill-opacity', p.fillOpacity ?? 0.3)
+      map.getCanvas().style.cursor = ''
+    })
+  }
+
+  // click
+  if (p.onClick) {
+    map.on('click', p.id, e => {
+      // убедимся, что features существуют
+      if (e.features && e.features.length) {
+        p.onClick!(e.lngLat)
+      }
+    })
+  }
+})
     }
 
-    // Ждём загрузки стиля
     if (!map.isStyleLoaded()) {
       map.once('style.load', addFeatures)
     } else {
       addFeatures()
     }
 
-    // Cleanup: сначала удаляем фичи, потом карту
+    // === Очистка ===
     return () => {
-      // если карта уже удалена – сразу выходим
       if (!map || typeof map.getLayer !== 'function') return
 
-      // удаляем маркеры
       markerInstances.forEach((m, i) => {
         const cfg = markers[i]
-        if (cfg?.onClick)
+        if (cfg?.onClick) {
           m.getElement().removeEventListener('click', cfg.onClick)
-        if (cfg?.onHover) {
-          m.getElement().removeEventListener('mouseenter', cfg.onHover)
-          m.getElement().removeEventListener('mouseleave', () => {
-            map.getCanvas().style.cursor = ''
-          })
         }
         m.remove()
       })
 
-      // удаляем слои/источники полигонов
       polygons.forEach(p => {
         if (map.getLayer(p.id)) map.removeLayer(p.id)
+        if (map.getLayer(`${p.id}-stroke`)) map.removeLayer(`${p.id}-stroke`)
         if (map.getSource(p.id)) map.removeSource(p.id)
       })
     }
