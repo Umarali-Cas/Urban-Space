@@ -19,7 +19,6 @@ export default async function crowdfunding({
 
   const crowdfundingData = data.blocks[0].data
 
-  console.log(crowdfundingData)
   return (
     <>
       <SupportUs

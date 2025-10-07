@@ -6,7 +6,7 @@ import Image from 'next/image'
 import typewritter from '../assets/icons/typewritter.svg'
 import yellowlight from '../assets/icons/yellowlight.svg'
 import { AddModal } from '@/entities/AddModal/ui/AddModal'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGetActionUser } from '@/i18n/useNativeLocale'
 
 type Props = {
@@ -18,6 +18,13 @@ export function AddArticleOrIdea({ isArticle, show }: Props) {
   const text = useGetActionUser()
   const { data: user } = useGetProfileQuery()
   const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "unset";
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
 
   if (!show || !user) return null
 

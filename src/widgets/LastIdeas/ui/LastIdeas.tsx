@@ -89,6 +89,7 @@ export function LastIdeas({
             flexDirection: 'column',
             alignItems: 'center',
             width: '100%',
+            color: 'gray',
             marginTop: '20px',
           }}
           className={classes.noIdeas}
@@ -100,24 +101,23 @@ export function LastIdeas({
             width={600}
             height={400}
           />
-          <p style={{ textAlign: 'center', marginTop: '20px' }}>
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>{not}</p>
+        </div>
+      ) : ideas.length === 0 ? (
+        <div>
+          <Image
+            className={classes.noIdeas}
+            src="/nothing.svg"
+            alt="404"
+            width={600}
+            height={400}
+          />
+          <p
+            style={{ textAlign: 'center', marginTop: '20px' }}
+          >
             {not}
           </p>
         </div>
-      ) : ideas.length === 0 ? (
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'gray',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            textWrap: 'nowrap',
-          }}
-        >
-          {not}
-        </p>
       ) : (
         <div className={classes.lastIdeas__ideas}>
           {ideas.map((idea, index) => (
