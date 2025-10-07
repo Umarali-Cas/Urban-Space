@@ -21,7 +21,6 @@ export default async function BankIdeas({
 
   const heroData = data.blocks[0].data
 
-  console.log(heroData)
 
   return (
     <>

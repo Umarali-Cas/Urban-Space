@@ -9,7 +9,6 @@ import Image from 'next/image'
 
 export default function ArticleDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  console.log(slug)
   if (!slug) return <p>Идентификатор идеи не найден</p>
   const { data: article, isLoading, error } = useGetArticleBySlugQuery(slug)
 
@@ -37,11 +36,9 @@ export default function ArticleDetailPage() {
       </div>
     )
 
-  console.log(article)
-
   return (
     <>
-      <ArticlesInfo timeCreate={article.created_at} desc={article.summary} title={article.title} />
+      <ArticlesInfo all={article} timeCreate={article.created_at} desc={article.summary} title={article.title} />
     </>
   )
 }

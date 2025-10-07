@@ -65,6 +65,7 @@ export function ProfilePage() {
   }, [user])
 
   const userArticles = articles.filter(article => article.category !== 'idea')
+  console.log(userArticles)
   const userIdeas = articles.filter(article => article.category === 'idea')
 
   return (
@@ -130,9 +131,10 @@ export function ProfilePage() {
               >
                 <ArticlesCard
                   color={'#000000'}
+                  key={article.id}
                   articleName={article.title}
                   article={article.summary}
-                  userName={user?.username ?? 'Неизвестный'}
+                  userName={article.author_id ?? 'Неизвестный'}
                 />
               </Link>
             ))

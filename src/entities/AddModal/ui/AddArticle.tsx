@@ -1,7 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import classes from './AddModal.module.scss'
 import {
   useCreateArticleMutation,
@@ -11,19 +12,25 @@ import {
 import { Uploaded } from './Uploaded'
 
 export function AddArticle() {
-  const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [pdfFiles, setPdfFiles] = useState<File[]>([])
   const [createArticle] = useCreateArticleMutation()
   const [uploadCover] = useUploadCoverMutation()
   const [uploadAttachments] = useUploadAttachmentsMutation()
   const [uploaded, setUploaded] = useState<boolean | null>(null)
 
+  // Превью через FileReader
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       setCoverFile(file)
-      setCoverPreview(URL.createObjectURL(file))
+
+      const reader = new FileReader()
+      reader.onload = () => {
+        setCoverPreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
   }
 
@@ -34,14 +41,11 @@ export function AddArticle() {
 
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (files) {
-      setPdfFiles(Array.from(files))
-    }
+    if (files) setPdfFiles(Array.from(files))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     const form = e.target as HTMLFormElement
     const title = (form[0] as HTMLInputElement).value
     const summary = (form[1] as HTMLTextAreaElement).value
@@ -50,24 +54,9 @@ export function AddArticle() {
     try {
       let cover_key = ''
       if (coverFile) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = await uploadCover(coverFile).unwrap()
         cover_key = result.cover_key
-        console.log('Cover uploaded, key:', cover_key)
       }
-
-      console.log('Отправка статьи:', {
-        slug: title.toLowerCase().replace(/\s+/g, '-'),
-        title,
-        summary,
-        body_md,
-        category: 'general',
-        tags: [],
-        cover_key,
-        attachments: [],
-      })
-
-      console.log('cover_key:', cover_key)
 
       const newArticle = await createArticle({
         slug: title.toLowerCase().replace(/\s+/g, '-'),
@@ -76,28 +65,25 @@ export function AddArticle() {
         body_md,
         category: 'general',
         tags: [],
-        cover_key: cover_key,
+        cover_key,
         attachments: [],
       }).unwrap()
 
       if (pdfFiles.length > 0) {
-        await uploadAttachments({
-          articleId: newArticle.id,
-          files: pdfFiles,
-        }).unwrap()
+        await uploadAttachments({ articleId: newArticle.id, files: pdfFiles }).unwrap()
       }
 
-    setUploaded(true) // ✅ успех
-  } catch (error) {
-    console.error('Ошибка при публикации:', error)
-    setUploaded(false) // ❌ ошибка
-  }
+      setUploaded(true)
+    } catch (error) {
+      console.error('Ошибка при публикации:', error)
+      setUploaded(false)
+    }
   }
 
-if (uploaded !== null) {
-  setTimeout(() => setUploaded(null), 3000)
-  return <Uploaded isUploaded={uploaded} />
-}
+  if (uploaded !== null) {
+    setTimeout(() => setUploaded(null), 3000)
+    return <Uploaded isUploaded={uploaded} />
+  }
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
@@ -129,9 +115,11 @@ if (uploaded !== null) {
           </>
         ) : (
           <div className={classes.coverPreviewBox}>
-            <img
+            <Image
               src={coverPreview}
               alt="Обложка"
+              width={300}
+              height={200}
               className={classes.coverPreview}
             />
             <button

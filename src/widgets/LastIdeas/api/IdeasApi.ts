@@ -9,6 +9,7 @@ export const IdeasApi = createApi({
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as any).auth?.token
       if (token) headers.set('authorization', `Bearer ${token}`)
+        console.log(token)
       return headers
     },
   }),
@@ -57,16 +58,16 @@ export const IdeasApi = createApi({
     }),
 
     // ← новый endpoint для лайка
-    likeIdea: builder.mutation<any, string>({
-      query: ideaId => ({
-        url: `/ideas/${ideaId}/like`,
-        method: 'POST',
-      }),
-      invalidatesTags: (result, error, ideaId) => [
-        { type: 'Idea', id: ideaId },
-        { type: 'Idea', id: 'LIST' },
-      ],
-    }),
+likeOrDislikeIdea: builder.mutation<any, { ideaId: string; action: 'like' | 'dislike' }>({
+  query: ({ ideaId, action }) => ({
+    url: `/ideas/${ideaId}/${action}`,
+    method: 'POST',
+  }),
+  invalidatesTags: (result, error, { ideaId }) => [
+    { type: 'Idea', id: ideaId },
+    { type: 'Idea', id: 'LIST' },
+  ],
+}),
     createIdea: builder.mutation<
       any,
       {
@@ -75,10 +76,10 @@ export const IdeasApi = createApi({
         description_md: string
         category: string
         tags: string[]
-        media: any[]
+        // media: any[]
         lat: number
         lon: number
-        status: 'PENDING'
+        status: 'DRAFT'
       }
     >({
       query: idea => ({
@@ -109,7 +110,7 @@ export const {
   useGetIdeasQuery,
   useGetIdeaBySlugQuery,
   useGetTotalCountQuery,
-  useLikeIdeaMutation,
+  useLikeOrDislikeIdeaMutation,
   useCreateIdeaMutation,
   useUploadIdeaMediaMutation,
 } = IdeasApi

@@ -96,7 +96,7 @@ createArticle: builder.mutation<any, CreateArticlePayload>({
     uploadCover: builder.mutation<string, File>({
       query: file => {
         const formData = new FormData()
-        formData.append('cover', file)
+        formData.append('file', file)
         return {
           url: '/articles/upload-cover',
           method: 'POST',

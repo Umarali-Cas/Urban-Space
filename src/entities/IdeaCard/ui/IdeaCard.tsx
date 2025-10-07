@@ -4,13 +4,14 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useLikeIdeaMutation } from '@/widgets/LastIdeas/api/IdeasApi'
+import { useLikeOrDislikeIdeaMutation } from '@/widgets/LastIdeas/api/IdeasApi'
 import classes from './IdeaCard.module.scss'
 import heartIcon from '../assets/icons/heart.svg'
 import baseAvatar from '../assets/images/UserImage.jpg'
 import { IdeaCardProps } from '../types/type'
 import { useMoreButton, useSupportProjectIdea } from '@/i18n/useNativeLocale'
 import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
+import { useState } from 'react'
 
 export function IdeaCard({
   slug,
@@ -24,12 +25,19 @@ export function IdeaCard({
   onSelect,
 }: IdeaCardProps & { uniqueId: string }) {
   // хук для лайка
-  const [likeIdea, { isLoading: isLiking }] = useLikeIdeaMutation()
+  const [isLiked, setIsLiked] = useState(false) // локально хранить лайк
+  const [likeOrDislikeIdea, { isLoading }] = useLikeOrDislikeIdeaMutation()
   const { data: userInfo } = useGetUserByIdQuery(userName)
 
-  const handleLike = () => {
-    if (isLiking) return
-    likeIdea(uniqueId)
+  const handleLike = async () => {
+    if (isLoading) return
+    const action = isLiked ? 'dislike' : 'like'
+    try {
+      await likeOrDislikeIdea({ ideaId: uniqueId, action }).unwrap()
+      setIsLiked(!isLiked)
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   return (
@@ -68,7 +76,7 @@ export function IdeaCard({
           <div
             className={classes.ideaCard__tags__likes}
             onClick={handleLike}
-            style={{ cursor: isLiking ? 'wait' : 'pointer' }}
+            style={{ cursor: isLiked ? 'wait' : 'pointer' }}
           >
             <Image
               src={heartIcon}
@@ -76,9 +84,10 @@ export function IdeaCard({
               width={24}
               height={24}
               className={classes.ideaCard__tags__likes__icon}
+                        style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
             />
             <span className={classes.ideaCard__tags__likes__count}>
-              {likes}
+          {likes + (isLiked ? 1 : 0)}
             </span>
           </div>
 

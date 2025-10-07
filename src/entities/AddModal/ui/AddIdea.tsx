@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
@@ -39,54 +40,35 @@ const [uploadIdeaMedia] = useUploadIdeaMediaMutation()
     }
   }
 
- const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-
-  const form = e.target as HTMLFormElement
-  const title = (form[0] as HTMLInputElement).value
-  const description_md = (form[1] as HTMLTextAreaElement).value
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  const form = e.target as HTMLFormElement;
+  const title = (form[0] as HTMLInputElement).value;
+  const description_md = (form[1] as HTMLTextAreaElement).value;
 
   try {
-    // 1. Создание идеи
-
-    console.log('Отправка идеи:', {
-      title,
-      slug: title.toLowerCase().replace(/\s+/g, '-'),
-      description_md,
-      category: 'general',
-      tags: [],
-      media: [],
-      lat: 0,
-      lon: 0,
-      status: 'PENDING',
-    })
     const newIdea = await createIdea({
       title,
       slug: title.toLowerCase().replace(/\s+/g, '-'),
       description_md,
       category: 'general',
       tags: [],
-      media: [],
       lat: 0,
       lon: 0,
-      status: 'PENDING',
-    }).unwrap()
+      status: 'DRAFT', // попробуй DRAFT
+    }).unwrap();
 
-    // 2. Загрузка медиа
-    const allFiles = [...(coverFile ? [coverFile] : []), ...pdfFiles]
-    if (allFiles.length > 0) {
-      await uploadIdeaMedia({
-        ideaId: newIdea.id,
-        files: allFiles,
-      }).unwrap()
+    const allFiles = [...(coverFile ? [coverFile] : []), ...pdfFiles];
+    if (allFiles.length) {
+      await uploadIdeaMedia({ ideaId: newIdea.id, files: allFiles }).unwrap();
     }
 
-    setUploaded(true)
-  } catch (error) {
-    console.error('Ошибка при публикации:', error)
-    setUploaded(false) // ❌ ошибка
+    setUploaded(true);
+  } catch (err: any) {
+    console.error('Ошибка при публикации:', err);
+    setUploaded(false); // показываем ошибку пользователю
   }
-}
+};
 
 if (uploaded !== null) {
   setTimeout(() => setUploaded(null), 3000)
