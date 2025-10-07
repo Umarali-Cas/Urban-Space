@@ -59,7 +59,7 @@ export default function ArticlesWrapp({
       return (
         <div className={classes.noArticles}>
           <Image src="/nothing.svg" alt="404" width={600} height={400} />
-          <p>{useNothingDefined()}</p>
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>{useNothingDefined()}</p>
         </div>
       )
     }
@@ -133,7 +133,7 @@ export default function ArticlesWrapp({
               width={600}
               height={400}
             />
-            <p style={{ textAlign: 'center', marginTop: '20px' }}>
+            <p className={classes.noArticles__text} style={{ textAlign: 'center', marginTop: '20px' }}>
               {nothing}
             </p>
           </div>

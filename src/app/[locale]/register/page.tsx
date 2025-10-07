@@ -26,7 +26,6 @@ export default async function Register({
   const logData = await loginRes.json()
 
   const ecoBaner = data.blocks.find((b: any) => b.type === 'features')?.data
-  console.log(regData?.blocks[0].data)
   return (
     <section>
       <EcoBaner title={ecoBaner.title} desc={ecoBaner.desc} />
