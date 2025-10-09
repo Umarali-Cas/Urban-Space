@@ -4,8 +4,6 @@ import { authApi } from '@/features/auth/api/authApi'
 import authReducer from '@/features/auth/lib/authSlice'
 import { articlesApi } from '@/widgets/Articles/api/articlesApi'
 import { IdeasApi } from '@/widgets/LastIdeas/api/IdeasApi'
-import { mapApi } from '@/features/CustomMap/api/mapApi'
-import { getAreasApi } from '@/features/CustomMap/api/getAreasApi'
 import storage from '../utils/storage'
 import { adminPagesApi } from '@/widgets/AdminPages/api/adminPagesApi'
 import { adminArticlesApi } from '@/widgets/AdminArticles/api/adminArticlesApi'
@@ -20,8 +18,6 @@ const rootReducer = combineReducers({
   [authApi.reducerPath]: authApi.reducer,
   [articlesApi.reducerPath]: articlesApi.reducer,
   [IdeasApi.reducerPath]: IdeasApi.reducer,
-  [mapApi.reducerPath]: mapApi.reducer,
-  [getAreasApi.reducerPath]: getAreasApi.reducer,
   [adminPagesApi.reducerPath]: adminPagesApi.reducer,
   [pagesApi.reducerPath]: pagesApi.reducer,
   [CrowdsourceApi.reducerPath]: CrowdsourceApi.reducer,
@@ -34,8 +30,6 @@ const persistConfig = {
     authApi.reducerPath,
     articlesApi.reducerPath,
     IdeasApi.reducerPath,
-    mapApi.reducerPath,
-    getAreasApi.reducerPath,
     adminPagesApi.reducerPath,
     adminArticlesApi.reducerPath,
     adminIdeasApi.reducerPath,
@@ -55,8 +49,6 @@ export const store = configureStore({
       authApi.middleware,
       articlesApi.middleware,
       IdeasApi.middleware,
-      mapApi.middleware,
-      getAreasApi.middleware,
       adminPagesApi.middleware,
       adminArticlesApi.middleware,
       adminIdeasApi.middleware,

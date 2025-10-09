@@ -120,13 +120,13 @@ export function useNavBarTiles() {
   const locale = useLocale()
   switch (locale) {
     case 'ru':
-      return ['Урбан-карта', 'Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
+      return ['Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
     case 'en':
-      return ['Urban Map', 'Urban Ideas Bank', 'Urban Articles', 'Crowdfunding', 'Crowdsourcing', 'About us']
+      return ['Urban Ideas Bank', 'Urban Articles', 'Crowdfunding', 'Crowdsourcing', 'About us']
     case 'kg':
-      return ['Урбан-карта', 'Урбан идеялар банкы', 'макалалар', 'Краудфандинг', 'Краудсорсинг', 'Биз жөнүндө']
+      return ['Урбан идеялар банкы', 'макалалар', 'Краудфандинг', 'Краудсорсинг', 'Биз жөнүндө']
     default:
-      return ['Урбан-карта', 'Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
+      return ['Банк Урбан-идей', 'Урбан-статьи', 'Краудфандинг', 'Краудсорсинг', 'О нас']
   }
 }
 

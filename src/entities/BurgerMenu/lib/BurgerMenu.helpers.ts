@@ -1,9 +1,5 @@
 export const BurgerMenuItems = [
   {
-    title: 'Урбан-карта',
-    href: '/map',
-  },
-  {
     title: 'Банк Урбан-идей',
     href: '/ideas',
   },

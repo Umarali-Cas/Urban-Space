@@ -95,9 +95,6 @@ export function AddArticle() {
       <label>Краткое описание</label>
       <textarea placeholder="Введите краткое описание" required />
 
-      <label>Полный текст статьи</label>
-      <textarea placeholder="Введите содержимое статьи" rows={6} required />
-
       {/* Обложка */}
       <div className={classes.fileGroup}>
         {!coverPreview ? (
