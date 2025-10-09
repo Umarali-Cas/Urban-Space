@@ -92,7 +92,7 @@ export function IdeasDetailPage({
         <h1 className={classes.ideasDetailPage__content__title}>{title}</h1>
         <div
           className={classes.ideasDetailPage__content__imageWrapper}
-          style={images.length > 0 ? { gap: '0' } : { gap: '32' }}
+          style={images.length === 0 ? { gap: '0' } : { gap: '32px' }}
         >
           {images.length > 0 ? (
             <Image

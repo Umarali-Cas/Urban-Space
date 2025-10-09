@@ -50,9 +50,11 @@ export function LastIdeas({
   })
 
   const { data: totalCount } = useGetTotalCountQuery()
+  console.log(ideas)
   const totalPages = totalCount ? Math.ceil(totalCount / limit) : 0
   const l = useInputSearchLocale()
   const not = useNothingDefined()
+  // console.log(ideas, "data")
 
   return (
     <section className={classes.lastIdeas}>
