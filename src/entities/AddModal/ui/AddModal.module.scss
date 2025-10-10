@@ -10,7 +10,7 @@
   justify-content: center;
   align-items: center;
   animation: fadeIn 0.3s ease-in-out;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -26,6 +26,11 @@
   position: relative;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   animation: slideUp 0.3s ease-in-out;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+    
+  }
 }
 
 .closeButton {
@@ -38,6 +43,7 @@
   cursor: pointer;
   color: #888;
   transition: color 0.2s ease;
+
   &:hover {
     color: #000;
   }
@@ -66,10 +72,6 @@
     resize: vertical;
   }
 
-  input[type='file'] {
-    margin-top: 8px;
-  }
-
   button[type='submit'] {
     padding: 12px;
     background-color: #37a222;
@@ -88,22 +90,20 @@
 
 .fileGroup {
   display: flex;
-  flex-direction: row;
-  gap: 4px;
-  //   margin-top: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .fileLabel {
   display: inline-block;
   padding: 10px 16px;
-  background-color: none;
   border: 2px dashed gray;
   color: gray;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
   width: fit-content;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 
   &:hover {
     background-color: #888;
@@ -115,170 +115,124 @@
   display: none;
 }
 
-.coverPreview {
-  margin-top: 8px;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
+/* Обложка */
+.coverPreviewBox {
+  max-width: 200px;
+  position: relative;
 
-  &:hover + .removeButton {
-    opacity: 1;
+  img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  &:hover {
-    filter: brightness(0.9);
+  .removeButton {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: #c62828;
+    }
   }
 }
 
+/* Галерея фото */
+.imagesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.imageCard {
+  position: relative;
+
+  img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .removeButton {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background-color: #e53935;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #c62828;
+    }
+  }
+}
+
+/* Файлы */
 .fileList {
-  margin-top: 8px;
-  padding-left: 16px;
-  list-style: disc;
+  margin-top: 4px;
+  list-style: none;
+  padding: 0;
 
   li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 14px;
-    color: #333;
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 6px;
+
+    button {
+      background: #e53935;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+
+      &:hover {
+        background: #c62828;
+      }
+    }
   }
 }
 
-.coverPreviewBox {
-  max-width: 40%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
-  position: relative;
-}
-
-.removeButton {
-  opacity: 0;
-  transition: all 0.2s ease-in-out;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: #e53935;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
+.fileNameSpan {
   font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  display: inline-block;
+  vertical-align: middle;
 
-  &:hover {
-    background-color: #c62828;
-    opacity: 1;
-  }
-
-  &:hover + .coverPreview {
-    filter: brightness(0.9);
-  }
-}
-
-.uploaded {
-  text-align: center;
-  padding: 20px;
-
-  &__title {
-    font-family: var(--font3);
-    font-weight: 600;
-    font-size: 32px;
-    line-height: 120%;
-    text-align: center;
-    color: #0c0d13;
-  }
-
-  &__text {
-    font-family: var(--third-family);
-    font-weight: 400;
-    font-size: 24px;
-    line-height: 160%;
-    text-align: center;
-    color: #5c5d61;
-    margin: 12px 0 16px;
-  }
-
-  &__icon__success {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    background: #23ca9b;
-    border-radius: 16px;
-    position: relative;
-  }
-
-  &__icon__reject {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
-    background: #ff4d4f;
-    border-radius: 16px;
-    position: relative;
-  }
-
-  &__line__one {
-    width: 35px;
-    height: 8px;
-    top: 54%;
-    transform: translateX(-50%) rotate(45deg);
-    left: 32%;
-    background: #ffffff;
-    position: absolute;
-    border-radius: 5px 0 0 5px;
-
-    &__reject{
-      position: absolute;
-      width: 80px;
-      height: 8px;
-      background: #ffffff;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(45deg);
-      border-radius: 5px;
-    }
-  }
-
-  &__line__two {
-    position: absolute;
-    width: 60px;
-    height: 8px;
-    background: #ffffff;
-    top: 50%;
-    right: -25%;
-    border-radius: 0 5px 5px 0;
-    transform: translateX(-50%) rotate(-45deg);
-
-        &__reject{
-      position: absolute;
-      width: 80px;
-      height: 8px;
-      background: #ffffff;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(-45deg);
-      border-radius: 5px;
-    }
+  @media (max-width: 475px) {
+    font-size: 12px;
+    max-width: 140px;
   }
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from {
-    transform: translateY(40px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
 }

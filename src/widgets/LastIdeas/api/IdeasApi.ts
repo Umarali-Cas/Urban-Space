@@ -20,21 +20,17 @@ export const IdeasApi = createApi({
         limit?: number
         offset?: number
         search?: string
-        category?: string
         author_id?: string
-        status?: string
       }
     >({
       query: ({
         limit = 6,
         offset = 0,
         search,
-        category,
         author_id,
-        status,
       }) => ({
         url: '/ideas/public',
-        params: { limit, offset, search, category, author_id, status },
+        params: { limit, offset, search, author_id },
       }),
       providesTags: result =>
         result
@@ -73,12 +69,8 @@ likeOrDislikeIdea: builder.mutation<any, { ideaId: string; action: 'like' | 'dis
         title: string
         slug: string
         description_md: string
-        category: string
         tags: string[]
-        // media: any[]
-        lat: number
-        lon: number
-        status: 'DRAFT'
+        media: any[]
       }
     >({
       query: idea => ({
