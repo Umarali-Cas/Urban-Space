@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useLikeOrDislikeIdeaMutation } from '@/widgets/LastIdeas/api/IdeasApi'
 import classes from './IdeaCard.module.scss'
 import heartIcon from '../assets/icons/heart.svg'
+import filled from '../assets/icons/filledheart.svg'
 import baseAvatar from '../assets/images/UserImage.jpg'
 import { IdeaCardProps } from '../types/type'
 import { useMoreButton, useSupportProjectIdea } from '@/i18n/useNativeLocale'
@@ -78,16 +79,29 @@ export function IdeaCard({
             onClick={handleLike}
             style={{ cursor: isLiked ? 'wait' : 'pointer' }}
           >
+            {!isLiked ? (
+              <Image
+                src={heartIcon}
+                alt="heart"
+                width={24}
+                height={24}
+                className={classes.ideaCard__tags__likes__icon}
+                style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
+              />
+
+            ) : (
+
             <Image
-              src={heartIcon}
+              src={filled}
               alt="heart"
               width={24}
               height={24}
               className={classes.ideaCard__tags__likes__icon}
-                        style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
+              style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
             />
+            )}
             <span className={classes.ideaCard__tags__likes__count}>
-          {likes + (isLiked ? 1 : 0)}
+              {likes + (isLiked ? 1 : 0)}
             </span>
           </div>
 
