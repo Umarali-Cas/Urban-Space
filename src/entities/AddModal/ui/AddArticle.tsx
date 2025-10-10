@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useState } from 'react'
@@ -7,41 +6,46 @@ import classes from './AddModal.module.scss'
 import {
   useCreateArticleMutation,
   useUploadAttachmentsMutation,
-  useUploadCoverMutation,
 } from '@/widgets/Articles/api/articlesApi'
 import { Uploaded } from './Uploaded'
 
 export function AddArticle() {
-  const [coverFile, setCoverFile] = useState<File | null>(null)
-  const [coverPreview, setCoverPreview] = useState<string | null>(null)
-  const [pdfFiles, setPdfFiles] = useState<File[]>([])
-  const [createArticle] = useCreateArticleMutation()
-  const [uploadCover] = useUploadCoverMutation()
-  const [uploadAttachments] = useUploadAttachmentsMutation()
+  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  const [otherFiles, setOtherFiles] = useState<File[]>([])
   const [uploaded, setUploaded] = useState<boolean | null>(null)
 
-  // Превью через FileReader
-  const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setCoverFile(file)
+  const [createArticle] = useCreateArticleMutation()
+  const [uploadAttachments] = useUploadAttachmentsMutation()
 
-      const reader = new FileReader()
-      reader.onload = () => {
-        setCoverPreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
-
-  const handleRemoveCover = () => {
-    setCoverFile(null)
-    setCoverPreview(null)
-  }
-
-  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
-    if (files) setPdfFiles(Array.from(files))
+    if (!files) return
+
+    const newFiles = Array.from(files)
+    setImageFiles(prev => [...prev, ...newFiles])
+
+    newFiles.forEach(file => {
+      const reader = new FileReader()
+      reader.onload = () =>
+        setImagePreviews(prev => [...prev, reader.result as string])
+      reader.readAsDataURL(file)
+    })
+  }
+
+  const handleRemoveImage = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index))
+    setImagePreviews(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const handleOtherFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (!files) return
+    setOtherFiles(prev => [...prev, ...Array.from(files)])
+  }
+
+  const handleRemoveOtherFile = (index: number) => {
+    setOtherFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,12 +56,6 @@ export function AddArticle() {
     const body_md = (form[2] as HTMLTextAreaElement).value
 
     try {
-      let cover_key = ''
-      if (coverFile) {
-        const result: any = await uploadCover(coverFile).unwrap()
-        cover_key = result.cover_key
-      }
-
       const newArticle = await createArticle({
         slug: title.toLowerCase().replace(/\s+/g, '-'),
         title,
@@ -65,17 +63,20 @@ export function AddArticle() {
         body_md,
         category: 'general',
         tags: [],
-        cover_key,
         attachments: [],
+        cover_key: ''
       }).unwrap()
 
-      if (pdfFiles.length > 0) {
-        await uploadAttachments({ articleId: newArticle.id, files: pdfFiles }).unwrap()
+      if (imageFiles.length || otherFiles.length) {
+        await uploadAttachments({
+          articleId: newArticle.id,
+          files: [...imageFiles, ...otherFiles],
+        }).unwrap()
       }
 
       setUploaded(true)
-    } catch (error) {
-      console.error('Ошибка при публикации:', error)
+    } catch (err) {
+      console.error('Ошибка при публикации:', err)
       setUploaded(false)
     }
   }
@@ -95,58 +96,52 @@ export function AddArticle() {
       <label>Краткое описание</label>
       <textarea placeholder="Введите краткое описание" required />
 
-      {/* Обложка */}
+      {/* Фотографии */}
       <div className={classes.fileGroup}>
-        {!coverPreview ? (
-          <>
-            <label htmlFor="coverUploadArticle" className={classes.fileLabel}>
-              Загрузить обложку
-            </label>
-            <input
-              type="file"
-              id="coverUploadArticle"
-              accept="image/*"
-              onChange={handleCoverChange}
-              className={classes.hiddenInput}
-            />
-          </>
-        ) : (
-          <div className={classes.coverPreviewBox}>
-            <Image
-              src={coverPreview}
-              alt="Обложка"
-              width={300}
-              height={200}
-              className={classes.coverPreview}
-            />
-            <button
-              type="button"
-              onClick={handleRemoveCover}
-              className={classes.removeButton}
-            >
-              Удалить
-            </button>
+        <label htmlFor="imagesUploadArticle" className={classes.fileLabel}>
+          Добавить фотографии
+        </label>
+        <input
+          type="file"
+          id="imagesUploadArticle"
+          accept="image/*"
+          multiple
+          onChange={handleImagesChange}
+          className={classes.hiddenInput}
+        />
+        {imagePreviews.length > 0 && (
+          <div className={classes.imagesGrid}>
+            {imagePreviews.map((src, idx) => (
+              <div key={idx} className={classes.imageCard}>
+                <Image src={src} alt={`Фото ${idx + 1}`} width={150} height={150} className={classes.coverPreview} />
+                <button type="button" className={classes.removeButton} onClick={() => handleRemoveImage(idx)}>
+                  Удалить
+                </button>
+              </div>
+            ))}
           </div>
         )}
       </div>
 
-      {/* PDF-файлы */}
+      {/* Другие файлы */}
       <div className={classes.fileGroup}>
-        <label htmlFor="pdfUploadArticle" className={classes.fileLabel}>
-          Прикрепить PDF-файлы
+        <label htmlFor="filesUploadArticle" className={classes.fileLabel}>
+          Прикрепить файлы
         </label>
         <input
           type="file"
-          id="pdfUploadArticle"
-          accept="application/pdf"
+          id="filesUploadArticle"
           multiple
-          onChange={handlePdfChange}
+          onChange={handleOtherFilesChange}
           className={classes.hiddenInput}
         />
-        {pdfFiles.length > 0 && (
+        {otherFiles.length > 0 && (
           <ul className={classes.fileList}>
-            {pdfFiles.map(file => (
-              <li key={file.name}>{file.name}</li>
+            {otherFiles.map((file, idx) => (
+              <li key={file.name}>
+                <span className={classes.fileNameSpan}>{file.name}</span>
+                <button type="button" onClick={() => handleRemoveOtherFile(idx)}>Удалить</button>
+              </li>
             ))}
           </ul>
         )}
