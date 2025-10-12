@@ -12,7 +12,7 @@ import baseAvatar from '../assets/images/UserImage.jpg'
 import { IdeaCardProps } from '../types/type'
 import { useMoreButton, useSupportProjectIdea } from '@/i18n/useNativeLocale'
 import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export function IdeaCard({
   slug,
@@ -23,21 +23,48 @@ export function IdeaCard({
   likes,
   imageUrl,
   uniqueId,
+  userLiked,
   onSelect,
 }: IdeaCardProps & { uniqueId: string }) {
   // хук для лайка
-  const [isLiked, setIsLiked] = useState(false) // локально хранить лайк
   const [likeOrDislikeIdea, { isLoading }] = useLikeOrDislikeIdeaMutation()
   const { data: userInfo } = useGetUserByIdQuery(userName)
 
-  const handleLike = async () => {
+  // в props ожидайте userLiked?: boolean и likes: number
+  const [localLiked, setLocalLiked] = useState<boolean>(Boolean(userLiked))
+  const [localLikesCount, setLocalLikesCount] = useState<number>(likes ?? 0)
+
+  useEffect(() => {
+    setLocalLiked(Boolean(userLiked))
+  }, [userLiked])
+
+  useEffect(() => {
+    setLocalLikesCount(likes ?? 0)
+  }, [likes])
+
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation() // не прокидываем клик вверх (например Link)
+    e.preventDefault()
     if (isLoading) return
-    const action = isLiked ? 'dislike' : 'like'
+
+    const action = localLiked ? 'dislike' : 'like'
+
+    // Оптимистичный апдейт
+    setLocalLiked(prev => !prev)
+    setLocalLikesCount(prev =>
+      action === 'like' ? prev + 1 : Math.max(0, prev - 1)
+    )
+
     try {
       await likeOrDislikeIdea({ ideaId: uniqueId, action }).unwrap()
-      setIsLiked(!isLiked)
+      // RTK invalidatesTags должен подтянуть свежие данные, но мы уже показали оптимистично
     } catch (err) {
-      console.error(err)
+      // Откат при ошибке
+      console.error('Like request failed', err)
+      setLocalLiked(prev => !prev)
+      setLocalLikesCount(prev =>
+        action === 'like' ? Math.max(0, prev - 1) : prev + 1
+      )
     }
   }
 
@@ -74,36 +101,28 @@ export function IdeaCard({
         </div>
 
         <div className={classes.ideaCard__tags}>
-          <div
-            className={classes.ideaCard__tags__likes}
+          <button
+            type="button"
             onClick={handleLike}
-            style={{ cursor: isLiked ? 'wait' : 'pointer' }}
+            className={classes.ideaCard__tags__likes}
+            disabled={isLoading}
+            aria-pressed={localLiked}
+            title={localLiked ? 'Убрать лайк' : 'Поставить лайк'}
           >
-            {!isLiked ? (
-              <Image
-                src={heartIcon}
-                alt="heart"
-                width={24}
-                height={24}
-                className={classes.ideaCard__tags__likes__icon}
-                style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
-              />
-
-            ) : (
-
             <Image
-              src={filled}
-              alt="heart"
+              src={localLiked ? filled : heartIcon}
+              alt="like"
               width={24}
               height={24}
               className={classes.ideaCard__tags__likes__icon}
-              style={{ filter: isLiked ? 'drop-shadow(0 0 5px red)' : 'none' }}
+              style={{
+                filter: localLiked ? 'drop-shadow(0 0 5px red)' : 'none',
+              }}
             />
-            )}
             <span className={classes.ideaCard__tags__likes__count}>
-              {likes + (isLiked ? 1 : 0)}
+              {localLikesCount}
             </span>
-          </div>
+          </button>
 
           <Link
             href={`/ideas/${slug}/`}

@@ -62,15 +62,15 @@ export default async function RootLayout({
     locale = cookieLocale
   }
 
-  const navCta = data.blocks.filter((b: any) => b.type === 'html')
-
+  const navCta = data.blocks.filter((b: any) => b.type === 'html')[0]
+  
   return (
     <html lang={locale}>
       <body className={`${inter.variable}`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Loader />
           <Providers>
-          <HeaderWrapper/>
+          <HeaderWrapper lang={navCta?.data.navBar}/>
             <main>{children}</main>
           </Providers>
           <Footer/>

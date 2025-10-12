@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @next/next/no-img-element */
 'use client'
@@ -6,6 +7,7 @@ import { useEffect, useState } from 'react'
 import classes from './AddModal.module.scss'
 import {
   useCreateIdeaMutation,
+  useUpdateIdeaMutation,
   useUploadIdeaMediaMutation,
 } from '@/widgets/LastIdeas/api/IdeasApi'
 import { Uploaded } from './Uploaded'
@@ -14,6 +16,8 @@ export function AddIdea() {
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
@@ -21,16 +25,20 @@ export function AddIdea() {
 
   const [createIdea] = useCreateIdeaMutation()
   const [uploadIdeaMedia] = useUploadIdeaMediaMutation()
+  const [updateIdea] = useUpdateIdeaMutation()
   const [uploaded, setUploaded] = useState<boolean | null>(null)
+
+  // контролируемое поле description для надёжности
+  const [description, setDescription] = useState('')
 
   // Превью картинок
   useEffect(() => {
-    const urls = images.map((f) => URL.createObjectURL(f))
-    imagePreviews.forEach((u) => URL.revokeObjectURL(u))
+    const urls = images.map(f => URL.createObjectURL(f))
+    imagePreviews.forEach(u => URL.revokeObjectURL(u))
     setImagePreviews(urls)
 
     return () => {
-      urls.forEach((u) => URL.revokeObjectURL(u))
+      urls.forEach(u => URL.revokeObjectURL(u))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [images])
@@ -78,61 +86,100 @@ export function AddIdea() {
   }
 
   // Submit
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  const form = e.target as HTMLFormElement
-  const title = (form[0] as HTMLInputElement).value
-  const description_md = (form[1] as HTMLTextAreaElement).value
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (isSubmitting) return
+    setIsSubmitting(true)
+    setUploadProgress(null)
 
-  try {
-    // 1️⃣ Сначала создаём идею без медиа
-    const ideaPayload = {
-      title,
-      slug: title.toLowerCase().replace(/\s+/g, '-'),
-      description_md,
-      media: [],
-      tags: [],
-    }
-    const newIdea = await createIdea(ideaPayload).unwrap()
-    console.log("📤 Идея создана:", newIdea)
+    try {
+      const form = e.target as HTMLFormElement
 
-    // 2️⃣ Загружаем все файлы к реальному ideaId
-    const allFiles: File[] = [
-      ...(coverFile ? [coverFile] : []),
-      ...images,
-      ...files,
-    ]
+      // Надёжное получение title: сначала FormData, затем form.elements
+      const fd = new FormData(form)
+      let titleVal = fd.get('title')
+      if (titleVal === null || typeof titleVal !== 'string') {
+        const el = form.elements.namedItem('title') as HTMLInputElement | null
+        titleVal = el ? el.value : ''
+      }
+      const title = String(titleVal || '').trim()
+      const description_md = String(
+        description || (fd.get('description_md') as string) || ''
+      ).trim()
 
-    let mediaObjects: any[] = []
-    if (allFiles.length) {
+      if (!title) {
+        console.error('Title is required')
+        setUploaded(false)
+        setIsSubmitting(false)
+        return
+      }
+
+      if (!description_md) {
+        console.error('Description is required')
+        setUploaded(false)
+        setIsSubmitting(false)
+        return
+      }
+
+      const ideaPayload = {
+        title,
+        slug: title.toLowerCase().replace(/\s+/g, '-'),
+        description_md,
+        description: description_md,
+        media: [],
+        tags: [],
+      }
+
+      // 1) Создаём идею
+      console.log('createIdea payload (stringified):', JSON.stringify(ideaPayload))
+      const newIdea = await createIdea(ideaPayload).unwrap()
+      console.log('Server returned description_md:', newIdea.description_md)
+
+      // 2) Собираем все файлы
+      const allFiles: File[] = [
+        ...(coverFile ? [coverFile] : []),
+        ...images,
+        ...files,
+      ]
+
+      if (allFiles.length === 0) {
+        setUploaded(true)
+        return
+      }
+
+      // 3) Загружаем файлы одним запросом через RTK mutation
       const uploadedFiles = await uploadIdeaMedia({
         ideaId: newIdea.id,
-        files: allFiles
+        files: allFiles,
       }).unwrap()
 
-      // Преобразуем файлы в нужный формат для media
-      mediaObjects = uploadedFiles.map(f => ({
-        file_key: f.file_key,
-        mime: f.mime,
-        size_bytes: f.size_bytes,
-        meta: {},
+      // 4) Преобразуем ответ в media объекты и обновляем идею
+      const mediaObjects = uploadedFiles.map((f: any) => ({
+        file_key: f.file_key ?? f.key ?? f.fileKey,
+        mime: f.mime ?? f.content_type,
+        size_bytes: f.size_bytes ?? f.size,
+        meta: f.meta ?? {},
       }))
-      console.log("📤 Файлы для media:", mediaObjects)
 
-      // 3️⃣ Если бэкенд требует media внутри идеи, обновляем её
-      // Assuming you have a separate API endpoint for updating an existing idea
-      // await updateIdea({
-      //   id: newIdea.id,
-      //   media: mediaObjects
-      // }).unwrap()
+      await updateIdea({
+        id: newIdea.id,
+        data: {
+          media: mediaObjects,
+        },
+      }).unwrap()
+
+      setUploaded(true)
+    } catch (err: any) {
+      console.error('❌ Ошибка при публикации:', err)
+      if (err?.status === 422 && err?.data) {
+        console.error('Validation details:', err.data.detail ?? err.data)
+      }
+      setUploaded(false)
+    } finally {
+      setIsSubmitting(false)
+      setUploadProgress(null)
     }
-
-    setUploaded(true)
-  } catch (err: any) {
-    console.error('❌ Ошибка при публикации:', err)
-    setUploaded(false)
   }
-}
 
   if (uploaded !== null) {
     setTimeout(() => setUploaded(null), 3000)
@@ -144,10 +191,21 @@ const handleSubmit = async (e: React.FormEvent) => {
       <h2>Добавить идею</h2>
 
       <label>Заголовок идеи</label>
-      <input type="text" placeholder="Введите заголовок идеи" required />
+      <input
+        name="title"
+        type="text"
+        placeholder="Введите заголовок идеи"
+        required
+      />
 
       <label>Описание идеи</label>
-      <textarea placeholder="Опишите вашу идею" required />
+      <textarea
+        name="description_md"
+        placeholder="Опишите вашу идею"
+        required
+        value={description}
+        onChange={e => setDescription(e.target.value)}
+      />
 
       {/* Обложка */}
       <div className={classes.fileGroup}>
@@ -166,8 +224,16 @@ const handleSubmit = async (e: React.FormEvent) => {
           </>
         ) : (
           <div className={classes.coverPreviewBox}>
-            <img src={coverPreview} alt="Обложка" className={classes.coverPreview} />
-            <button type="button" onClick={handleRemoveCover} className={classes.removeButton}>
+            <img
+              src={coverPreview}
+              alt="Обложка"
+              className={classes.coverPreview}
+            />
+            <button
+              type="button"
+              onClick={handleRemoveCover}
+              className={classes.removeButton}
+            >
               Удалить
             </button>
           </div>
@@ -192,7 +258,11 @@ const handleSubmit = async (e: React.FormEvent) => {
           <div className={classes.imagesGrid}>
             {imagePreviews.map((src, idx) => (
               <div key={src} className={classes.imageCard}>
-                <img src={src} alt={`Фото ${idx + 1}`} className={classes.imagePreview} />
+                <img
+                  src={src}
+                  alt={`Фото ${idx + 1}`}
+                  className={classes.imagePreview}
+                />
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(idx)}
@@ -236,7 +306,9 @@ const handleSubmit = async (e: React.FormEvent) => {
         )}
       </div>
 
-      <button type="submit">Добавить идею</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Отправка...' : 'Добавить идею'}
+      </button>
     </form>
   )
 }
