@@ -8,6 +8,14 @@
 main {
   padding: 120px 0 0 0;
   margin: 0 auto;
+
+  @media (max-width: 600px) {
+    padding: 80px 0 0 0;
+  }
+
+  @media (max-width: 400px) {
+    padding: 40px 0 0 0;
+  }
 }
 
 input[type='password']::-ms-reveal {

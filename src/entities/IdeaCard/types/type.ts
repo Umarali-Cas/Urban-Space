@@ -10,6 +10,7 @@ export interface IdeaCardProps {
   imageUrl?: string | StaticImageData
   uniqueId: number | string
   slug: string
+  userLiked?: boolean | null
   status: string
   onSelect?: () => void
 }

@@ -1,8 +1,8 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import classes from './ArticlesPage.module.scss'
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import {
@@ -32,7 +32,6 @@ export default function ArticlesWrapp({
   const nothing = useNothingDefined()
   const inputPlaceholder = useInputSearchLocale()
 
-  // debounce для поиска
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchInput)
@@ -40,7 +39,6 @@ export default function ArticlesWrapp({
     }, 500)
     return () => clearTimeout(handler)
   }, [searchInput])
-
 
   const {
     data: articles = [],
@@ -52,14 +50,41 @@ export default function ArticlesWrapp({
     search: debouncedSearch,
   })
 
-  const { data: totalCountData } = useGetTotalCountQuery()
+  const { data: totalCountData = 0 } = useGetTotalCountQuery()
+  const totalPages = Math.max(1, Math.ceil(totalCountData / limit))
+
+  useEffect(() => {
+    if (page > totalPages) setPage(totalPages)
+  }, [totalPages])
+
+  // visible pages with ellipsis (compact)
+  const visiblePages = useMemo(() => {
+    const total = totalPages
+    const current = page
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+
+    const pages: (number | '...')[] = []
+    const left = Math.max(2, current - 1)
+    const right = Math.min(total - 1, current + 1)
+
+    pages.push(1)
+    if (left > 2) pages.push('...')
+    for (let i = left; i <= right; i++) pages.push(i)
+    if (right < total - 1) pages.push('...')
+    pages.push(total)
+
+    return pages
+  }, [totalPages, page])
+
+  const goPrev = () => setPage(p => Math.max(1, p - 1))
+  const goNext = () => setPage(p => Math.min(totalPages, p + 1))
 
   const CardsBox = () => {
     if (articles.length === 0) {
       return (
         <div className={classes.noArticles}>
-          <Image src="/nothing.svg" alt="404" width={600} height={400} />
-          <p style={{ textAlign: 'center', marginTop: '20px' }}>{useNothingDefined()}</p>
+          <Image className='global-image-nothing' src="/nothing.svg" alt="404" width={600} height={400} />
+          <p style={{ textAlign: 'center', marginTop: '20px' }}>{nothing}</p>
         </div>
       )
     }
@@ -85,19 +110,25 @@ export default function ArticlesWrapp({
 
   return (
     <section className={classes.articlesPage}>
-      <h1 className={classes.articlesPage__title}>{title}</h1>
-      <p className={classes.articlesPage__description}>{desc}</p>
-      <AddArticleOrIdea show={true} isArticle={true} />
+      <div className={classes.headerRow}>
+        <div>
+          <h1 className={classes.articlesPage__title}>{title}</h1>
+          <p className={classes.articlesPage__description}>{desc}</p>
+          <div className={classes.searchWrap}>
+            <input
+              type="text"
+              className={classes.sorting__input}
+              placeholder={inputPlaceholder}
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+            />
+          </div>
+        </div>
 
-      {/* Сортировка */}
-      <div className={classes.sorting}>
-        <input
-          type="text"
-          className={classes.sorting__input}
-          placeholder={inputPlaceholder}
-          value={searchInput}
-          onChange={e => setSearchInput(e.target.value)}
-        />
+        <div className={classes.headerControls}>
+
+          <AddArticleOrIdea show={true} isArticle={true} />
+        </div>
       </div>
 
       <div
@@ -142,21 +173,63 @@ export default function ArticlesWrapp({
         )}
       </div>
 
-      {/* Пагинация */}
-      <div className={classes.pagination}>
-        {Array.from(
-          { length: Math.ceil((totalCountData ?? 0) / limit) },
-          (_, i) => i + 1
-        ).map(p => (
-          <button
-            key={p}
-            onClick={() => setPage(p)}
-            className={`${classes.pagination__button} ${page === p ? classes.active : ''}`}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
+      {/* Pagination */}
+      <nav className={classes.pagination} aria-label="Pagination">
+        <button
+          className={classes.iconButton}
+          onClick={() => setPage(1)}
+          disabled={page === 1}
+          aria-label="Первая страница"
+        >
+          ⏮
+        </button>
+
+        <button
+          className={classes.iconButton}
+          onClick={goPrev}
+          disabled={page === 1}
+          aria-label="Предыдущая страница"
+        >
+          ‹
+        </button>
+
+        <div className={classes.pagesList}>
+          {visiblePages.map((p, i) =>
+            p === '...' ? (
+              <span key={i} className={classes.ellipsis}>
+                …
+              </span>
+            ) : (
+              <button
+                key={p}
+                onClick={() => setPage(Number(p))}
+                className={`${classes.pageButton} ${page === p ? classes.active : ''}`}
+                aria-current={page === p ? 'page' : undefined}
+              >
+                {p}
+              </button>
+            )
+          )}
+        </div>
+
+        <button
+          className={classes.iconButton}
+          onClick={goNext}
+          disabled={page === totalPages}
+          aria-label="Следующая страница"
+        >
+          ›
+        </button>
+
+        <button
+          className={classes.iconButton}
+          onClick={() => setPage(totalPages)}
+          disabled={page === totalPages}
+          aria-label="Последняя страница"
+        >
+          ⏭
+        </button>
+      </nav>
     </section>
   )
 }

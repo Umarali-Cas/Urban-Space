@@ -135,3 +135,173 @@
   background: var(--green); // фиолетовый акцент
   color: white;
 }
+
+/* Pagination / layout improvements */
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 12px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.headerControls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  @media (max-width: 770px) {
+    justify-content: center;
+  }
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+.searchWrap {
+  min-width: 220px;
+  max-width: 420px;
+  margin-bottom: 40px;
+  width: 100%;
+
+  @media (max-width: 500px) {
+    margin-bottom: 20px;
+  }
+}
+
+/* center helpers */
+.centerText {
+  text-align: center;
+  color: #7a8894;
+  margin-top: 18px;
+}
+
+.centerEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px 0;
+}
+
+/* Grid spacing tweak */
+.lastIdeas__ideas {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 12px;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 880px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Pagination styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+/* numeric page button */
+.pageButton {
+  background: #ffffff;
+  border: 1px solid #e6e6e6;
+  color: #1f2937;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  min-width: 40px;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.pageButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+}
+
+.iconButton {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #6b7280;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: #f3f4f9;
+  color: #111827;
+}
+
+.iconButton:disabled,
+.pageButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* pages list wrapper */
+.pagesList {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: 0 6px;
+}
+
+/* ellipsis */
+.ellipsis {
+  padding: 0 6px;
+  color: #9aa4af;
+  font-weight: 600;
+}
+
+/* active page */
+.active {
+  background: var(--green);
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.12);
+  transform: none;
+}
+
+.nothing{
+  @media (max-width: 500px) {
+    width: 250px;
+
+  }
+}
+
+/* responsive tweaks */
+@media (max-width: 480px) {
+  .pageButton {
+    padding: 6px 8px;
+    min-width: 34px;
+    font-size: 14px;
+  }
+  .pagesList {
+    gap: 6px;
+  }
+  .headerRow {
+    gap: 8px;
+  }
+}
