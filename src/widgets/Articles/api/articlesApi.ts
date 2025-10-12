@@ -6,11 +6,7 @@ import type { RootState } from '@/app/store/store'
   slug: string
   title: string
   summary: string
-  body_md: string
-  category: string
-  tags: string[]
-  cover_key: string
-  attachments: any[]
+    attachments?: any[] 
 }
 
 export const articlesApi = createApi({
@@ -126,17 +122,8 @@ interface Article {
   id: string
   slug: string
   title: string
-  category: string
   summary: string
-  body_md: string
-  tags: string[]
-  cover_key: string
-  attachments: {
-    file_key: string
-    mime: string
-    size_bytes: number
-    meta: any
-  }[]
+    attachments?: any[] 
   author_id: string
   status: 'DRAFT' | 'PUBLISHED' | 'REJECTED'
   views_count: number

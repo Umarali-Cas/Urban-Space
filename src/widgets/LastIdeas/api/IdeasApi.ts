@@ -23,12 +23,7 @@ export const IdeasApi = createApi({
         author_id?: string
       }
     >({
-      query: ({
-        limit = 6,
-        offset = 0,
-        search,
-        author_id,
-      }) => ({
+      query: ({ limit = 6, offset = 0, search, author_id }) => ({
         url: '/ideas/public',
         params: { limit, offset, search, author_id },
       }),
@@ -53,16 +48,19 @@ export const IdeasApi = createApi({
     }),
 
     // ← новый endpoint для лайка
-likeOrDislikeIdea: builder.mutation<any, { ideaId: string; action: 'like' | 'dislike' }>({
-  query: ({ ideaId, action }) => ({
-    url: `/ideas/${ideaId}/${action}`,
-    method: 'POST',
-  }),
-  invalidatesTags: (result, error, { ideaId }) => [
-    { type: 'Idea', id: ideaId },
-    { type: 'Idea', id: 'LIST' },
-  ],
-}),
+    likeOrDislikeIdea: builder.mutation<
+      any,
+      { ideaId: string; action: 'like' | 'dislike' }
+    >({
+      query: ({ ideaId, action }) => ({
+        url: `/ideas/${ideaId}/${action}`,
+        method: 'POST',
+      }),
+      invalidatesTags: (result, error, { ideaId }) => [
+        { type: 'Idea', id: ideaId },
+        { type: 'Idea', id: 'LIST' },
+      ],
+    }),
     createIdea: builder.mutation<
       any,
       {
@@ -79,6 +77,29 @@ likeOrDislikeIdea: builder.mutation<any, { ideaId: string; action: 'like' | 'dis
         body: idea,
       }),
       invalidatesTags: ['Idea'],
+    }),
+    updateIdea: builder.mutation<
+      any,
+      {
+        id: string
+        data: {
+          title?: string
+          slug?: string
+          description_md?: string
+          tags?: string[]
+          media?: any[]
+        }
+      }
+    >({
+      query: ({ id, data }) => ({
+        url: `/ideas/${id}`,
+        method: 'PUT', // или PATCH если ваш бек принимает PATCH
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [
+        { type: 'Idea', id },
+        { type: 'Idea', id: 'LIST' },
+      ],
     }),
 
     uploadIdeaMedia: builder.mutation<any[], { ideaId: string; files: File[] }>(
@@ -104,4 +125,5 @@ export const {
   useLikeOrDislikeIdeaMutation,
   useCreateIdeaMutation,
   useUploadIdeaMediaMutation,
+  useUpdateIdeaMutation,
 } = IdeasApi
