@@ -1,12 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from 'next/image'
 import { ArticlesInfoProps } from '../types/type'
 import classes from './ArticlesInfo.module.scss'
-import { useGetArticlesQuery } from '@/widgets/Articles/api/articlesApi'
+import {
+  useCreateCommentMutation,
+  useGetArticlesQuery,
+  useGetCommentsQuery,
+} from '@/widgets/Articles/api/articlesApi'
 import Link from 'next/link'
 import { ArticlesCard } from '@/entities/ArticlesCard'
 import { useDetailPageLocale } from '@/i18n/useNativeLocale'
 import { getImageIdea } from '@/entities/IdeasDetailPage/getImageIdea'
-import { Key } from 'react'
+import { Key, useState } from 'react'
+import { ArticleCommentCard } from '@/features/CommentCard/ui/ArticleCommentCard'
 
 export function ArticlesInfo({
   all,
@@ -15,8 +21,12 @@ export function ArticlesInfo({
   timeCreate,
 }: ArticlesInfoProps) {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 7 })
-  const { otherArticles, titleArticle, subtitleArticle, share } =
+  const commentsQuery = useGetCommentsQuery(all.id)
+  const { otherArticles, titleArticle, subtitleArticle, share, commentsTitle } =
     useDetailPageLocale()
+  const [createComment] = useCreateCommentMutation()
+
+  const [comment, setComment] = useState('')
 
   const images = Array.isArray(all.attachments)
     ? all.attachments.filter((file: { mime: string }) =>
@@ -35,24 +45,48 @@ export function ArticlesInfo({
 
   const handleShare = async () => {
     const url = window.location.href
-
     try {
       if (navigator.share) {
-        // если браузер поддерживает Web Share API
         await navigator.share({
           title: document.title,
-          text: 'Смотри идею на сайте!',
+          text: 'Смотри статью на сайте!',
           url,
         })
       } else {
-        // fallback: просто копируем ссылку в буфер обмена
         await navigator.clipboard.writeText(url)
-        // можно добавить свой кастомный тост: "Ссылка скопирована"
       }
     } catch (err) {
       console.error('Ошибка при шаринге:', err)
     }
   }
+
+  const handleAddComment = async () => {
+    if (!comment.trim()) return
+    try {
+      await createComment({ articleId: all.id, body_md: comment }).unwrap()
+      setComment('')
+    } catch (err) {
+      console.error('Ошибка при добавлении комментария:', err)
+    }
+  }
+
+  const buildTree = (comments: any[]) => {
+    const map = new Map<string, any>()
+    comments.forEach(c => map.set(c.id, { ...c, children: [] }))
+
+    const roots: any[] = []
+    comments.forEach(c => {
+      if (c.parent_id) {
+        const parent = map.get(c.parent_id)
+        if (parent) parent.children.push(map.get(c.id))
+      } else {
+        roots.push(map.get(c.id))
+      }
+    })
+    return roots
+  }
+
+  const structuredComments = commentsQuery.data ? buildTree(commentsQuery.data) : []
 
   return (
     <section className={classes.articlesInfo}>
@@ -60,10 +94,11 @@ export function ArticlesInfo({
         <h1>{titleArticle}</h1>
         <p>{subtitleArticle}</p>
       </div>
+
       <div className={classes.articlesInfo__content}>
         <div className={classes.articlesInfo__content__upWrapper}>
           <span>
-            {formatDate()}{' '}
+            {formatDate()}
             <Image
               className={classes.calendarImg}
               src="/calendar.svg"
@@ -86,10 +121,12 @@ export function ArticlesInfo({
             {share}
           </button>
         </div>
+
         <h1 className={classes.articlesInfo__content__title}>{title}</h1>
+
         <div
           className={classes.articlesInfo__content__imageWrapper}
-          style={images.length > 0 ? { gap: '0' } : { gap: '32' }}
+          style={images.length > 0 ? { gap: '0' } : { gap: '32px' }}
         >
           {images.length > 0 ? (
             <Image
@@ -108,6 +145,7 @@ export function ArticlesInfo({
               height={512}
             />
           )}
+
           <div className={classes.articlesInfo__content__imageWrapper__others}>
             {images
               .slice(1)
@@ -130,13 +168,15 @@ export function ArticlesInfo({
               )}
           </div>
         </div>
+
         <p className={classes.articlesInfo__content__desc}>{desc}</p>
       </div>
+
       <h1 className={classes.articlesInfo__others__title}>{otherArticles}</h1>
       <div className={classes.articlesInfo__others}>
         {isLoading && <p>Загрузка...</p>}
         {articles
-          .filter(article => article.id !== all.id) // исключаем текущую статью
+          .filter(article => article.id !== all.id)
           .map(article => (
             <Link
               key={article.id}
@@ -144,6 +184,9 @@ export function ArticlesInfo({
               className={classes.articles__container__content__track__item}
             >
               <ArticlesCard
+                info={true}
+                comments={article.comments_count || '0'}
+                views={article.views_count || '0'}
                 color="#000"
                 key={article.id}
                 article={article.summary || 'Нет описания'}
@@ -152,6 +195,37 @@ export function ArticlesInfo({
               />
             </Link>
           ))}
+      </div>
+
+      {/* Комментарии */}
+      <div className={classes.articlesInfo__comments}>
+        <h1>{commentsTitle}</h1>
+
+        <div className={classes.articlesInfo__comments__inputWrapper}>
+          <input
+            value={comment}
+            onChange={e => setComment(e.target.value)}
+            className={classes.articlesInfo__comments__input}
+            type="text"
+            placeholder="Оставить комментарий"
+          />
+          <button
+            onClick={handleAddComment}
+            className={classes.articlesInfo__comments__button}
+          >
+            Отправить
+          </button>
+        </div>
+
+        <hr />
+
+        {structuredComments.length > 0 ? (
+          structuredComments.map(comment => (
+            <ArticleCommentCard key={comment.id} com={comment} articleId={all.id} />
+          ))
+        ) : (
+          <div style={{ textAlign: 'center' }}>Ничего нету</div>
+        )}
       </div>
     </section>
   )

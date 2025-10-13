@@ -1,10 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client"
 import Image, { StaticImageData } from 'next/image'
 import classes from './IdeasDetailPage.module.scss'
-import { useGetIdeasQuery } from '@/widgets/LastIdeas/api/IdeasApi'
+import {
+  useGetCommentsQuery,
+  useAddCommentMutation,
+  useGetIdeasQuery,
+} from '@/widgets/LastIdeas/api/IdeasApi'
 import { IdeaCard } from '../IdeaCard'
 import { useDetailPageLocale } from '@/i18n/useNativeLocale'
 import { getImageIdea } from './getImageIdea'
 import { getImageUrlFromMedia } from '@/shared/hooks/getImageUrlFromMedia'
+import { useState } from 'react'
+import { IdeaCommentCard } from '@/features/CommentCard/ui/IdeaCommentCard'
 
 export function IdeasDetailPage({
   title,
@@ -20,7 +28,13 @@ export function IdeasDetailPage({
   id: string
 }) {
   const { data: ideas = [], isLoading } = useGetIdeasQuery({ limit: 4 })
-  const { titleIdea, subtitleIdea, share, otherIdeas } = useDetailPageLocale()
+  const { titleIdea, subtitleIdea, share, otherIdeas, commentsTitle } =
+    useDetailPageLocale()
+
+  // ✅ Для идей используем отдельную мутацию
+  const { data: comments = [] } = useGetCommentsQuery(id)
+  const [addComment, { isLoading: isAdding }] = useAddCommentMutation()
+  const [commentText, setCommentText] = useState('')
 
   const images = Array.isArray(image)
     ? image.filter(file => file.mime?.startsWith('image/'))
@@ -37,24 +51,52 @@ export function IdeasDetailPage({
 
   const handleShare = async () => {
     const url = window.location.href
-
     try {
       if (navigator.share) {
-        // если браузер поддерживает Web Share API
         await navigator.share({
           title: document.title,
           text: 'Смотри идею на сайте!',
           url,
         })
       } else {
-        // fallback: просто копируем ссылку в буфер обмена
         await navigator.clipboard.writeText(url)
-        // можно добавить свой кастомный тост: "Ссылка скопирована"
+        alert('Ссылка скопирована!')
       }
     } catch (err) {
       console.error('Ошибка при шаринге:', err)
     }
   }
+
+  const handleAddComment = async () => {
+    if (!commentText.trim()) return
+      console.log('ideaId:', id, 'text:', commentText)
+    try {
+      await addComment({ ideaId: id, text: commentText }).unwrap()
+      setCommentText('')
+    } catch (error) {
+      console.error('Ошибка при добавлении комментария:', error)
+    }
+  }
+
+  const buildTree = (comments: any[]) => {
+    const map = new Map<string, any>()
+    comments.forEach(c => map.set(c.id, { ...c, children: [] }))
+
+    const roots: any[] = []
+
+    comments.forEach(c => {
+      if (c.parent_id) {
+        const parent = map.get(c.parent_id)
+        if (parent) parent.children.push(map.get(c.id))
+      } else {
+        roots.push(map.get(c.id))
+      }
+    })
+
+    return roots
+  }
+
+  const structuredComments = buildTree(comments)
 
   return (
     <section className={classes.ideasDetailPage}>
@@ -62,6 +104,7 @@ export function IdeasDetailPage({
         <h1>{titleIdea}</h1>
         <p>{subtitleIdea}</p>
       </div>
+
       <div className={classes.ideasDetailPage__content}>
         <div className={classes.ideasDetailPage__content__upWrapper}>
           <span>
@@ -89,7 +132,9 @@ export function IdeasDetailPage({
             {share}
           </button>
         </div>
+
         <h1 className={classes.ideasDetailPage__content__title}>{title}</h1>
+
         <div
           className={classes.ideasDetailPage__content__imageWrapper}
           style={images.length === 0 ? { gap: '0' } : { gap: '32px' }}
@@ -111,6 +156,7 @@ export function IdeasDetailPage({
               height={512}
             />
           )}
+
           <div
             className={classes.ideasDetailPage__content__imageWrapper__others}
           >
@@ -128,13 +174,15 @@ export function IdeasDetailPage({
             ))}
           </div>
         </div>
+
         <p className={classes.ideasDetailPage__content__desc}>{desc}</p>
       </div>
+
       <h1 className={classes.ideasDetailPage__others__title}>{otherIdeas}</h1>
       <div className={classes.ideasDetailPage__others}>
         {isLoading && <p>Загрузка...</p>}
         {ideas
-          .filter(idea => idea.id !== id) // исключаем текущую идею
+          .filter(idea => idea.id !== id)
           .map((idea, index) => (
             <IdeaCard
               slug={idea.slug || ''}
@@ -150,6 +198,38 @@ export function IdeasDetailPage({
               status={idea.status || 'DRAFT'}
             />
           ))}
+      </div>
+
+      {/* 💬 Комментарии */}
+      <div className={classes.ideasInfo__comments}>
+        <h1>{commentsTitle}</h1>
+
+        <div className={classes.ideasInfo__comments__inputWrapper}>
+          <input
+            className={classes.ideasInfo__comments__input}
+            type="text"
+            placeholder="Оставить комментарий"
+            value={commentText}
+            onChange={e => setCommentText(e.target.value)}
+          />
+          <button
+            className={classes.ideasInfo__comments__button}
+            onClick={handleAddComment}
+            disabled={isAdding}
+          >
+            {isAdding ? 'Отправка...' : 'Отправить'}
+          </button>
+        </div>
+
+        <hr />
+
+        {structuredComments.length ? (
+          structuredComments.map(comment => (
+            <IdeaCommentCard key={comment.id} com={comment}   ideaId={id} />
+          ))
+        ) : (
+          <div style={{ margin: '0 auto' }}>Ничего нету</div>
+        )}
       </div>
     </section>
   )

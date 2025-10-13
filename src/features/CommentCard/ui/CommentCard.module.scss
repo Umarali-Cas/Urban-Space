@@ -1,0 +1,190 @@
+.commentCard {
+  max-width: 800px;
+  width: 100%;
+  border-radius: 8px;
+  max-height: 600px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 8px;
+  border: 1px solid grey;
+  background: #00000005;
+  margin-left: 20px;
+  position: relative;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: -15px;
+    width: 0;
+    height: 0;
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-right: 15px solid rgb(156, 156, 156);
+  }
+
+  @media (max-width: 850px) {
+    margin-left: 5px;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+    flex-wrap: wrap;
+
+    &__avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: grey;
+    }
+
+    &__name {
+      font-size: 18px;
+      font-weight: 500;
+      word-break: break-word;
+    }
+  }
+
+  &__body {
+    font-size: 16px !important;
+    white-space: normal;
+    word-wrap: break-word;
+    color: #333 !important;
+    padding: 0 10px;
+    margin: 16px 0 !important;
+  }
+
+  &__replyButton {
+    background: none;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    margin-bottom: 8px;
+    text-decoration: underline;
+  }
+
+  &__replyBox {
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    padding-left: 10px;
+    width: 95%;
+
+    @media (max-width: 450px) {
+      flex-direction: column;
+    }
+
+    input {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    button {
+      background: #000;
+      color: #fff;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-size: 14px;
+
+      &:hover {
+        background: #333;
+      }
+
+      //   @media (max-width: 450px) {
+      //     padding: 3px 5px;
+      //     font-size: 12px;
+      //   }
+    }
+  }
+
+  &__children {
+    margin-left: 20px;
+    margin-top: 6px;
+    border-left: 1px dashed #ccc;
+    padding-left: 12px;
+  }
+
+  // 🔹 Адаптация для экранов до 300px
+  @media (max-width: 300px) {
+    margin-left: 10px;
+    padding: 6px;
+
+    &::before {
+      top: 8px;
+      left: -10px;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-right: 10px solid rgb(156, 156, 156);
+    }
+
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+
+      &__avatar {
+        width: 35px;
+        height: 35px;
+      }
+
+      &__name {
+        font-size: 16px;
+      }
+    }
+
+    &__body {
+      font-size: 14px !important;
+      padding: 0 6px;
+    }
+
+    &__replyButton {
+      font-size: 12px;
+      margin-left: 6px;
+    }
+
+    &__replyBox {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 4px;
+      padding-left: 6px;
+
+      input {
+        font-size: 13px;
+        padding: 5px 6px;
+      }
+
+      button {
+        font-size: 13px;
+        padding: 5px 8px;
+      }
+    }
+
+    &__children {
+      row-gap: 8px;
+      margin-left: 20px;
+      padding-left: 8px;
+    }
+  }
+
+  &__child {
+    width: 100%;
+    margin-bottom: 8px;
+    border: none;
+    background: none;
+  }
+}

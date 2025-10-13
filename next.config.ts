@@ -5,11 +5,20 @@ const nextConfig: NextConfig = {
   productionBrowserSourceMaps: false,
   images: {
     // добавляй сюда все домены, с которых будут подгружаться картинки
-    domains: ['example.com', 'cdn.yourapp.com', 'api.urbanspace.sdinis.org', 'urbanspaceblob.blob.core.windows.net'],
+    domains: [
+      'example.com',
+      'cdn.yourapp.com',
+      'api.urbanspace.sdinis.org',
+      'urbanspaceblob.blob.core.windows.net',
+    ],
   },
   // Рекомендуется для продакшна
   output: 'standalone',
   reactStrictMode: true,
+  experimental: {
+    // @ts-expect-error: 'fetchCache' is not yet in Next.js types, but is supported at runtime
+    fetchCache: 'force-no-store',
+  },
 }
 
 const withNextIntl = require('next-intl/plugin')('./src/i18n/request.ts')

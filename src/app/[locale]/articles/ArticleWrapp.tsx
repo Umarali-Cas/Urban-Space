@@ -97,9 +97,12 @@ export default function ArticlesWrapp({
             className={classes.articlesPage__cardsContainer__item}
           >
             <ArticlesCard
+              info={false}
+              comments={article.comments_count || "0"}
+              views={article.views_count || "0"}
               color={'#000000'}
               articleName={article.title}
-              article={article.body_html}
+              article={article.summary || 'Нет описания'}
               userName={article.author_id ?? 'Неизвестный'}
             />
           </Link>

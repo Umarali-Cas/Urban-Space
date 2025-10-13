@@ -16,6 +16,8 @@ import { useRouter } from 'next/navigation'
 // import edit from '../assets/icons/imageEdit.svg'
 import { useProfileLocale } from '@/i18n/useNativeLocale'
 import { getAvatarUrl } from '@/shared/hooks/getAvatarUrl'
+import { IdeaCard } from '@/entities/IdeaCard'
+import { getImageUrlFromMedia } from '@/shared/hooks/getImageUrlFromMedia'
 
 export function ProfilePage() {
   const router = useRouter()
@@ -130,6 +132,9 @@ export function ProfilePage() {
                 className={classes.profilePage__myArticles__card}
               >
                 <ArticlesCard
+                  comments={article.comments_count}
+                  views={article.views_count}
+                  info={false}
                   color={'#000000'}
                   key={article.id}
                   articleName={article.title}
@@ -160,12 +165,19 @@ export function ProfilePage() {
                 href={`/articles/${idea.slug}`}
                 className={classes.profilePage__myIdeas__card}
               >
-                <ArticlesCard
-                  color={'#000000'}
-                  articleName={idea.title}
-                  article={idea.summary}
-                  userName={user?.username ?? 'Неизвестный'}
-                />
+            <IdeaCard
+              key={`${idea.id}-${idea.slug}`}
+              slug={idea.slug || ''}
+              uniqueId={idea.id}
+              date={idea?.created_at || ''}
+              likes={idea.likes_count || 0}
+              link={idea.link || ''}
+              subtitle={idea.description_md || ''}
+              title={idea.title || ''}
+              userName={idea.author_id}
+              imageUrl={getImageUrlFromMedia(idea.media)}
+              status={idea.status || 'DRAFT'}
+            />
               </Link>
             ))
           )}

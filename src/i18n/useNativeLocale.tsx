@@ -321,6 +321,7 @@ export function useDetailPageLocale() {
         map: 'Где пользователь советует реализовать идею',
         otherIdeas: 'Другие публикации',
         otherArticles: 'Другие статьи',
+        commentsTitle: 'Комментарии',
       }
     case 'en':
       return {
@@ -332,6 +333,7 @@ export function useDetailPageLocale() {
         map: 'Where the user suggests to realize the idea',
         otherIdeas: 'Other publications',
         otherArticles: 'Other articles',
+        commentsTitle: 'Comments',
       }
     case 'kg':
       return {
@@ -343,6 +345,7 @@ export function useDetailPageLocale() {
         map: 'Колдонуучу идеяны ишке ашырууга кеңеш берген жерде',
         otherIdeas: 'Башка публикациялар',
         otherArticles: 'Башка макалалар',
+        commentsTitle: 'Комментариалар',
       }
     default:
       return {
@@ -354,6 +357,7 @@ export function useDetailPageLocale() {
         map: 'Где пользователь советует реализовать идею',
         otherIdeas: 'Другие публикации',
         otherArticles: 'Другие статьи',
+        commentsTitle: 'Комментарии',
       }
   }
 }

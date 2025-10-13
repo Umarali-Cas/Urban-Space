@@ -23,6 +23,7 @@ export default async function ArticlesPage({
   const data = await res.json()
   const articleData = data?.blocks?.[0]?.data
 
+
   return (
     <ArticlesWrapp
       title={articleData?.title ?? 'No title'}
