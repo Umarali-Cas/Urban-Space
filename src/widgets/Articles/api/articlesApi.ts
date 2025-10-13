@@ -2,11 +2,11 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import type { RootState } from '@/app/store/store'
 
-  interface CreateArticlePayload {
+interface CreateArticlePayload {
   slug: string
   title: string
   summary: string
-    attachments?: any[] 
+  attachments?: any[]
 }
 
 export const articlesApi = createApi({
@@ -21,7 +21,7 @@ export const articlesApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['Articles'],
+  tagTypes: ['Articles', 'Comments'],
   endpoints: builder => ({
     getArticles: builder.query<
       any[],
@@ -60,6 +60,24 @@ export const articlesApi = createApi({
       providesTags: ['Articles'],
     }),
 
+    getComments: builder.query<
+      any[], // массив комментариев
+      string // article_id
+    >({
+      query: articleId => `/articles/${articleId}/comments`,
+      providesTags: ['Comments'],
+    }),
+    createComment: builder.mutation<
+      any,
+      { articleId: string; body_md?: string; parent_id?: string }
+    >({
+      query: ({ articleId, body_md, parent_id }) => ({
+        url: `/articles/${articleId}/comments`,
+        method: 'POST',
+        body: { body_md, parent_id }, // ✅ сервер ожидает именно body_md
+      }),
+      invalidatesTags: ['Comments'],
+    }),
     getTotalCount: builder.query<number, void>({
       query: () => '/articles/counts',
     }),
@@ -81,13 +99,13 @@ export const articlesApi = createApi({
       }),
       invalidatesTags: ['Articles'],
     }),
-createArticle: builder.mutation<any, CreateArticlePayload>({
-  query: article => ({
-    url: '/articles/',
-    method: 'POST',
-    body: article,
-  }),
-}),
+    createArticle: builder.mutation<any, CreateArticlePayload>({
+      query: article => ({
+        url: '/articles/',
+        method: 'POST',
+        body: article,
+      }),
+    }),
 
     uploadCover: builder.mutation<string, File>({
       query: file => {
@@ -123,7 +141,7 @@ interface Article {
   slug: string
   title: string
   summary: string
-    attachments?: any[] 
+  attachments?: any[]
   author_id: string
   status: 'DRAFT' | 'PUBLISHED' | 'REJECTED'
   views_count: number
@@ -139,6 +157,8 @@ export const {
   useUpdateArticleMutation,
   useDeleteArticleMutation,
   useCreateArticleMutation,
+  useGetCommentsQuery,
+  useCreateCommentMutation,
   useUploadCoverMutation,
   useUploadAttachmentsMutation,
 } = articlesApi

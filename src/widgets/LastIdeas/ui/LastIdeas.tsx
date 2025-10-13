@@ -126,10 +126,10 @@ export function LastIdeas({
         <div className={classes.lastIdeas__ideas}>
           {ideas.map((idea, index) => (
             <IdeaCard
-              key={idea.id ?? index}
+              key={`${idea.id ?? 'no-id'}-${page}-${index}`}
               slug={idea.slug || ''}
               uniqueId={idea.id}
-              date={idea.created_at || ''}
+              date={idea?.created_at || ''}
               likes={idea.likes_count || 0}
               link={idea.link || ''}
               subtitle={idea.description_md || ''}
@@ -166,12 +166,12 @@ export function LastIdeas({
         <div className={classes.pagesList}>
           {visiblePages.map((p, i) =>
             p === '...' ? (
-              <span key={i} className={classes.ellipsis}>
+              <span key={`ellipsis-${i}-${p}`} className={classes.ellipsis}>
                 …
               </span>
             ) : (
               <button
-                key={p}
+                key={`${p}-${i}`}
                 onClick={() => setPage(Number(p))}
                 className={`${classes.pageButton} ${page === p ? classes.active : ''}`}
                 aria-current={page === p ? 'page' : undefined}
