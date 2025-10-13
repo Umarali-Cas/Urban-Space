@@ -1,4 +1,3 @@
-// src/features/CustomMap/api/IdeasApi.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
@@ -12,16 +11,13 @@ export const IdeasApi = createApi({
       return headers
     },
   }),
-  tagTypes: ['Idea'],
+  tagTypes: ['Idea', 'Comments'],
   endpoints: builder => ({
+
+    // 🧠 Получение списка идей
     getIdeas: builder.query<
       any[],
-      {
-        limit?: number
-        offset?: number
-        search?: string
-        author_id?: string
-      }
+      { limit?: number; offset?: number; search?: string; author_id?: string }
     >({
       query: ({ limit = 6, offset = 0, search, author_id }) => ({
         url: '/ideas/public',
@@ -36,6 +32,7 @@ export const IdeasApi = createApi({
           : [{ type: 'Idea' as const, id: 'LIST' }],
     }),
 
+    // 🧠 Получение одной идеи по slug
     getIdeaBySlug: builder.query<any, string>({
       query: slug => `/ideas/${slug}`,
       providesTags: (result, error, slug) => [
@@ -43,11 +40,12 @@ export const IdeasApi = createApi({
       ],
     }),
 
+    // 📊 Общее количество идей
     getTotalCount: builder.query<number, void>({
       query: () => '/ideas/counts',
     }),
 
-    // ← новый endpoint для лайка
+    // ❤️ Лайк / дизлайк
     likeOrDislikeIdea: builder.mutation<
       any,
       { ideaId: string; action: 'like' | 'dislike' }
@@ -61,6 +59,8 @@ export const IdeasApi = createApi({
         { type: 'Idea', id: 'LIST' },
       ],
     }),
+
+    // ✏️ Создание новой идеи
     createIdea: builder.mutation<
       any,
       {
@@ -78,6 +78,8 @@ export const IdeasApi = createApi({
       }),
       invalidatesTags: ['Idea'],
     }),
+
+    // 🔄 Обновление идеи
     updateIdea: builder.mutation<
       any,
       {
@@ -93,7 +95,7 @@ export const IdeasApi = createApi({
     >({
       query: ({ id, data }) => ({
         url: `/ideas/${id}`,
-        method: 'PUT', // или PATCH если ваш бек принимает PATCH
+        method: 'PUT',
         body: data,
       }),
       invalidatesTags: (result, error, { id }) => [
@@ -102,6 +104,7 @@ export const IdeasApi = createApi({
       ],
     }),
 
+    // 🖼️ Загрузка медиа для идеи
     uploadIdeaMedia: builder.mutation<any[], { ideaId: string; files: File[] }>(
       {
         query: ({ ideaId, files }) => {
@@ -115,6 +118,25 @@ export const IdeasApi = createApi({
         },
       }
     ),
+
+    // 💬 Получение комментариев к идее
+    getComments: builder.query<any[], string>({
+      query: ideaId => `/ideas/${ideaId}/comments`,
+      providesTags: (result, error, ideaId) => [
+        { type: 'Comments', id: ideaId },
+      ],
+    }),
+
+    // 💌 Добавление комментария к идее
+addComment: builder.mutation<any, { ideaId: string; text: string; parent_id?: string }>({
+  query: ({ ideaId, text, parent_id }) => ({
+    url: `/ideas/${ideaId}/comments`,
+    method: 'POST',
+    body: parent_id ? { body_md: text, parent_id } : { body_md: text },
+  }),
+  invalidatesTags: (result, error, { ideaId }) => [{ type: 'Comments', id: ideaId }],
+}),
+
   }),
 })
 
@@ -126,4 +148,6 @@ export const {
   useCreateIdeaMutation,
   useUploadIdeaMediaMutation,
   useUpdateIdeaMutation,
+  useGetCommentsQuery,
+  useAddCommentMutation,
 } = IdeasApi

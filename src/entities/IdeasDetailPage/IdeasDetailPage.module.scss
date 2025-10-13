@@ -65,11 +65,11 @@
       padding: 0 20px;
       font-size: 14px;
 
-      span{
+      span {
         display: flex;
         align-items: center;
         column-gap: 4px;
-        color: #444A5D;
+        color: #444a5d;
         font-size: 14px;
       }
 
@@ -109,7 +109,7 @@
           }
         }
 
-        &:active{
+        &:active {
           transform: scale(0.95);
         }
       }
@@ -224,6 +224,50 @@
       @media (max-width: 768px) {
         font-size: 22px !important;
         margin-bottom: 22px;
+      }
+    }
+  }
+
+  .ideasInfo {
+    &__comments {
+      display: flex;
+      flex-direction: column;
+      padding: 0 20px;
+      row-gap: 15px;
+      width: 100%;
+
+          @media (max-width: 550px) {
+        padding: 0 10px;
+    }
+
+      &__inputWrapper {
+        max-width: 600px;
+        display: flex;
+        column-gap: 8px;
+      }
+
+      &__input {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        row-gap: 16px;
+        padding: 12px 12px;
+        border: 1px solid #333;
+        border-radius: 8px;
+      }
+
+      &__button {
+        max-width: 100px;
+        width: 100%;
+        border-radius: 8px;
+        background: none;
+        border: 1px solid #333;
+      }
+
+      hr {
+        width: 100%;
+        margin-top: 10px;
+        border: 1px solid #333;
       }
     }
   }

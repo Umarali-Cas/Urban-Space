@@ -16,6 +16,9 @@ export function Articles({ title, desc }: { title: string; desc: string }) {
       className={classes.articles__container__content__track__item}
     >
       <ArticlesCard
+        info={false}
+        comments={article.comments_count || '0'}
+        views={article.views_count || '0'}
         color={'#ffffff'}
         key={article.id}
         article={article.summary || 'Нет описания'}
