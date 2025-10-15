@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client"
+'use client'
 import Image, { StaticImageData } from 'next/image'
 import classes from './IdeasDetailPage.module.scss'
 import {
@@ -36,9 +36,17 @@ export function IdeasDetailPage({
   const [addComment, { isLoading: isAdding }] = useAddCommentMutation()
   const [commentText, setCommentText] = useState('')
 
+  console.log(image)
+
   const images = Array.isArray(image)
     ? image.filter(file => file.mime?.startsWith('image/'))
     : []
+
+  const files = Array.isArray(image)
+    ? image.filter(file => file.mime?.startsWith('application/'))
+    : []
+
+  console.log(files)
 
   const formatDate = () => {
     const date = new Date(timeCreate)
@@ -69,7 +77,7 @@ export function IdeasDetailPage({
 
   const handleAddComment = async () => {
     if (!commentText.trim()) return
-      console.log('ideaId:', id, 'text:', commentText)
+    console.log('ideaId:', id, 'text:', commentText)
     try {
       await addComment({ ideaId: id, text: commentText }).unwrap()
       setCommentText('')
@@ -176,6 +184,50 @@ export function IdeasDetailPage({
         </div>
 
         <p className={classes.ideasDetailPage__content__desc}>{desc}</p>
+        {/* 🧾 Прикреплённые файлы */}
+        {files.length > 0 && (
+          <div className={classes.ideasDetailPage__files}>
+            <h3>Прикреплённые файлы:</h3>
+            <ul>
+              {files.map((file, idx) => {
+                const fileUrl = getImageIdea(id, file.file_key)
+                const ext = file.mime?.split('/')[1] || ''
+                const isPdf = ext.includes('pdf')
+                const isWord = ext.includes('word') || ext.includes('msword')
+                const isExcel =
+                  ext.includes('excel') || ext.includes('spreadsheet')
+
+                const icon = isPdf
+                  ? '/pdf.svg'
+                  : isWord
+                    ? '/word.svg'
+                    : isExcel
+                      ? '/excel.svg'
+                      : '/file.svg'
+
+                return (
+                  <li key={idx} className={classes.fileItem}>
+                    <Image
+                      src={icon}
+                      alt={ext}
+                      width={24}
+                      height={24}
+                      className={classes.fileIcon}
+                    />
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={classes.fileLink}
+                    >
+                      {file.name || `Файл ${idx + 1}`}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
 
       <h1 className={classes.ideasDetailPage__others__title}>{otherIdeas}</h1>
@@ -193,7 +245,7 @@ export function IdeasDetailPage({
               link={idea.link || ''}
               subtitle={idea.description_md || ''}
               title={idea.title || ''}
-              userName={idea.author_name}
+              userName={idea.author_id}
               imageUrl={getImageUrlFromMedia(idea.media)}
               status={idea.status || 'DRAFT'}
             />
@@ -225,7 +277,7 @@ export function IdeasDetailPage({
 
         {structuredComments.length ? (
           structuredComments.map(comment => (
-            <IdeaCommentCard key={comment.id} com={comment}   ideaId={id} />
+            <IdeaCommentCard key={comment.id} com={comment} ideaId={id} />
           ))
         ) : (
           <div style={{ margin: '0 auto' }}>Ничего нету</div>
