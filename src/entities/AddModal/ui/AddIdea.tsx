@@ -182,7 +182,7 @@ export function AddIdea() {
   }
 
   if (uploaded !== null) {
-    setTimeout(() => setUploaded(null), 3000)
+    setTimeout(() => setUploaded(null), 93000)
     return <Uploaded isUploaded={uploaded} />
   }
 
