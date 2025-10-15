@@ -34,6 +34,12 @@ export function ArticlesInfo({
       )
     : []
 
+  const files = Array.isArray(all.attachments)
+    ? all.attachments.filter((file: { mime: string }) =>
+        file.mime?.startsWith('application/')
+      )
+    : []
+
   const formatDate = () => {
     const date = new Date(timeCreate)
     return new Intl.DateTimeFormat('ru-RU', {
@@ -170,6 +176,49 @@ export function ArticlesInfo({
         </div>
 
         <p className={classes.articlesInfo__content__desc}>{desc}</p>
+         {files.length > 0 && (
+          <div className={classes.articlesInfo__files}>
+            <h3>Прикреплённые файлы:</h3>
+            <ul>
+              {files.map((file: any, idx: any) => {
+                const fileUrl = getImageIdea(all.id, file.file_key)
+                const ext = file.mime?.split('/')[1] || ''
+                const isPdf = ext.includes('pdf')
+                const isWord = ext.includes('word') || ext.includes('msword')
+                const isExcel =
+                  ext.includes('excel') || ext.includes('spreadsheet')
+
+                const icon = isPdf
+                  ? '/pdf.svg'
+                  : isWord
+                    ? '/word.svg'
+                    : isExcel
+                      ? '/excel.svg'
+                      : '/file.svg'
+
+                return (
+                  <li key={idx} className={classes.fileItem}>
+                    <Image
+                      src={icon}
+                      alt={ext}
+                      width={24}
+                      height={24}
+                      className={classes.fileIcon}
+                    />
+                    <a
+                      href={fileUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={classes.fileLink}
+                    >
+                      {file.name || `Файл ${idx + 1}`}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
 
       <h1 className={classes.articlesInfo__others__title}>{otherArticles}</h1>
