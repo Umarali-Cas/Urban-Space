@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+'use client'
 import Image from 'next/image'
 import { ArticlesInfoProps } from '../types/type'
 import classes from './ArticlesInfo.module.scss'
@@ -22,7 +24,7 @@ export function ArticlesInfo({
 }: ArticlesInfoProps) {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 7 })
   const commentsQuery = useGetCommentsQuery(all.id)
-  const { otherArticles, titleArticle, subtitleArticle, share, commentsTitle } =
+  const { otherArticles, titleArticle, subtitleArticle, share, commentsTitle, send, noComments, sending, filesHave, input, reply, inputTxt, fileName} =
     useDetailPageLocale()
   const [createComment] = useCreateCommentMutation()
 
@@ -132,7 +134,7 @@ export function ArticlesInfo({
 
         <div
           className={classes.articlesInfo__content__imageWrapper}
-          style={images.length > 0 ? { gap: '0' } : { gap: '32px' }}
+          style={images.length === 0 ? { gap: '0' } : { gap: '32px' }}
         >
           {images.length > 0 ? (
             <Image
@@ -178,7 +180,7 @@ export function ArticlesInfo({
         <p className={classes.articlesInfo__content__desc}>{desc}</p>
          {files.length > 0 && (
           <div className={classes.articlesInfo__files}>
-            <h3>Прикреплённые файлы:</h3>
+            <h3>{filesHave}</h3>
             <ul>
               {files.map((file: any, idx: any) => {
                 const fileUrl = getImageIdea(all.id, file.file_key)
@@ -211,7 +213,7 @@ export function ArticlesInfo({
                       rel="noopener noreferrer"
                       className={classes.fileLink}
                     >
-                      {file.name || `Файл ${idx + 1}`}
+                      {file.name || `${fileName} ${idx + 1}`}
                     </a>
                   </li>
                 )
@@ -238,9 +240,9 @@ export function ArticlesInfo({
                 views={article.views_count || '0'}
                 color="#000"
                 key={article.id}
-                article={article.summary || 'Нет описания'}
-                articleName={article.title || 'Без названия'}
-                userName={article.author_id ?? 'Неизвестный'}
+                article={article.summary || ''}
+                articleName={article.title || ''}
+                userName={article.author_id ?? ''}
               />
             </Link>
           ))}
@@ -256,13 +258,13 @@ export function ArticlesInfo({
             onChange={e => setComment(e.target.value)}
             className={classes.articlesInfo__comments__input}
             type="text"
-            placeholder="Оставить комментарий"
+            placeholder={input}
           />
           <button
             onClick={handleAddComment}
             className={classes.articlesInfo__comments__button}
           >
-            Отправить
+            {send}
           </button>
         </div>
 
@@ -270,10 +272,10 @@ export function ArticlesInfo({
 
         {structuredComments.length > 0 ? (
           structuredComments.map(comment => (
-            <ArticleCommentCard key={comment.id} com={comment} articleId={all.id} />
+            <ArticleCommentCard sendingTxt={sending} sendTxt={send} inputTxt={inputTxt} title={reply} key={comment.id} com={comment} articleId={all.id} />
           ))
         ) : (
-          <div style={{ textAlign: 'center' }}>Ничего нету</div>
+          <div style={{ textAlign: 'center' }}>{noComments}</div>
         )}
       </div>
     </section>

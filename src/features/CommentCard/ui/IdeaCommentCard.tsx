@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+'use client'
+
 import Image from 'next/image'
 import classes from './CommentCard.module.scss'
 import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
@@ -6,7 +9,7 @@ import { useAddCommentMutation } from '@/widgets/LastIdeas/api/IdeasApi'
 import baseAvatar from '../assets/UserImage.jpg'
 import { useEffect, useRef, useState } from 'react'
 
-export function IdeaCommentCard({ com, ideaId, className }: any) {
+export function IdeaCommentCard({ com, ideaId, className, title, inputTxt, sendTxt, sendingTxt }: any) {
   const { data: userInfo } = useGetUserByIdQuery(com.author_id)
   const [addComment, { isLoading }] = useAddCommentMutation()
   const [isReplying, setIsReplying] = useState(false)
@@ -15,18 +18,25 @@ export function IdeaCommentCard({ com, ideaId, className }: any) {
 
   const handleReply = async () => {
     if (!replyText.trim()) return
-    try {
-      await addComment({
-        ideaId,
-        text: replyText,
-        parent_id: com.id,
-      }).unwrap()
 
-      setReplyText('')
-      setIsReplying(false)
-    } catch (error) {
-      console.error('Ошибка при отправке ответа:', error)
-    }
+      const payload = {
+    ideaId,
+    text: replyText,
+    parent_id: com.id,
+  }
+
+  console.log('📤 Отправляем комментарий:', payload)
+
+  try {
+    const response = await addComment(payload).unwrap()
+
+    console.log('✅ Ответ от сервера:', response)
+    setReplyText('')
+    setIsReplying(false)
+  } catch (error: any) {
+    console.error('❌ Ошибка при отправке ответа:', error)
+    if (error?.data) console.log('📄 Ответ сервера:', error.data)
+  }
   }
 const replyRef = useRef<HTMLDivElement>(null)
 
@@ -64,7 +74,7 @@ useEffect(() => {
         className={classes.commentCard__replyButton}
         onClick={() => setIsReplying(!isReplying)}
       >
-        Ответить
+        {title}
       </button>
 
       {isReplying && (
@@ -72,10 +82,10 @@ useEffect(() => {
           <input
             value={replyText}
             onChange={e => setReplyText(e.target.value)}
-            placeholder="Ваш ответ"
+            placeholder={inputTxt}
           />
           <button onClick={handleReply} disabled={isLoading}>
-            {isLoading ? 'Отправка...' : 'Отправить'}
+            {isLoading ? sendingTxt : sendTxt}
           </button>
         </div>
       )}
@@ -88,6 +98,10 @@ useEffect(() => {
               key={child.id}
               com={child}
               ideaId={ideaId}
+              title={title}
+              inputTxt={inputTxt}
+              sendTxt={sendTxt}
+              sendingTxt={sendingTxt}
             />
           ))}
         </div>
