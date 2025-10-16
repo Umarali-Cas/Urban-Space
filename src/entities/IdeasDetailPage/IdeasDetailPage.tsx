@@ -28,7 +28,7 @@ export function IdeasDetailPage({
   id: string
 }) {
   const { data: ideas = [], isLoading } = useGetIdeasQuery({ limit: 4 })
-  const { titleIdea, subtitleIdea, share, otherIdeas, commentsTitle } =
+  const { titleIdea, subtitleIdea, share, otherIdeas, commentsTitle, send, noComments, sending, filesHave, input, reply, inputTxt, fileName } =
     useDetailPageLocale()
 
   // ✅ Для идей используем отдельную мутацию
@@ -68,7 +68,6 @@ export function IdeasDetailPage({
         })
       } else {
         await navigator.clipboard.writeText(url)
-        alert('Ссылка скопирована!')
       }
     } catch (err) {
       console.error('Ошибка при шаринге:', err)
@@ -187,7 +186,7 @@ export function IdeasDetailPage({
         {/* 🧾 Прикреплённые файлы */}
         {files.length > 0 && (
           <div className={classes.ideasDetailPage__files}>
-            <h3>Прикреплённые файлы:</h3>
+            <h3>{filesHave}</h3>
             <ul>
               {files.map((file, idx) => {
                 const fileUrl = getImageIdea(id, file.file_key)
@@ -220,7 +219,7 @@ export function IdeasDetailPage({
                       rel="noopener noreferrer"
                       className={classes.fileLink}
                     >
-                      {file.name || `Файл ${idx + 1}`}
+                      {file.name || `${fileName} ${idx + 1}`}
                     </a>
                   </li>
                 )
@@ -260,7 +259,7 @@ export function IdeasDetailPage({
           <input
             className={classes.ideasInfo__comments__input}
             type="text"
-            placeholder="Оставить комментарий"
+            placeholder={input}
             value={commentText}
             onChange={e => setCommentText(e.target.value)}
           />
@@ -269,7 +268,7 @@ export function IdeasDetailPage({
             onClick={handleAddComment}
             disabled={isAdding}
           >
-            {isAdding ? 'Отправка...' : 'Отправить'}
+            {isAdding ? sending : send}
           </button>
         </div>
 
@@ -277,10 +276,10 @@ export function IdeasDetailPage({
 
         {structuredComments.length ? (
           structuredComments.map(comment => (
-            <IdeaCommentCard key={comment.id} com={comment} ideaId={id} />
+            <IdeaCommentCard sendingTxt={sending} sendTxt={send} inputTxt={inputTxt} title={reply} key={comment.id} com={comment} ideaId={id} />
           ))
         ) : (
-          <div style={{ margin: '0 auto' }}>Ничего нету</div>
+          <div style={{ margin: '0 auto' }}>{noComments}</div>
         )}
       </div>
     </section>
