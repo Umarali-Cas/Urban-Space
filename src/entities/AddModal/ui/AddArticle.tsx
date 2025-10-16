@@ -10,8 +10,10 @@ import {
   useUpdateArticleMutation,
 } from '@/widgets/Articles/api/articlesApi'
 import { Uploaded } from './Uploaded'
+import { useAddAOrI } from '@/i18n/useNativeLocale'
 
 export function AddArticle() {
+  const locale = useAddAOrI()
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [otherFiles, setOtherFiles] = useState<File[]>([])
@@ -77,35 +79,24 @@ export function AddArticle() {
       return
     }
 
-    // 1) Создаём статью через RTK (prepareHeaders добавит Authorization автоматически)
+    // 1) Создаём статью
     const newArticle = await createArticle({
       slug: titleTrim.toLowerCase().replace(/\s+/g, '-'),
       title: titleTrim,
       summary: summaryTrim || 'NO-SUMMARY',
-      // не отправляем лишних полей
     }).unwrap()
 
-    console.log('Article created:', newArticle)
 
     // 2) Загружаем attachments
     const allFiles: File[] = [...imageFiles, ...otherFiles]
     let uploadedAttachments: any[] = []
+
     if (allFiles.length > 0) {
       uploadedAttachments = await uploadAttachments({
         articleId: newArticle.id,
         files: allFiles,
       }).unwrap()
     }
-    console.log('Uploading files count:', allFiles.length)
-allFiles.forEach((f, i) => {
-  console.log(`file[${i}] name:`, f.name, 'type:', f.type, 'size:', f.size)
-})
-
-const fdPreview = new FormData()
-allFiles.forEach(file => fdPreview.append('files', file))
-for (const pair of fdPreview.entries()) {
-  console.log('FormData entry:', pair[0], pair[1] instanceof File ? (pair[1] as File).name : pair[1])
-}
 
     // 3) Обновляем статью attachments если требуется
     if (uploadedAttachments.length > 0) {
@@ -118,9 +109,16 @@ for (const pair of fdPreview.entries()) {
 
       await updateArticle({
         articleId: newArticle.id,
-        data: ( { attachments: attachmentsObjects } as any ),
+        data: { attachments: attachmentsObjects } as any,
       }).unwrap()
     }
+
+    // ✅ 4) Очистка полей после успешной публикации
+    setTitle('')
+    setSummary('')
+    setImageFiles([])
+    setImagePreviews([])
+    setOtherFiles([])
 
     setUploaded(true)
   } catch (err: any) {
@@ -131,6 +129,7 @@ for (const pair of fdPreview.entries()) {
   }
 }
 
+
   if (uploaded !== null) {
     setTimeout(() => setUploaded(null), 3000)
     return <Uploaded isUploaded={uploaded} />
@@ -138,22 +137,22 @@ for (const pair of fdPreview.entries()) {
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
-      <h2>Добавить статью</h2>
+      <h2>{locale.article.title}</h2>
 
-      <label>Заголовок статьи</label>
+      <label>{locale.article.zagolovok.title}</label>
       <input
         name="title"
         type="text"
-        placeholder="Введите заголовок статьи"
+        placeholder={locale.article.zagolovok.placeholder}
         required
         value={title}
         onChange={e => setTitle(e.target.value)}
       />
 
-      <label>Краткое описание</label>
+      <label>{locale.article.desc.title}</label>
       <textarea
         name="summary"
-        placeholder="Введите краткое описание"
+        placeholder={locale.article.desc.placeholder}
         value={summary}
         onChange={e => setSummary(e.target.value)}
       />
@@ -161,7 +160,7 @@ for (const pair of fdPreview.entries()) {
       {/* Фотографии */}
       <div className={classes.fileGroup}>
         <label htmlFor="imagesUploadArticle" className={classes.fileLabel}>
-          Добавить фотографии
+          {locale.article.images}
         </label>
         <input
           type="file"
@@ -187,7 +186,7 @@ for (const pair of fdPreview.entries()) {
                   className={classes.removeButton}
                   onClick={() => handleRemoveImage(idx)}
                 >
-                  Удалить
+                  {locale.delete}
                 </button>
               </div>
             ))}
@@ -198,7 +197,7 @@ for (const pair of fdPreview.entries()) {
       {/* Другие файлы */}
       <div className={classes.fileGroup}>
         <label htmlFor="filesUploadArticle" className={classes.fileLabel}>
-          Прикрепить файлы
+          {locale.article.files}
         </label>
         <input
           type="file"
@@ -213,7 +212,7 @@ for (const pair of fdPreview.entries()) {
               <li key={file.name}>
                 <span className={classes.fileNameSpan}>{file.name}</span>
                 <button type="button" onClick={() => handleRemoveOtherFile(idx)}>
-                  Удалить
+                  {locale.delete}
                 </button>
               </li>
             ))}
@@ -222,7 +221,7 @@ for (const pair of fdPreview.entries()) {
       </div>
 
       <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Отправка...' : 'Опубликовать статью'}
+        {isSubmitting ? locale.article.upload : locale.article.files}
       </button>
     </form>
   )

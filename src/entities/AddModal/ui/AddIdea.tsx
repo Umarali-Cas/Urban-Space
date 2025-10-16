@@ -11,8 +11,10 @@ import {
   useUploadIdeaMediaMutation,
 } from '@/widgets/LastIdeas/api/IdeasApi'
 import { Uploaded } from './Uploaded'
+import { useAddAOrI } from '@/i18n/useNativeLocale'
 
 export function AddIdea() {
+  const locale = useAddAOrI()
   const [coverPreview, setCoverPreview] = useState<string | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
 
@@ -182,26 +184,26 @@ export function AddIdea() {
   }
 
   if (uploaded !== null) {
-    setTimeout(() => setUploaded(null), 93000)
+    setTimeout(() => setUploaded(null), 3000)
     return <Uploaded isUploaded={uploaded} />
   }
 
   return (
     <form className={classes.form} onSubmit={handleSubmit}>
-      <h2>Добавить идею</h2>
+      <h2>{locale.idea.title}</h2>
 
-      <label>Заголовок идеи</label>
+      <label>{locale.idea.zagolovok.title}</label>
       <input
         name="title"
         type="text"
-        placeholder="Введите заголовок идеи"
+        placeholder={locale.idea.zagolovok.placeholder}
         required
       />
 
-      <label>Описание идеи</label>
+      <label>{locale.idea.desc.title}</label>
       <textarea
         name="description_md"
-        placeholder="Опишите вашу идею"
+        placeholder={locale.idea.desc.placeholder}
         required
         value={description}
         onChange={e => setDescription(e.target.value)}
@@ -212,7 +214,7 @@ export function AddIdea() {
         {!coverPreview ? (
           <>
             <label htmlFor="coverUpload" className={classes.fileLabel}>
-              Загрузить обложку
+              {locale.idea.previwImage}
             </label>
             <input
               type="file"
@@ -234,7 +236,7 @@ export function AddIdea() {
               onClick={handleRemoveCover}
               className={classes.removeButton}
             >
-              Удалить
+              {locale.delete}
             </button>
           </div>
         )}
@@ -243,7 +245,7 @@ export function AddIdea() {
       {/* Несколько фото */}
       <div className={classes.fileGroup}>
         <label htmlFor="imagesUpload" className={classes.fileLabel}>
-          Добавить фотографии
+          {locale.idea.images}
         </label>
         <input
           type="file"
@@ -268,7 +270,7 @@ export function AddIdea() {
                   onClick={() => handleRemoveImage(idx)}
                   className={classes.removeButton}
                 >
-                  Удалить
+                  {locale.delete}
                 </button>
               </div>
             ))}
@@ -279,7 +281,7 @@ export function AddIdea() {
       {/* Файлы */}
       <div className={classes.fileGroup}>
         <label htmlFor="filesUpload" className={classes.fileLabel}>
-          Прикрепить файлы
+          {locale.idea.files}
         </label>
         <input
           type="file"
@@ -298,7 +300,7 @@ export function AddIdea() {
                   onClick={() => handleRemoveFile(idx)}
                   className={classes.removeButton}
                 >
-                  Удалить
+                  {locale.delete}
                 </button>
               </li>
             ))}
@@ -307,7 +309,7 @@ export function AddIdea() {
       </div>
 
       <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Отправка...' : 'Добавить идею'}
+        {isSubmitting ? locale.idea.upload : locale.idea.title}
       </button>
     </form>
   )

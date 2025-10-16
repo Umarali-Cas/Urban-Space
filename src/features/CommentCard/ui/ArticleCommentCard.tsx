@@ -1,4 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+'use client'
+
 import Image from 'next/image'
 import classes from './CommentCard.module.scss'
 import { useGetUserByIdQuery } from '@/features/auth/api/authApi'
