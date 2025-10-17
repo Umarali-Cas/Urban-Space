@@ -11,6 +11,7 @@ const IdeaForm = dynamic(
 
 export function GiveIdea({
   title,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   desc,
   formData,
 }: {
@@ -23,7 +24,8 @@ export function GiveIdea({
     <section className={classes.giveIdea}>
       <div className={classes.giveIdea__header}>
         <h1 className={classes.giveIdea__header__title}>{title}</h1>
-        <p className={classes.giveIdea__header__description}>{desc}</p>
+        {/* <p className={classes.giveIdea__header__description}>{desc}</p> */}
+        <p className={classes.giveIdea__header__description}>Вносите свой вклад в развитие среды! Предлагайте идеи, голосуйте за проекты и участвуйте в решении актуальных городских и сельских вызовов.</p>
       </div>
       <IdeaForm formData={formData} />
     </section>
