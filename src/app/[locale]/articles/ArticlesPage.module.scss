@@ -27,11 +27,15 @@
   }
 
   &__description {
-    font-size: 24px;
-    color: var(--black);
+    font-size: 22px;
     font-weight: 400;
-    margin: 16px 0 48px;
+    color: #7a8894;
+    margin: 16px 0 40px;
     line-height: 140%;
+
+    @media (max-width: 768px) {
+      font-size: 20px;
+    }
   }
 
   &__cardsContainer {
@@ -41,15 +45,14 @@
     justify-content: center !important;
     gap: 32px;
     position: relative;
-    
+
     * {
       color: var(--black);
     }
-    
+
     @media (max-width: 1400px) {
       gap: 16px;
     }
-
 
     @media (max-width: 1350px) {
       grid-template-columns: repeat(2, auto);
@@ -179,7 +182,10 @@
   cursor: pointer;
   font-weight: 600;
   min-width: 40px;
-  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .pageButton:hover:not(:disabled) {
@@ -198,7 +204,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.12s ease, color 0.12s ease;
+  transition:
+    background 0.12s ease,
+    color 0.12s ease;
 }
 
 .iconButton:hover:not(:disabled) {
