@@ -21,9 +21,10 @@ export function Articles({ title, desc }: { title: string; desc: string }) {
         views={article.views_count || '0'}
         color={'#ffffff'}
         key={article.id}
-        article={article.summary || 'Нет описания'}
-        articleName={article.title || 'Без названия'}
-        userName={article.author_id ?? 'Неизвестный'}
+        article={article.summary ?? ''}
+        articleName={article.title ?? ''}
+        userName={article.author_id ?? ''}
+        timeDate={article.created_at ?? ''}
       />
     </Link>
   ))

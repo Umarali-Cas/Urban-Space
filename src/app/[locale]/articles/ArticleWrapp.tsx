@@ -102,8 +102,9 @@ export default function ArticlesWrapp({
               views={article.views_count || "0"}
               color={'#000000'}
               articleName={article.title}
-              article={article.summary || 'Нет описания'}
-              userName={article.author_id ?? 'Неизвестный'}
+              article={article.summary || ''}
+              userName={article.author_id ?? ''}
+              timeDate={article.created_at || ''}
             />
           </Link>
         ))}

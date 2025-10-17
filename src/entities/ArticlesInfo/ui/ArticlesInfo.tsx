@@ -243,6 +243,7 @@ export function ArticlesInfo({
                 article={article.summary || ''}
                 articleName={article.title || ''}
                 userName={article.author_id ?? ''}
+                timeDate={article.created_at ?? ''}
               />
             </Link>
           ))}
