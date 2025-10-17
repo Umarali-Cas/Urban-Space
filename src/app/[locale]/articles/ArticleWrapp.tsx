@@ -19,6 +19,7 @@ import { AddArticleOrIdea } from '@/entities/AddArticleOrIdea/ui/AddArticleOrIde
 
 export default function ArticlesWrapp({
   title,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   desc,
 }: {
   title: string
@@ -117,7 +118,8 @@ export default function ArticlesWrapp({
       <div className={classes.headerRow}>
         <div>
           <h1 className={classes.articlesPage__title}>{title}</h1>
-          <p className={classes.articlesPage__description}>{desc}</p>
+          {/* <p className={classes.articlesPage__description}>{desc}</p> */}
+          <p className={classes.articlesPage__description}>Читайте и вдохновляйтесь! Открывайте новые идеи и лучшие практики для улучшения городской и сельской среды.</p>
           <div className={classes.searchWrap}>
             <input
               type="text"
