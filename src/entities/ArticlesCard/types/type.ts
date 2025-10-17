@@ -6,4 +6,5 @@ export interface ArticlesCardProps {
   views: string
   comments: string
   info: boolean | null | undefined
+  timeDate: string
 }

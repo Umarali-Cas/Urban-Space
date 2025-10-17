@@ -41,14 +41,15 @@
     justify-content: center !important;
     gap: 32px;
     position: relative;
-
+    
+    * {
+      color: var(--black);
+    }
+    
     @media (max-width: 1400px) {
       gap: 16px;
     }
 
-    * {
-      color: var(--black);
-    }
 
     @media (max-width: 1350px) {
       grid-template-columns: repeat(2, auto);
