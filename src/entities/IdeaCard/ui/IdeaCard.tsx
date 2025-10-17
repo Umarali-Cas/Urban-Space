@@ -34,6 +34,15 @@ export function IdeaCard({
   const [localLiked, setLocalLiked] = useState<boolean>(Boolean(userLiked))
   const [localLikesCount, setLocalLikesCount] = useState<number>(likes ?? 0)
 
+  const formatDate = () => {
+    const data = new Date(date)
+    return new Intl.DateTimeFormat('ru-RU', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(data)
+  }
+
   useEffect(() => {
     setLocalLiked(Boolean(userLiked))
   }, [userLiked])
@@ -94,10 +103,10 @@ export function IdeaCard({
               className={classes.ideaCard__box__profile__avatar}
             />
             <span className={classes.ideaCard__box__profile__name}>
-              {userInfo?.username || 'User Name'}
+              {userInfo?.username || ''}
             </span>
           </div>
-          <span className={classes.ideaCard__box__time}>{date}</span>
+          <span className={classes.ideaCard__box__time}>{formatDate()}</span>
         </div>
 
         <div className={classes.ideaCard__tags}>

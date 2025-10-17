@@ -140,6 +140,7 @@ export function ProfilePage() {
                   articleName={article.title}
                   article={article.summary}
                   userName={article.author_id ?? 'Неизвестный'}
+                  timeDate={article.created_at ?? ''}
                 />
               </Link>
             ))
