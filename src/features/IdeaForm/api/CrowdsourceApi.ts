@@ -5,48 +5,43 @@ export const CrowdsourceApi = createApi({
   reducerPath: 'crowdsourceApi',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL,
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers, { getState, endpoint }) => {
       const token = (getState() as any).auth?.token
       if (token) {
         headers.set('authorization', `Bearer ${token}`)
       }
       headers.set('accept', 'application/json')
+
+      // 🧠 не добавляем content-type для FormData (uploadCrowdMedia)
+      if (endpoint !== 'uploadCrowdMedia') {
+        headers.set('content-type', 'application/json')
+      }
+
       return headers
     },
   }),
   tagTypes: ['Crowdsource'],
   endpoints: builder => ({
-    createCrowdsource: builder.mutation<any, {
-      theme: string
-      description: string
-      category: string
-      image?: File
-      tags?: string
-      lat: number
-      lng: number
-    }>({
-      query: idea => {
-        const formData = new FormData()
-        formData.append('theme', idea.theme)
-        formData.append('description', idea.description)
-        formData.append('category', idea.category)
-        formData.append('tags', idea.tags || '')
-        formData.append('lat', idea.lat.toString())
-        formData.append('lng', idea.lng.toString())
-
-        if (idea.image) {
-          formData.append('image', idea.image) // добавляем реальный файл
-        }
-
-        return {
-          url: '/crowdsource/',
-          method: 'POST',
-          body: formData, // FormData вместо JSON
-        }
-      },
+    createCrowdsource: builder.mutation<
+      any,
+      { theme: string; description: string }
+    >({
+      query: idea => ({
+        url: '/crowdsource/',
+        method: 'POST',
+        body: idea,
+      }),
       invalidatesTags: ['Crowdsource'],
+    }),
+    uploadCrowdMedia: builder.mutation({
+      query: ({ crowd_id, body }) => ({
+        url: `/crowdsource/${crowd_id}/media`,
+        method: 'POST',
+        body, // FormData
+      }),
     }),
   }),
 })
 
-export const { useCreateCrowdsourceMutation } = CrowdsourceApi
+export const { useCreateCrowdsourceMutation, useUploadCrowdMediaMutation } =
+  CrowdsourceApi

@@ -3,16 +3,19 @@
 
 import React, { useState } from 'react'
 import Image from 'next/image'
-
 import classes from './IdeaForm.module.scss'
 import profilePic from '../assets/user-icon.svg'
 import { useSelectFile } from '@/i18n/useNativeLocale'
-import { useCreateCrowdsourceMutation } from '../api/CrowdsourceApi'
+import {
+  useCreateCrowdsourceMutation,
+  useUploadCrowdMediaMutation,
+} from '../api/CrowdsourceApi'
 
 export function IdeaForm({ formData }: { formData: any }) {
   const [file, setFile] = useState<File | null>(null)
   const [preview, setPreview] = useState<string | null>(null)
   const [createCrowdsource] = useCreateCrowdsourceMutation()
+  const [uploadCrowdMedia] = useUploadCrowdMediaMutation()
   const fileNameLocale = useSelectFile()
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,24 +29,35 @@ export function IdeaForm({ formData }: { formData: any }) {
     const form = e.currentTarget as HTMLFormElement
     const fd = new FormData(form)
 
-    const formDataObj = new FormData()
-    formDataObj.append('theme', fd.get('theme') as string)
-    formDataObj.append('description', fd.get('description') as string)
+    const theme = fd.get('theme') as string
+    const description = fd.get('description') as string
 
-    if (file) {
-      formDataObj.append('file', file)
+    const payload = {
+      theme,
+      description,
+      category: 'solved',
     }
 
     try {
-      const plainFormData = Object.fromEntries(formDataObj.entries()) as any
-      const res = await createCrowdsource(plainFormData).unwrap()
-      console.log('✅ Создано:', res)
+      const created = await createCrowdsource(payload).unwrap()
+
+      // если есть файл — загружаем отдельно
+      if (file) {
+        const mediaData = new FormData()
+        mediaData.append('files', file)
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const res = await uploadCrowdMedia({
+          crowd_id: created.id,
+          body: mediaData, // ✅ передаём саму FormData
+        }).unwrap()
+      }
 
       form.reset()
       setFile(null)
       setPreview(null)
-    } catch (err) {
-      console.error('❌ Ошибка при отправке:', err)
+    } catch (err: any) {
+      console.error(err)
     }
   }
 
@@ -95,7 +109,12 @@ export function IdeaForm({ formData }: { formData: any }) {
               <span>{fileNameLocale}</span>
             </div>
           )}
-          <input type="file" name="image" onChange={handleFileChange} />
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
         </div>
       </label>
 

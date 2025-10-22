@@ -115,7 +115,7 @@ export function IdeasDetailPage({
       <div className={classes.ideasDetailPage__content}>
         <div className={classes.ideasDetailPage__content__upWrapper}>
           <span>
-            {formatDate()}{' '}
+            {formatDate()}
             <Image
               className={classes.calendarImg}
               src="/calendar.svg"
@@ -275,7 +275,7 @@ export function IdeasDetailPage({
         <hr />
 
         {structuredComments.length ? (
-          structuredComments.map(comment => (
+          [...structuredComments].reverse().map(comment => (
             <IdeaCommentCard sendingTxt={sending} sendTxt={send} inputTxt={inputTxt} title={reply} key={comment.id} com={comment} ideaId={id} />
           ))
         ) : (
