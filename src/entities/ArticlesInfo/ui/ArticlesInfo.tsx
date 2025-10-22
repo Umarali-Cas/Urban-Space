@@ -24,8 +24,21 @@ export function ArticlesInfo({
 }: ArticlesInfoProps) {
   const { data: articles = [], isLoading } = useGetArticlesQuery({ limit: 7 })
   const commentsQuery = useGetCommentsQuery(all.id)
-  const { otherArticles, titleArticle, subtitleArticle, share, commentsTitle, send, noComments, sending, filesHave, input, reply, inputTxt, fileName} =
-    useDetailPageLocale()
+  const {
+    otherArticles,
+    titleArticle,
+    subtitleArticle,
+    share,
+    commentsTitle,
+    send,
+    noComments,
+    sending,
+    filesHave,
+    input,
+    reply,
+    inputTxt,
+    fileName,
+  } = useDetailPageLocale()
   const [createComment] = useCreateCommentMutation()
 
   const [comment, setComment] = useState('')
@@ -94,7 +107,9 @@ export function ArticlesInfo({
     return roots
   }
 
-  const structuredComments = commentsQuery.data ? buildTree(commentsQuery.data) : []
+  const structuredComments = commentsQuery.data
+    ? buildTree(commentsQuery.data)
+    : []
 
   return (
     <section className={classes.articlesInfo}>
@@ -178,7 +193,7 @@ export function ArticlesInfo({
         </div>
 
         <p className={classes.articlesInfo__content__desc}>{desc}</p>
-         {files.length > 0 && (
+        {files.length > 0 && (
           <div className={classes.articlesInfo__files}>
             <h3>{filesHave}</h3>
             <ul>
@@ -272,9 +287,19 @@ export function ArticlesInfo({
         <hr />
 
         {structuredComments.length > 0 ? (
-          structuredComments.map(comment => (
-            <ArticleCommentCard sendingTxt={sending} sendTxt={send} inputTxt={inputTxt} title={reply} key={comment.id} com={comment} articleId={all.id} />
-          ))
+          [...structuredComments]
+            .reverse()
+            .map(comment => (
+              <ArticleCommentCard
+                key={comment.id}
+                sendingTxt={sending}
+                sendTxt={send}
+                inputTxt={inputTxt}
+                title={reply}
+                com={comment}
+                articleId={all.id}
+              />
+            ))
         ) : (
           <div style={{ textAlign: 'center' }}>{noComments}</div>
         )}
