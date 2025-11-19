@@ -11,6 +11,7 @@ import { useCrowdfundingData } from '@/i18n/useNativeLocale'
 
 export function SupportUs({
   title,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   desc,
   formData,
 }: {
@@ -54,7 +55,7 @@ export function SupportUs({
       {/* Выбор проекта через LastIdeas */}
       <LastIdeas
         title={title}
-        subtitle={desc}
+        subtitle={"Поддерживайте лучшие проекты!"}
         viewCards={3}
         selected={setSelectedIdea} // передаём выбранную идею наверх
         showSelectButton={true}
